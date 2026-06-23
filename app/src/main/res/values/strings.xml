@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">VLM Analyzer</string>
+    <string-array name="backend_options">
+        <item>REMOTE - Cloud API</item>
+        <item>LOCAL - On-Device (llama-server)</item>
+    </string-array>
+    <string-array name="local_backend_options">
+        <item>CPU - ARM Cores</item>
+        <item>OpenCL - GPU (Adreno)</item>
+        <item>Hexagon - Qualcomm HTP NPU</item>
+    </string-array>
+</resources>

@@ -1,0 +1,107 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IntelliJ
+*.iml
+
+# Android Studio
+captures/
+.externalNativeBuild
+.cxx
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Bytecode wrapper (except gradle wrapper which is needed)
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Model files (large binaries)
+*.gguf
+*.bin
+*.onnx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*~
+$*.tmp
+
+# sherpa-onnx build directory (cloned from GitHub)
+sherpa-onnx/
+
+# Pre-built native libraries (downloaded from releases)
+jniLibs/
+app/src/main/cpp/libs/
+
+# Build logs
+build.log
+*.log
+
+Not_Needed/
+
+# Downloaded archives
+sherpa-onnx-v*.tar.bz2
+sherpa-onnx-whisper-base.en.tar.bz2
+
+#. ENV as it is auto-generated from setup-config
+.env
+
+# llama.cpp directory
+
+.idea/
+.gradle/
+.cxx/
+build/
+app/build/
+app/.cxx/
+local.properties
+*.apk
+*.aab
+*.iml
+
+# llama.cpp build artifacts (Android)
+llama.cpp
+llama.cpp/build-android/
+llama.cpp/OpenCL-ICD-Loader/build-android/
+llama.cpp/lib/*.so
+llama.cpp/lib/*.o
+llama.cpp/lib/*.a

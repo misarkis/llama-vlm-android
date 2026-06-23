@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#1a1a1a">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VLM Screen Analyzer"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Capture Source Toggle -->
+        <LinearLayout
+            android:id="@+id/capture_source_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capture Source:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rg_capture_source"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_screen_capture"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="Screen"
+                    android:textSize="14sp"
+                    android:textColor="#ffffff"
+                    android:buttonTint="#9C27B0"
+                    android:checked="true"
+                    android:layout_marginEnd="4dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_camera_capture"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="Camera"
+                    android:textSize="14sp"
+                    android:textColor="#ffffff"
+                    android:buttonTint="#9C27B0"
+                    android:layout_marginStart="4dp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- Mode selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Backend Mode:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_mode_remote"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="REMOTE"
+                    android:textSize="14sp"
+                    android:backgroundTint="#9C27B0"
+                    android:textColor="#ffffff"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/btn_mode_local"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="LOCAL"
+                    android:textSize="14sp"
+                    android:backgroundTint="#666666"
+                    android:textColor="#ffffff"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Status bar -->
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:gravity="center"
+            android:padding="8dp"
+            android:background="#333333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Local Server Configuration Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_local_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="#2a2a2a"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Local Settings"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#4CAF50"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Server status / config display -->
+                <TextView
+                    android:id="@+id/tv_server_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Server: Stopped"
+                    android:textSize="12sp"
+                    android:textColor="#f44336"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Local Settings button -->
+                <Button
+                    android:id="@+id/btn_server_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Local Settings"
+                    android:textSize="12sp"
+                    android:backgroundTint="#9C27B0"
+                    android:textColor="#ffffff"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Server control buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_start_server"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="Start Local"
+                        android:textSize="12sp"
+                        android:backgroundTint="#4CAF50"
+                        android:textColor="#ffffff"
+                        android:layout_marginEnd="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_stop_server"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="Stop Local"
+                        android:textSize="12sp"
+                        android:backgroundTint="#f44336"
+                        android:textColor="#ffffff"
+                        android:layout_marginStart="4dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Models are read from /data/local/tmp/llama.cpp/models/"
+                    android:textSize="11sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Image Scale Factor - visible for both modes -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#2a2a2a"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image Scale Factor"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/sb_image_scale_factor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="100" />
+
+                <TextView
+                    android:id="@+id/tv_image_scale_value"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="1.00"
+                    android:textSize="13sp"
+                    android:textColor="#ffffff"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/tv_image_size_preview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1080x2640"
+                    android:textSize="11sp"
+                    android:textColor="#8888ff"
+                    android:gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drag: 0.10 to 1.00"
+                android:textSize="10sp"
+                android:textColor="#888888" />
+        </LinearLayout>
+
+        <!-- Save Options -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#2a2a2a"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp">
+
+            <CheckBox
+                android:id="@+id/cb_save_audio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save voice recordings to Downloads/VLM_Capture"
+                android:textSize="13sp"
+                android:textColor="#ffffff"
+                android:buttonTint="#9C27B0"
+                android:layout_marginBottom="8dp" />
+
+            <CheckBox
+                android:id="@+id/cb_save_screenshots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save screenshots to Downloads/VLM_Capture"
+                android:textSize="13sp"
+                android:textColor="#ffffff"
+                android:buttonTint="#9C27B0" />
+        </LinearLayout>
+
+        <!-- Control buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Analyzer"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#4CAF50"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/btn_stop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stop Analyzer"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#f44336"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/btn_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remote Settings"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#9C27B0"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Result area -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Analysis Result"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="8dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="200dp"
+            android:background="#333333"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/result_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap 'Start Analyzer' to start..."
+                android:textSize="14sp"
+                android:textColor="#cccccc"
+                android:lineSpacingExtra="4dp" />
+        </ScrollView>
+
+        <!-- Info footer -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tap 'Start Analyzer' to begin | Voice commands work through overlay widget"
+            android:textSize="11sp"
+            android:textColor="#666666"
+            android:gravity="center"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>

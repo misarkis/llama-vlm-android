@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Backend Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Local Backend"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btn_backend_cpu"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="CPU"
+                android:textSize="12sp"
+                android:backgroundTint="#4CAF50"
+                android:textColor="#ffffff"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btn_backend_gpu"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="GPU"
+                android:textSize="12sp"
+                android:backgroundTint="#666666"
+                android:textColor="#ffffff"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btn_backend_npu"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="NPU"
+                android:textSize="12sp"
+                android:backgroundTint="#666666"
+                android:textColor="#ffffff"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- Model File -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Model File"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btn_select_model"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Select Model"
+                android:textSize="12sp"
+                android:backgroundTint="#2196F3"
+                android:textColor="#ffffff"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tv_selected_model"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1.5"
+                android:text="None"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:gravity="center_vertical"
+                android:background="#333333"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:ellipsize="middle" />
+        </LinearLayout>
+
+        <!-- MMProj File -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MMProj File"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btn_select_mmproj"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Select MMProj"
+                android:textSize="12sp"
+                android:backgroundTint="#2196F3"
+                android:textColor="#ffffff"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tv_selected_mmproj"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1.5"
+                android:text="None"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:gravity="center_vertical"
+                android:background="#333333"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:ellipsize="middle" />
+        </LinearLayout>
+
+        <!-- Context Size -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Context Size"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/et_server_n_ctx"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:hint="16384"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Context window size for the model"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Batch Size -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Batch Size"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/et_server_n_batch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:hint="512"
+                android:text="512"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maximum batch size for prompt processing"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Max Tokens -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max Tokens"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <EditText
+                android:id="@+id/et_server_max_tokens"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:inputType="number"
+                android:hint="1024"
+                android:text="1024"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maximum tokens to generate per analysis"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- HTP Sessions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="HTP Sessions (NPU only)"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <Spinner
+                android:id="@+id/spinner_htp_sessions"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#333333"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of HTP sessions: 1=HTP0, 2=HTP0,HTP1, 3=HTP0,HTP1,HTP2, 4=HTP0,HTP1,HTP2,HTP3"
+                android:textSize="11sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Inference Parameters Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inference Parameters"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Image Min Tokens -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image Min Tokens"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_image_min_tokens"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="numberSigned"
+                android:hint="-1 (unlimited)"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minimum image tokens (-1 = unlimited)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Top K -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top K"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_top_k"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="number"
+                android:hint="40"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top-k sampling (40 recommended)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Top P -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top P"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_top_p"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="numberDecimal"
+                android:hint="0.95"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top-p sampling (0.95 recommended)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Temperature -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temperature"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="numberDecimal"
+                android:hint="0.80"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sampling temperature (0.80 recommended)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Repetition Penalty -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repetition Penalty"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_repetition_penalty"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="numberDecimal"
+                android:hint="1.00"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Penalty for repetition (1.00 = disabled, 1.05-1.20 recommended)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Verbose -->
+        <CheckBox
+            android:id="@+id/cb_server_verbose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verbose mode - Enable detailed logging"
+            android:textColor="#ffffff"
+            android:buttonTint="#9C27B0"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Debug Logs Toggle -->
+        <CheckBox
+            android:id="@+id/cb_debug_logs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Debug logs - Enable detailed debugging"
+            android:textColor="#ffffff"
+            android:buttonTint="#9C27B0"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Info Logs Toggle -->
+        <CheckBox
+            android:id="@+id/cb_info_logs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Info logs - Enable informational messages"
+            android:textColor="#ffffff"
+            android:buttonTint="#9C27B0"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+</ScrollView>
