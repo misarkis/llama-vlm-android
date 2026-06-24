@@ -463,7 +463,7 @@
         <div class="hero-content">
             <span class="hero-badge">🤖 Powered by llama.cpp</span>
             <h1>LLAMA VLM Android</h1>
-            <p>Screen capture and analysis powered by Vision Language Models with on-device AI acceleration. Run Qwen2-VL locally on your phone using CPU, GPU (Adreno), or NPU (Hexagon HTP).</p>
+            <p>Screen/Camera capture and analysis powered by Vision Language Models with on-device AI acceleration. Run your favorite VLM locally on your phone using CPU, GPU (Adreno), or NPU (Hexagon HTP).</p>
             <div class="hero-buttons">
                 <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV1.0" class="btn btn-primary">
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.84 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
@@ -632,21 +632,38 @@
         <h2 class="section-title">Quick Start</h2>
         <p class="section-subtitle">Get up and running in minutes</p>
         <div class="features-grid">
-            <div class="feature-card fade-in">
-                <h3>1️⃣ Download APK</h3>
-                <p>Get the latest release from the GitHub releases page and install on your Android device.</p>
+            <div class="feature-card fade-in" style="text-align: center;">
+                <h3>1️⃣ Download and install app</h3>
+                <p style="margin-bottom: 1rem;">Get the latest release and install on your Android device.</p>
+                <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV1.0" class="btn btn-primary" style="display: inline-flex;">
+                    Download v1.0
+                </a>
             </div>
             <div class="feature-card fade-in">
-                <h3>2️⃣ Grant Permissions</h3>
-                <p>Launch the app and grant screen capture and overlay permissions for floating controls.</p>
+                <h3>2️⃣ Choose Mode</h3>
+                <p>Select REMOTE (cloud with powerful models) or LOCAL (on-device, offline mode).</p>
+                <img src="https://raw.githubusercontent.com/misarkis/llama-vlm-android/main/docs/images/Main-Activity-Camera-Local.jpg" alt="Main Activity" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 400px; object-fit: contain;">
             </div>
             <div class="feature-card fade-in">
-                <h3>3️⃣ Choose Mode</h3>
-                <p>Select REMOTE (cloud) or LOCAL (on-device) mode. Configure settings as needed.</p>
+                <h3>3️⃣ LOCAL Inference</h3>
+                <p>If you want to run local inference (offline, on-device):</p>
+                <p style="margin-top: 0.5rem;">Download and push a model to your device:</p>
+                <a href="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF" class="btn btn-secondary" style="display: inline-flex; margin: 0.5rem 0;">
+                    Qwen2-VL-2B GGUF
+                </a>
+                <p style="margin-top: 0.5rem;">Then select model path in Local Settings, update parameters, backend and press Save. Then press Start Local and wait until you see "Backend" in green. Then press Start Analyzer.</p>
+                <img src="https://raw.githubusercontent.com/misarkis/llama-vlm-android/main/docs/images/Main-Activity-Local-Local-Settings.jpg" alt="Local Settings" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 400px; object-fit: contain;">
             </div>
             <div class="feature-card fade-in">
-                <h3>4️⃣ Start Analyzing</h3>
-                <p>Tap capture to analyze your screen. Results are spoken aloud via offline TTS.</p>
+                <h3>4️⃣ Remote Inference</h3>
+                <p>If you want remote inference (cloud, powerful models):</p>
+                <p style="margin-top: 0.5rem;">Set your llama.cpp server URL in Remote Settings. Press Save and then press Start Analyzer.</p>
+                <img src="https://raw.githubusercontent.com/misarkis/llama-vlm-android/main/docs/images/Main-Activity-Remote-Settings.jpg" alt="Remote Settings" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 400px; object-fit: contain;">
+            </div>
+            <div class="feature-card fade-in">
+                <h3>5️⃣ Start Analyzing</h3>
+                <p>Tap capture button to analyze. Results spoken aloud via offline TTS.</p>
+                <img src="https://raw.githubusercontent.com/misarkis/llama-vlm-android/main/docs/images/Result-Camera-Overlay.jpg" alt="Analysis Result" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 300px; object-fit: contain;">
             </div>
         </div>
     </section>
@@ -654,11 +671,13 @@
     <!-- Technologies Section -->
     <section id="technologies">
         <h2 class="section-title">Technologies</h2>
+        <p class="section-subtitle">Built using the following Open Source</p>
         <div class="tech-grid fade-in">
             <div class="tech-badge">🦙 llama.cpp</div>
             <div class="tech-badge">🔊 sherpa-onnx</div>
             <div class="tech-badge">🎮 OpenCL</div>
             <div class="tech-badge">🔧 Hexagon SDK</div>
+            <div class="tech-badge">👁️ OpenCV</div>
         </div>
     </section>
 
@@ -669,7 +688,7 @@
         <div class="code-block fade-in">
             <code>
 # MSYS2 UCRT64 terminal<br>
-cd VLM-Analyze-Android<br>
+cd llama-vlm-android<br>
 source ./setup-config.sh    # Configure paths<br>
 ./buildAPK.sh -All -install # Build and install
             </code>
@@ -679,14 +698,11 @@ source ./setup-config.sh    # Configure paths<br>
     <!-- Footer -->
     <footer>
         <h3>LLAMA VLM Android</h3>
-        <p style="color: var(--gray); margin: 1rem 0;">Screen capture and analysis with on-device AI</p>
+        <p style="color: var(--gray); margin: 1rem 0;">AI Vision Everywhere — On‑Device or Remote</p>
         <div class="footer-links">
             <a href="https://github.com/misarkis/llama-vlm-android" target="_blank">GitHub Repository</a>
             <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV1.0" target="_blank">Download v1.0</a>
             <a href="https://github.com/misarkis/llama-vlm-android/blob/main/LICENSE" target="_blank">MIT License</a>
-            <a href="https://github.com/ggml-org/llama.cpp" target="_blank">llama.cpp</a>
-            <a href="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF" target="_blank">Qwen2-VL Model</a>
-            <a href="https://github.com/k2-fsa/sherpa-onnx" target="_blank">sherpa-onnx</a>
         </div>
         <p style="color: var(--gray); margin-top: 2rem;">
             Developed with <a href="https://claude.ai/code" style="color: var(--primary);">Claude CLI</a>
