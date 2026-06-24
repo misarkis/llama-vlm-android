@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VLM-Analyze Android - Screen Capture with Vision Language Models</title>
+    <title>LLAMA VLM Android</title>
     <meta name="description" content="A mobile screen capture and analysis tool that uses Vision Language Models (VLM) to analyze what's on your screen with local CPU, GPU, or NPU acceleration.">
     <meta name="keywords" content="VLM, Vision Language Model, Android, llama.cpp, AI, Screen Capture, Qwen, NPU, GPU, Hexagon">
     <meta name="author" content="Michel Sarkis">
 
     <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="VLM-Analyze Android">
+    <meta property="og:title" content="LLAMA VLM Android">
     <meta property="og:description" content="Screen capture and VLM analysis with on-device AI acceleration">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://misarkis.github.io/llama-vlm-android/">
@@ -306,9 +306,12 @@
             border-radius: 16px;
             overflow-x: auto;
             margin: 2rem 0;
+            text-align: center;
         }
 
         .architecture pre {
+            display: inline-block;
+            text-align: left;
             font-size: 0.75rem;
             line-height: 1.4;
             color: var(--accent);
@@ -459,7 +462,7 @@
     <div class="hero">
         <div class="hero-content">
             <span class="hero-badge">🤖 Powered by llama.cpp</span>
-            <h1>VLM-Analyze Android</h1>
+            <h1>LLAMA VLM Android</h1>
             <p>Screen capture and analysis powered by Vision Language Models with on-device AI acceleration. Run Qwen2-VL locally on your phone using CPU, GPU (Adreno), or NPU (Hexagon HTP).</p>
             <div class="hero-buttons">
                 <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV1.0" class="btn btn-primary">
@@ -607,7 +610,7 @@
         <p class="section-subtitle">Built on llama.cpp's mtmd multimodal inference engine</p>
         <div class="architecture fade-in">
 <pre><code>┌─────────────────────────────────────────────────────────────┐
-│                     VLM-Analyze Android                     │
+│                     LLAMA VLM Android                       │
 ├─────────────────────────────────────────────────────────────┤
 │  MainActivity - Mode Selection (REMOTE / LOCAL)             │
 ├─────────────────────────────────────────────────────────────┤
@@ -651,16 +654,11 @@
     <!-- Technologies Section -->
     <section id="technologies">
         <h2 class="section-title">Technologies</h2>
-        <p class="section-subtitle">Built with cutting-edge open source tools</p>
         <div class="tech-grid fade-in">
             <div class="tech-badge">🦙 llama.cpp</div>
-            <div class="tech-badge">⚡ Qwen2-VL</div>
             <div class="tech-badge">🔊 sherpa-onnx</div>
             <div class="tech-badge">🎮 OpenCL</div>
             <div class="tech-badge">🔧 Hexagon SDK</div>
-            <div class="tech-badge">🤖 Android NDK</div>
-            <div class="tech-badge">📦 CMake</div>
-            <div class="tech-badge">💻 MSYS2</div>
         </div>
     </section>
 
@@ -680,7 +678,7 @@ source ./setup-config.sh    # Configure paths<br>
 
     <!-- Footer -->
     <footer>
-        <h3>VLM-Analyze Android</h3>
+        <h3>LLAMA VLM Android</h3>
         <p style="color: var(--gray); margin: 1rem 0;">Screen capture and analysis with on-device AI</p>
         <div class="footer-links">
             <a href="https://github.com/misarkis/llama-vlm-android" target="_blank">GitHub Repository</a>
