@@ -63,7 +63,7 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     VLM-Analyze Android                     │
+│                     LLAMA VLM Android                       │
 ├─────────────────────────────────────────────────────────────┤
 │  MainActivity                                               │
 │  ├── Mode Selection (REMOTE / LOCAL)                        │
