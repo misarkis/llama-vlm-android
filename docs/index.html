@@ -612,17 +612,28 @@
 <pre><code>┌─────────────────────────────────────────────────────────────┐
 │                     LLAMA VLM Android                       │
 ├─────────────────────────────────────────────────────────────┤
-│  MainActivity - Mode Selection (REMOTE / LOCAL)             │
+│  MainActivity                                               │
+│  ├── Mode Selection (REMOTE / LOCAL)                        │
+│  ├── Capture Source (Screen / Camera)                       │
+│  └── Settings Configuration                                 │
 ├─────────────────────────────────────────────────────────────┤
-│  ScreenCaptureService │  CameraCaptureActivity              │
-│  ├── Screen Capture   │  ├── Camera Preview                 │
-│  ├── Overlay Controls │  ├── Frame Capture                  │
-│  └── Inference Routing│  └── YUV→RGB Conversion             │
+│  ScreenCaptureService   │  CameraCaptureActivity            │
+│  ├── Screen Capture     │  ├── Camera Preview               │
+│  ├── Overlay Controls   │  ├── Frame Capture                │
+│  └── Inference Routing  │  └── YUV→RGB Conversion           │
 ├─────────────────────────────────────────────────────────────┤
-│  LocalInferenceBackend (LOCAL mode)                         │
+│  VlmAnalyzer                                                │
+│  ├── Image Pre-Processing (LOCAL/REMOTE)                    │
+│  ├── API Client (remote HTTP)                               │
+│  └── Local Inference Backend (LOCAL mode)                   │
+├─────────────────────────────────────────────────────────────┤
+│  Local Inference Backend (LOCAL mode)                       │
 │  ├── libmtmd-inference-jni.so (JNI wrapper)                 │
 │  ├── libllama.so + libmtmd.so (multimodal inference)        │
 │  └── Backends: CPU / GPU (OpenCL) / NPU (Hexagon HTP)       │
+├─────────────────────────────────────────────────────────────┤
+│  TtsHelper (Offline TTS)                                    │
+│  └── Text-to-speech for results                             │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
     </section>
