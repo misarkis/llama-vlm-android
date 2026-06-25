@@ -70,17 +70,17 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 │  ├── Capture Source (Screen / Camera)                       │
 │  └── Settings Configuration                                 │
 ├─────────────────────────────────────────────────────────────┤
-│  ScreenCaptureService    │  CameraCaptureActivity           │
+│  ScreenCaptureService   │  CameraCaptureActivity            │
 │  ├── Screen Capture     │  ├── Camera Preview               │
 │  ├── Overlay Controls   │  ├── Frame Capture                │
 │  └── Inference Routing  │  └── YUV→RGB Conversion           │
 ├─────────────────────────────────────────────────────────────┤
 │  VlmAnalyzer                                                │
-│  ├── Image Encoding (JPEG/base64 for REMOTE)                │
+│  ├── Image Pre-Processing (LOCAL/REMOTE)                    │
 │  ├── API Client (remote HTTP)                               │
 │  └── Local Inference Backend (LOCAL mode)                   │
 ├─────────────────────────────────────────────────────────────┤
-│  LocalInferenceBackend (LOCAL mode only)                    │
+│  Local Inference Backend (LOCAL mode)                       │
 │  ├── libmtmd-inference-jni.so (JNI wrapper)                 │
 │  ├── libllama.so + libmtmd.so (multimodal inference)        │
 │  └── Backends: CPU / GPU (OpenCL) / NPU (Hexagon HTP)       │
