@@ -471,3 +471,4 @@ MIT License - See LICENSE file for details
 - **Claude CLI** - https://claude.ai/code (development assistant)
 - **OpenCL** - https://www.khronos.org/opencl/ (GPU acceleration)
 - **Hexagon SDK** - https://www.qualcomm.com/ (NPU acceleration)
+- **OpenCV** - https://github.com/opencv/opencv (Image Processing)
