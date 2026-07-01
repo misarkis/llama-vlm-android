@@ -61,6 +61,10 @@ static std::atomic<int32_t> g_last_prompt_tokens{0};
 static std::atomic<int32_t> g_last_completion_tokens{0};
 static std::atomic<int64_t> g_last_total_time_ms{0};
 static std::atomic<double> g_last_tokens_per_second{0.0};
+static std::atomic<double> g_last_prefill_time_ms{0.0};
+static std::atomic<double> g_last_decode_time_ms{0.0};
+static std::atomic<double> g_last_prefill_throughput{0.0};
+static std::atomic<double> g_last_decode_throughput{0.0};
 
 // ============================================================================
 // Java String Helper
@@ -651,9 +655,30 @@ static std::string run_inference(InferenceContext* ctx, mtmd_image_data_t* image
     g_last_prompt_tokens.store(result.n_prompt_tokens, std::memory_order_relaxed);
     g_last_total_time_ms.store(duration, std::memory_order_relaxed);
     g_last_tokens_per_second.store(result.tokens_per_second, std::memory_order_relaxed);
+    g_last_prefill_time_ms.store(result.prompt_eval_time_ms, std::memory_order_relaxed);
+    g_last_decode_time_ms.store(result.eval_time_ms, std::memory_order_relaxed);
 
-    LOGI("Inference complete: %d prompt + %d completion tokens in %lldms (%.2f t/s)",
-         result.n_prompt_tokens, result.n_tokens, duration, result.tokens_per_second);
+    // Calculate throughput breakdown (used for both storage and logging)
+    double prefill_throughput = 0;
+    if (result.n_prompt_tokens > 0 && result.prompt_eval_time_ms > 0) {
+        prefill_throughput = (result.n_prompt_tokens * 1000.0) / result.prompt_eval_time_ms;
+    }
+    double decode_throughput = 0;
+    if (result.eval_time_ms > 0) {
+        decode_throughput = (result.n_tokens * 1000.0) / result.eval_time_ms;
+    }
+    g_last_prefill_throughput.store(prefill_throughput, std::memory_order_relaxed);
+    g_last_decode_throughput.store(decode_throughput, std::memory_order_relaxed);
+
+    LOGI("Inference complete:");
+    LOGI("  Prompt tokens: %d", result.n_prompt_tokens);
+    LOGI("  Completion tokens: %d", result.n_tokens);
+    LOGI("  Prefill time: %.2f ms", result.prompt_eval_time_ms);
+    LOGI("  Decode time: %.2f ms", result.eval_time_ms);
+    LOGI("  Total time: %lldms", duration);
+    LOGI("  Prefill throughput: %.2f t/s", prefill_throughput);
+    LOGI("  Decode throughput: %.2f t/s", decode_throughput);
+    LOGI("  Overall throughput: %.2f t/s", result.tokens_per_second);
 
     // Return the shared buffer content (already filtered by on_token callback)
     // This avoids returning garbage tokens that may have been generated after detection

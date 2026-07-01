@@ -68,6 +68,7 @@ static void android_log_callback(ggml_log_level level, const char* text, void* u
 }
 #endif
 
+
 // Helper to check for antiprompt in generated tokens (mimic mtmd_cli_context::check_antiprompt)
 static bool check_antiprompt(const llama_tokens& generated_tokens, const llama_tokens& antiprompt_tokens) {
     if (antiprompt_tokens.empty() || generated_tokens.size() < antiprompt_tokens.size()) {
@@ -358,7 +359,11 @@ mtmd_api_status mtmd_inference_init(
 #ifdef __ANDROID__
     // Route llama.cpp logs to Android logcat
     llama_log_set(android_log_callback, nullptr);
-    GGML_LOG_INFO("Android log callback installed");
+
+    // Route mtmd/clip logs to Android logcat (for vision encoder backend info)
+    mtmd_log_set(android_log_callback, nullptr);
+
+    GGML_LOG_INFO("Android log callback installed (llama + mtmd)");
 #endif
 
     double init_start = get_time_ms();
@@ -540,6 +545,11 @@ mtmd_api_status mtmd_inference_init(
     cparams.show_timings = params.show_timings;
     cparams.warmup = params.warmup;
 
+    // Log batch configuration for performance analysis
+    GGML_LOG_INFO("  n_batch: %d", cparams.n_batch);
+    GGML_LOG_INFO("  n_ubatch: %d", cparams.n_ubatch);
+    GGML_LOG_INFO("  n_ctx: %d", cparams.n_ctx);
+
     // Memory
     cparams.use_mmap = params.use_mmap;
     cparams.use_mlock = params.use_mlock;
@@ -549,7 +559,11 @@ mtmd_api_status mtmd_inference_init(
 
     // Flash attention
     cparams.flash_attn_type = (enum llama_flash_attn_type) params.flash_attn_type;
-	
+
+    // Log flash attention configuration
+    GGML_LOG_INFO("  Flash attention type: %d", params.flash_attn_type);
+    GGML_LOG_INFO("  Flash attention enabled: %s", params.flash_attn_type > 0 ? "yes" : "no");
+
 	// Set global debug flag for Android logging callback
 #ifdef __ANDROID__
     g_mtmd_debug_logs = params.debug_logs_enabled;
@@ -862,6 +876,10 @@ mtmd_api_status mtmd_inference_run(
     result_out->prompt_eval_time_ms = eval_end - eval_start;
     result_out->n_prompt_tokens = new_n_past - old_n_past;  // Actual prompt tokens for this call
 
+    // Calculate and log total prompt tokens (text + image)
+    int32_t total_prompt_tokens = new_n_past - old_n_past;
+    GGML_LOG_INFO("  Total prompt tokens (text + image): %d", total_prompt_tokens);
+
     // Generate response
     double gen_start = get_time_ms();
     int n_predict = ctx->params.n_predict < 0 ? INT_MAX : ctx->params.n_predict;
@@ -925,8 +943,27 @@ mtmd_api_status mtmd_inference_run(
         result_out->tokens_per_second = (result_out->n_tokens * 1000.0) / result_out->eval_time_ms;
     }
 
-    GGML_LOG_INFO("=== mtmd_inference_run COMPLETE: %d tokens, %.2f t/s ===",
-            result_out->n_tokens, result_out->tokens_per_second);
+    // Calculate prefill throughput (text tokens only)
+    double prefill_throughput = 0;
+    if (result_out->n_prompt_tokens > 0 && result_out->prompt_eval_time_ms > 0) {
+        prefill_throughput = (result_out->n_prompt_tokens * 1000.0) / result_out->prompt_eval_time_ms;
+    }
+
+    // Calculate decode throughput
+    double decode_throughput = 0;
+    if (result_out->eval_time_ms > 0) {
+        decode_throughput = (result_out->n_tokens * 1000.0) / result_out->eval_time_ms;
+    }
+
+    GGML_LOG_INFO("=== mtmd_inference_run COMPLETE ===");
+    GGML_LOG_INFO("  Prompt tokens: %d", result_out->n_prompt_tokens);
+    GGML_LOG_INFO("  Completion tokens: %d", result_out->n_tokens);
+    GGML_LOG_INFO("  Prefill time: %.2f ms", result_out->prompt_eval_time_ms);
+    GGML_LOG_INFO("  Decode time: %.2f ms", result_out->eval_time_ms);
+    GGML_LOG_INFO("  Total time: %.2f ms", result_out->prompt_eval_time_ms + result_out->eval_time_ms);
+    GGML_LOG_INFO("  Prefill throughput: %.2f t/s", prefill_throughput);
+    GGML_LOG_INFO("  Decode throughput: %.2f t/s", decode_throughput);
+    GGML_LOG_INFO("  Overall throughput: %.2f t/s", result_out->tokens_per_second);
 
     return MTMD_API_SUCCESS;
 }
