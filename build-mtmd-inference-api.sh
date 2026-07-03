@@ -18,7 +18,8 @@
 #   2. Updates llama.cpp/tools/CMakeLists.txt to include the new subdirectory
 #   3. Builds libmtmd-inference-api.a (static library for Android)
 #   4. Builds mtmd-inference-test (test executable)
-#   5. Copies integration files to app/src/main/cpp/:
+#   5. Builds mtmd-profile-test (HTP profiling test executable)
+#   6. Copies integration files to app/src/main/cpp/:
 #      - mtmd-inference-api.h (public API header)
 #      - libmtmd-inference-api.a (static library)
 #      - llama.h, ggml*.h (required headers)
@@ -35,6 +36,12 @@ fi
 #   Also rebuilds llama.cpp from scratch (CPU + OpenCL + Hexagon backends)
 #   before building mtmd-inference-api.
 #
+# WITH -Profile:
+#   Enables OpenCL GPU profiling in llama.cpp build (adds CPU overhead).
+#   ONLY has effect when used with -All flag (triggers rebuild).
+#   Note: GPU profiling is a COMPILE-TIME option - cannot be toggled
+#   without rebuilding llama.cpp from scratch with -All -Profile.
+#
 # OUTPUT FILES:
 #   Shared libs (from build-llamacpp-android.sh):
 #     app/src/main/jniLibs/arm64-v8a/
@@ -49,8 +56,9 @@ fi
 #       - libmtmd-inference-api.a (static library for linking)
 #
 # USAGE:
-#   ./build-mtmd-inference-api.sh     # Build mtmd-inference-api only
-#   ./build-mtmd-inference-api.sh -All # Build llama.cpp + mtmd-inference-api
+#   ./build-mtmd-inference-api.sh              # Build mtmd-inference-api only
+#   ./build-mtmd-inference-api.sh -All         # Build llama.cpp + mtmd-inference-api
+#   ./build-mtmd-inference-api.sh -All -Profile # Build with OpenCL GPU profiling
 #   ./build-mtmd-inference-api.sh --help
 #
 # NEXT STEP:
@@ -76,20 +84,59 @@ warn() { echo "[WARN] $1"; }
 error() { echo "[ERROR] $1"; exit 1; }
 
 BUILD_ALL=false
+PROFILE_BUILD=false
 for arg in "$@"; do
     case $arg in
         -All)
             BUILD_ALL=true
             ;;
+        -Profile)
+            PROFILE_BUILD=true
+            ;;
         -help|--help)
-            echo "Usage: ./build-mtmd-inference-api.sh [-All]"
+            echo "Usage: ./build-mtmd-inference-api.sh [-All] [-Profile]"
             echo ""
             echo "Options:"
-            echo "  -All  Build llama.cpp + mtmd-inference-api"
+            echo "  -All      Build llama.cpp + mtmd-inference-api"
+            echo "  -Profile  Enable OpenCL GPU profiling (compile-time only, requires -All)"
+            echo ""
+            echo "IMPORTANT: GPU profiling is a COMPILE-TIME option."
+            echo "           To enable: ./build-mtmd-inference-api.sh -All -Profile"
+            echo "           Cannot toggle profiling without rebuilding llama.cpp from scratch."
             exit 0
             ;;
     esac
 done
+
+# Check if llama.cpp build configuration matches request
+MARKER_FILE="${LLAMA_CPP_DIR}/build-android/.build_config"
+NEED_REBUILD=false
+REBUILD_REASON=""
+
+if [ "$BUILD_ALL" = true ]; then
+    info "Rebuild requested with -All flag, will rebuild llama.cpp from scratch"
+elif [ -f "$MARKER_FILE" ]; then
+    CURRENT_PROFILE=$(grep "GPU_PROFILE=" "$MARKER_FILE" 2>/dev/null | cut -d'=' -f2)
+    if [ -n "$CURRENT_PROFILE" ]; then
+        if [ "$PROFILE_BUILD" = true ]; then
+            PROFILE_REQUESTED="ON"
+        else
+            PROFILE_REQUESTED="OFF"
+        fi
+
+        if [ "$CURRENT_PROFILE" != "$PROFILE_REQUESTED" ]; then
+            NEED_REBUILD=true
+            REBUILD_REASON="GPU_PROFILE mismatch: existing=$CURRENT_PROFILE, requested=$PROFILE_REQUESTED"
+        else
+            info "llama.cpp build configuration matches: GPU_PROFILE=$CURRENT_PROFILE"
+        fi
+    else
+        warn "Invalid marker file format at $MARKER_FILE"
+    fi
+else
+    warn "No build configuration marker found at $MARKER_FILE"
+    warn "llama.cpp may not have been built with build-llamacpp-android.sh"
+fi
 
 info "Checking mtmd-inference-api source directory..."
 if [ ! -d "$MTMD_SOURCE_DIR" ]; then
@@ -102,7 +149,18 @@ if [ -d "$MTMD_TARGET_DIR" ]; then
     rm -rf "$MTMD_TARGET_DIR"
 fi
 mkdir -p "$MTMD_TARGET_DIR"
-cp -r "${MTMD_SOURCE_DIR}"/* "$MTMD_TARGET_DIR/"
+
+# Copy mtmd-inference-api library files from mtmd-inference-api/
+cp "${MTMD_SOURCE_DIR}/mtmd-inference-api.cpp" "$MTMD_TARGET_DIR/"
+cp "${MTMD_SOURCE_DIR}/mtmd-inference-api.h" "$MTMD_TARGET_DIR/"
+cp "${MTMD_SOURCE_DIR}/CMakeLists.txt" "$MTMD_TARGET_DIR/"
+cp "${MTMD_SOURCE_DIR}/README.md" "$MTMD_TARGET_DIR/"
+cp "${MTMD_SOURCE_DIR}/test.cpp" "$MTMD_TARGET_DIR/"
+
+# Copy mtmd-profile-test.cpp from profiler/
+ProfilerDir="${SCRIPT_DIR}/profiler"
+cp "${ProfilerDir}/mtmd-profile-test.cpp" "$MTMD_TARGET_DIR/"
+
 success "Copied to $MTMD_TARGET_DIR"
 
 info "Checking llama.cpp integration..."
@@ -119,29 +177,42 @@ else
     warn "tools/CMakeLists.txt not found"
 fi
 
-if [ "$BUILD_ALL" = true ]; then
-    info "Building llama.cpp + mtmd-inference-api..."
-    if [ -d "$BUILD_DIR" ]; then
-        rm -rf "$BUILD_DIR"
-        success "Cleaned build directory"
+if [ "$BUILD_ALL" = true ] || [ "$NEED_REBUILD" = true ]; then
+    if [ "$NEED_REBUILD" = true ]; then
+        info "llama.cpp configuration mismatch detected - auto-rebuilding..."
+        info "  Reason: $REBUILD_REASON"
+    else
+        info "Building llama.cpp + mtmd-inference-api..."
+        if [ -d "$BUILD_DIR" ]; then
+            rm -rf "$BUILD_DIR"
+            success "Cleaned build directory"
+        fi
+        info "Rebuilding llama.cpp with Android configuration..."
     fi
-    info "Rebuilding llama.cpp with Android configuration..."
     BUILD_SCRIPT="${SCRIPT_DIR}/build-llamacpp-android.sh"
     if [ -f "$BUILD_SCRIPT" ]; then
         export ANDROID_NDK="${ANDROID_NDK_HOME}"
         cd "$SCRIPT_DIR"
-        bash "$BUILD_SCRIPT"
+        if [ "$PROFILE_BUILD" = true ]; then
+            bash "$BUILD_SCRIPT" -Profile
+        else
+            bash "$BUILD_SCRIPT"
+        fi
         if [ $? -ne 0 ]; then
             error "build-llamacpp-android.sh failed"
         fi
-        success "llama.cpp rebuilt successfully"
+        if [ "$NEED_REBUILD" = true ]; then
+            success "llama.cpp auto-rebuilt to match requested configuration"
+        else
+            success "llama.cpp rebuilt successfully"
+        fi
     else
         error "build-llamacpp-android.sh not found at $BUILD_SCRIPT"
     fi
 fi
 
 info "Building mtmd-inference-api library..."
-cmake --build "$BUILD_DIR" --target mtmd-inference-api mtmd-inference-test -- -j$(nproc)
+cmake --build "$BUILD_DIR" --target mtmd-inference-api mtmd-inference-test mtmd-profile-test -- -j$(nproc)
 if [ $? -ne 0 ]; then
     error "Build failed"
 fi
@@ -149,6 +220,7 @@ success "Build completed!"
 
 STATIC_LIB="${BUILD_DIR}/tools/mtmd-inference-api/libmtmd-inference-api.a"
 TEST_EXE="${BUILD_DIR}/bin/mtmd-inference-test"
+PROFILE_TEST_EXE="${BUILD_DIR}/bin/mtmd-profile-test"
 
 info ""
 info "Build outputs:"
@@ -162,6 +234,15 @@ fi
 if [ -f "$TEST_EXE" ]; then
     SIZE=$(du -h "$TEST_EXE" | cut -f1)
     info "  Test executable: $SIZE"
+else
+    warn "Test executable not found at $TEST_EXE"
+fi
+
+if [ -f "$PROFILE_TEST_EXE" ]; then
+    SIZE=$(du -h "$PROFILE_TEST_EXE" | cut -f1)
+    info "  Profile test executable: $SIZE"
+else
+    warn "Profile test executable not found at $PROFILE_TEST_EXE"
 fi
 
 info ""
@@ -200,10 +281,29 @@ fi
 
 success "Files copied to app directory"
 
+# Show effective GPU profiling status from existing/build configuration
+EFFECTIVE_PROFILE="Unknown"
+if [ -f "$MARKER_FILE" ]; then
+    CURRENT_PROFILE=$(grep "GPU_PROFILE=" "$MARKER_FILE" 2>/dev/null | cut -d'=' -f2)
+    if [ "$CURRENT_PROFILE" = "ON" ]; then
+        EFFECTIVE_PROFILE="ENABLED (in llama.cpp build)"
+    elif [ "$CURRENT_PROFILE" = "OFF" ]; then
+        EFFECTIVE_PROFILE="DISABLED (in llama.cpp build)"
+    fi
+fi
+
 info ""
 info "========================================"
 info "  mtmd-inference-api Build Complete"
 info "========================================"
+info ""
+info "Build Configuration:"
+if [ "$BUILD_ALL" = true ] || [ "$NEED_REBUILD" = true ]; then
+    info "  Rebuild llama.cpp: Yes"
+else
+    info "  Rebuild llama.cpp: No"
+fi
+info "  GPU Profiling:     $EFFECTIVE_PROFILE"
 info ""
 info "App integration files:"
 info "  Headers: $APP_MTMD_API_INCLUDE_DIR"

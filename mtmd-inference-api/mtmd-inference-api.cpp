@@ -247,6 +247,7 @@ void mtmd_inference_params_default(mtmd_inference_params_t* params) {
     params->no_perf = false;
     params->show_timings = true;
     params->warmup = false;
+    params->htp_profile = 0;  // HTP profiling disabled by default
 
     // Memory
     params->use_mmap = false;
@@ -357,13 +358,20 @@ mtmd_api_status mtmd_inference_init(
     GGML_LOG_INFO("=== mtmd_inference_init START ===");
 
 #ifdef __ANDROID__
+    // Set global debug flags FIRST (before installing callbacks) so HTP profiling logs are captured
+    g_mtmd_debug_logs = params.debug_logs_enabled;
+    g_mtmd_info_logs = params.info_logs_enabled;
+
     // Route llama.cpp logs to Android logcat
     llama_log_set(android_log_callback, nullptr);
 
     // Route mtmd/clip logs to Android logcat (for vision encoder backend info)
     mtmd_log_set(android_log_callback, nullptr);
 
-    GGML_LOG_INFO("Android log callback installed (llama + mtmd)");
+    // Route ggml logs (including ggml-hexagon HTP profiling) to Android logcat
+    ggml_log_set(android_log_callback, nullptr);
+
+    GGML_LOG_INFO("Android log callback installed (llama + mtmd + ggml)");
 #endif
 
     double init_start = get_time_ms();
@@ -427,6 +435,13 @@ mtmd_api_status mtmd_inference_init(
     if(params.verbose_prompt){
 		setenv("GGML_HEXAGON_VERBOSE", "1",1);
 	}
+
+    // Set HTP profiling if requested
+    if (params.htp_profile > 0 && params.device.find("HTP") != std::string::npos) {
+        std::string profile_val = std::to_string(params.htp_profile);
+        setenv("GGML_HEXAGON_PROFILE", profile_val.c_str(), 1);
+        GGML_LOG_INFO("Set GGML_HEXAGON_PROFILE=%d for HTP profiling", params.htp_profile);
+    }
 
     if (progress_cb) {
         progress_cb("Initializing backends...", user_data);
@@ -563,12 +578,6 @@ mtmd_api_status mtmd_inference_init(
     // Log flash attention configuration
     GGML_LOG_INFO("  Flash attention type: %d", params.flash_attn_type);
     GGML_LOG_INFO("  Flash attention enabled: %s", params.flash_attn_type > 0 ? "yes" : "no");
-
-	// Set global debug flag for Android logging callback
-#ifdef __ANDROID__
-    g_mtmd_debug_logs = params.debug_logs_enabled;
-    g_mtmd_info_logs = params.info_logs_enabled;
-#endif
 
     // Chat template
     cparams.chat_template = params.chat_template;

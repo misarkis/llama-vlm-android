@@ -112,11 +112,6 @@ function Test-LlamaCppLibs {
     return Test-Path "$JniLibsDir\libllama.so"
 }
 
-function Test-MtmdInferenceApi {
-    $MtmdLib = Join-Path $ScriptDir "app\src\main\cpp\libs\arm64-v8a\libmtmd-inference-api.a"
-    return Test-Path $MtmdLib
-}
-
 # Clean action
 if ($Clean) {
     Write-Host "Cleaning VLM-Analyze Android..."
@@ -172,47 +167,24 @@ if ($All) {
     }
 }
 
-# Step 2: Build mtmd-inference-api if -All flag is set
-if ($All) {
-    Write-Host "=============================================="
-    Write-Host "Building mtmd-inference-api..."
-    Write-Host "=============================================="
+# Step 2: Always build mtmd-inference-api before APK
+Write-Host "=============================================="
+Write-Host "Building mtmd-inference-api..."
+Write-Host "=============================================="
 
-    $MtmdScript = Join-Path $ScriptDir "build-mtmd-inference-api.ps1"
-    if (Test-Path $MtmdScript) {
-        & $MtmdScript -All
-    } else {
-        Write-Host "ERROR: build-mtmd-inference-api.ps1 not found"
-        exit 1
-    }
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: mtmd-inference-api build failed"
-        exit 1
-    }
-    Write-Host "mtmd-inference-api build complete!"
+$MtmdScript = Join-Path $ScriptDir "build-mtmd-inference-api.ps1"
+if (Test-Path $MtmdScript) {
+    & $MtmdScript
 } else {
-    # Auto-detect: build mtmd-inference-api if static lib missing
-    if (-not (Test-MtmdInferenceApi)) {
-        Write-Host "mtmd-inference-api not found..."
-        Write-Host "Running build-mtmd-inference-api.ps1..."
-
-        $MtmdScript = Join-Path $ScriptDir "build-mtmd-inference-api.ps1"
-        if (Test-Path $MtmdScript) {
-            & $MtmdScript
-        } else {
-            Write-Host "ERROR: build-mtmd-inference-api.ps1 not found"
-            Write-Host "Please run build-mtmd-inference-api.ps1 manually first."
-            exit 1
-        }
-
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "ERROR: mtmd-inference-api build failed"
-            exit 1
-        }
-        Write-Host "mtmd-inference-api build complete!"
-    }
+    Write-Host "ERROR: build-mtmd-inference-api.ps1 not found"
+    exit 1
 }
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: mtmd-inference-api build failed"
+    exit 1
+}
+Write-Host "mtmd-inference-api build complete!"
 
 # Step 3: Build sherpa-onnx if -All flag is set
 if ($All) {

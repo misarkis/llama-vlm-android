@@ -69,9 +69,6 @@ has_llama_libs() {
     [ -f "app/src/main/jniLibs/arm64-v8a/libllama.so" ]
 }
 
-has_mtmd_api() {
-    [ -f "app/src/main/cpp/libs/arm64-v8a/libmtmd-inference-api.a" ]
-}
 
 if [ "$ACTION" = "clean" ]; then
     echo "Cleaning VLM-Analyze Android..."
@@ -111,32 +108,17 @@ else
         fi
     fi
 
-    # Step 2: Build mtmd-inference-api if -All flag is set
-    if [ "$BUILD_ALL" = true ]; then
-        echo "=============================================="
-        echo "Building mtmd-inference-api..."
-        echo "=============================================="
-        ./build-mtmd-inference-api.sh
+    # Step 2: Always build mtmd-inference-api before APK
+    echo "=============================================="
+    echo "Building mtmd-inference-api..."
+    echo "=============================================="
+    ./build-mtmd-inference-api.sh
 
-        if [ $? -ne 0 ]; then
-            echo "ERROR: mtmd-inference-api build failed"
-            exit 1
-        fi
-        echo "mtmd-inference-api build complete!"
-    else
-        # Auto-detect: build mtmd-inference-api if static lib missing
-        if ! has_mtmd_api; then
-            echo "mtmd-inference-api not found..."
-            echo "Running build-mtmd-inference-api.sh..."
-            ./build-mtmd-inference-api.sh
-
-            if [ $? -ne 0 ]; then
-                echo "ERROR: mtmd-inference-api build failed"
-                exit 1
-            fi
-            echo "mtmd-inference-api build complete!"
-        fi
+    if [ $? -ne 0 ]; then
+        echo "ERROR: mtmd-inference-api build failed"
+        exit 1
     fi
+    echo "mtmd-inference-api build complete!"
 
     # Step 3: Build sherpa-onnx if -All flag is set
     if [ "$BUILD_ALL" = true ]; then

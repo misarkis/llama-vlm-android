@@ -14,7 +14,8 @@
 #   2. Updates llama.cpp/tools/CMakeLists.txt to include the new subdirectory
 #   3. Builds libmtmd-inference-api.a (static library for Android)
 #   4. Builds mtmd-inference-test (test executable)
-#   5. Copies integration files to app/src/main/cpp/:
+#   5. Builds mtmd-profile-test (HTP profiling test executable)
+#   6. Copies integration files to app/src/main/cpp/:
 #      - mtmd-inference-api.h (public API header)
 #      - libmtmd-inference-api.a (static library)
 #      - llama.h, ggml*.h (required headers)
@@ -22,6 +23,12 @@
 # WITH -All:
 #   Also rebuilds llama.cpp from scratch (CPU + OpenCL + Hexagon backends)
 #   before building mtmd-inference-api.
+#
+# WITH -Profile:
+#   Enables OpenCL GPU profiling in llama.cpp build (adds CPU overhead).
+#   ONLY has effect when used with -All flag (triggers rebuild).
+#   Note: GPU profiling is a COMPILE-TIME option - cannot be toggled
+#   without rebuilding llama.cpp from scratch with -All -Profile.
 #
 # OUTPUT FILES:
 #   Shared libs (from build-llamacpp-android.sh):
@@ -47,8 +54,9 @@ if (Test-Path $EnvFile) {
 #       - libmtmd-inference-api.a (static library for linking)
 #
 # USAGE:
-#   .\build-mtmd-inference-api.ps1     # Build mtmd-inference-api only
-#   .\build-mtmd-inference-api.ps1 -All # Build llama.cpp + mtmd-inference-api
+#   .\build-mtmd-inference-api.ps1              # Build mtmd-inference-api only
+#   .\build-mtmd-inference-api.ps1 -All         # Build llama.cpp + mtmd-inference-api
+#   .\build-mtmd-inference-api.ps1 -All -Profile # Build with OpenCL GPU profiling
 #   .\build-mtmd-inference-api.ps1 -Help
 #
 # NEXT STEP:
@@ -72,6 +80,7 @@ function ConvertTo-WindowsPath {
 
 # Parse arguments - use $args only (works with both direct invocation and -File)
 $All = $false
+$Profile = $false
 $Help = $false
 
 # CMake path from .env or default to MSYS2 UCRT64 CMake
@@ -87,16 +96,23 @@ $argArray = @($args)
 for ($i = 0; $i -lt $argArray.Count; $i++) {
     switch ($argArray[$i]) {
         '-All' { $All = $true }
+        '-Profile' { $Profile = $true }
         '-Help' { $Help = $true }
         '-CmakePath' { if ($i -lt $argArray.Count - 1) { $i++; $CmakePath = $argArray[$i] } }
     }
 }
 
 if ($Help) {
-    Write-Host "Usage: .\build-mtmd-inference-api.ps1 [-All]"
+    Write-Host "Usage: .\build-mtmd-inference-api.ps1 [-All] [-Profile]"
     Write-Host ""
     Write-Host "Options:"
-    Write-Host "  -All  Build llama.cpp + mtmd-inference-api"
+    Write-Host "  -All      Build llama.cpp + mtmd-inference-api"
+    Write-Host "  -Profile  Enable OpenCL GPU profiling (compile-time only, requires -All)"
+    Write-Host "  -Help     Show this help"
+    Write-Host ""
+    Write-Host "IMPORTANT: GPU profiling is a COMPILE-TIME option."
+    Write-Host "           To enable: .\build-mtmd-inference-api.ps1 -All -Profile"
+    Write-Host "           Cannot toggle profiling without rebuilding llama.cpp from scratch."
     exit 0
 }
 
@@ -123,6 +139,33 @@ function Write-Success { Write-Host "${Green}[SUCCESS]${NC} $args" }
 function Write-Warn { Write-Host "${Yellow}[WARN]${NC} $args" }
 function Write-Error { Write-Host "${Red}[ERROR]${NC} $args" }
 
+# Check if llama.cpp build configuration matches request
+$MarkerFile = Join-Path $LlamaCppDir "build-android\.build_config"
+$NeedRebuild = $false
+$RebuildReason = ""
+
+if ($All) {
+    Write-Info "Rebuild requested with -All flag, will rebuild llama.cpp from scratch"
+} elseif (Test-Path $MarkerFile) {
+    $MarkerContent = Get-Content $MarkerFile -Raw
+    if ($MarkerContent -match 'GPU_PROFILE=(\w+)') {
+        $CurrentProfile = $matches[1]
+        $ProfileRequested = if ($Profile) { "ON" } else { "OFF" }
+
+        if ($CurrentProfile -ne $ProfileRequested) {
+            $NeedRebuild = $true
+            $RebuildReason = "GPU_PROFILE mismatch: existing=$CurrentProfile, requested=$ProfileRequested"
+        } else {
+            Write-Info "llama.cpp build configuration matches: GPU_PROFILE=$CurrentProfile"
+        }
+    } else {
+        Write-Warn "Invalid marker file format at $MarkerFile"
+    }
+} else {
+    Write-Warn "No build configuration marker found at $MarkerFile"
+    Write-Warn "llama.cpp may not have been built with build-llamacpp-android.sh"
+}
+
 # Step 1: Verify source directory exists
 Write-Info "Checking mtmd-inference-api source directory..."
 if (-not (Test-Path $MtmdSourceDir)) {
@@ -140,7 +183,19 @@ if (Test-Path $MtmdTargetDir) {
 }
 
 New-Item -ItemType Directory -Force -Path $MtmdTargetDir | Out-Null
-Copy-Item $MtmdSourceDir\* -Destination $MtmdTargetDir -Recurse -Force
+
+# Copy mtmd-inference-api library files from mtmd-inference-api/
+$LibraryDir = Join-Path $ScriptDir "mtmd-inference-api"
+Copy-Item (Join-Path $LibraryDir "mtmd-inference-api.cpp") $MtmdTargetDir -Force
+Copy-Item (Join-Path $LibraryDir "mtmd-inference-api.h") $MtmdTargetDir -Force
+Copy-Item (Join-Path $LibraryDir "CMakeLists.txt") $MtmdTargetDir -Force
+Copy-Item (Join-Path $LibraryDir "README.md") $MtmdTargetDir -Force
+Copy-Item (Join-Path $LibraryDir "test.cpp") $MtmdTargetDir -Force
+
+# Copy mtmd-profile-test.cpp from profiler/
+$ProfilerDir = Join-Path $ScriptDir "profiler"
+Copy-Item (Join-Path $ProfilerDir "mtmd-profile-test.cpp") $MtmdTargetDir -Force
+
 Write-Success "Copied to $MtmdTargetDir"
 
 # Step 3: Update tools/CMakeLists.txt if needed
@@ -166,12 +221,15 @@ if (Test-Path $ToolsCMakeLists) {
     Write-Warn "tools/CMakeLists.txt not found"
 }
 
-# Step 4: Clean build if requested
-if ($All) {
-    Write-Info "Building llama.cpp + mtmd-inference-api..."
-
-    # Rebuild llama.cpp with Android configuration using shell script
-    Write-Info "Rebuilding llama.cpp with Android configuration..."
+# Step 4: Rebuild llama.cpp if -All requested or configuration mismatch detected
+if ($All -or $NeedRebuild) {
+    if ($NeedRebuild) {
+        Write-Info "llama.cpp configuration mismatch detected - auto-rebuilding..."
+        Write-Info "  Reason: $RebuildReason"
+    } else {
+        Write-Info "Building llama.cpp + mtmd-inference-api..."
+        Write-Info "Rebuilding llama.cpp with Android configuration..."
+    }
 
     if ($env:MSYS2_PATH) {
         $Msys2Path = ConvertTo-WindowsPath -Path $env:MSYS2_PATH
@@ -179,7 +237,11 @@ if ($All) {
         if (Test-Path $BashPath) {
             # Set PATH to include MSYS2 tools (git, etc.)
             $env:PATH = "$Msys2Path\usr\bin;$Msys2Path\ucrt64\bin;$($env:PATH)"
-            & $BashPath -c "cd '$ScriptDir' && ./build-llamacpp-android.sh"
+            if ($Profile) {
+                & $BashPath -c "cd '$ScriptDir' && ./build-llamacpp-android.sh -Profile"
+            } else {
+                & $BashPath -c "cd '$ScriptDir' && ./build-llamacpp-android.sh"
+            }
         } else {
             Write-Error "MSYS2 bash not found at $BashPath"
             exit 1
@@ -193,7 +255,11 @@ if ($All) {
         Write-Error "llama.cpp build failed"
         exit 1
     }
-    Write-Success "llama.cpp rebuilt successfully"
+    if ($NeedRebuild) {
+        Write-Success "llama.cpp auto-rebuilt to match requested configuration"
+    } else {
+        Write-Success "llama.cpp rebuilt successfully"
+    }
 }
 
 # Step 5: Build mtmd-inference-api
@@ -201,7 +267,7 @@ Write-Info "Building mtmd-inference-api library..."
 
 # Note: CMake is pre-configured by build-llamacpp-android.sh
 # Do not reconfigure here - it would use wrong parameters for Android
-& $CmakePath "--build" $BuildDirPath "--target" "mtmd-inference-api" "mtmd-inference-test" "--" "-j4" 2>&1 | Out-String
+& $CmakePath "--build" $BuildDirPath "--target" "mtmd-inference-api" "mtmd-inference-test" "mtmd-profile-test" "--" "-j4" 2>&1 | Out-String
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Build failed"
@@ -213,6 +279,7 @@ Write-Success "Build completed!"
 # Step 6: Verify build outputs
 $StaticLib = Join-Path $BuildDirPath "tools\mtmd-inference-api\libmtmd-inference-api.a"
 $TestExe = Join-Path $BuildDirPath "bin\mtmd-inference-test"
+$ProfileTestExe = Join-Path $BuildDirPath "bin\mtmd-profile-test"
 
 Write-Info ""
 Write-Info "Build outputs:"
@@ -227,6 +294,13 @@ if (Test-Path $StaticLib) {
 if (Test-Path $TestExe) {
     $Size = (Get-Item $TestExe).Length / 1MB
     Write-Info "  Test executable: $([math]::Round($Size, 2)) MB"
+}
+
+if (Test-Path $ProfileTestExe) {
+    $Size = (Get-Item $ProfileTestExe).Length / 1MB
+    Write-Info "  Profile test executable: $([math]::Round($Size, 2)) MB"
+} else {
+    Write-Warn "Profile test executable not found at $ProfileTestExe"
 }
 
 # Step 7: Copy files to app directory for integration
@@ -270,11 +344,23 @@ if (Test-Path $GgmlIncludeDir) {
 
 Write-Success "Files copied to app directory"
 
-# Summary
+# Summary - show effective GPU profiling status from existing/build configuration
+$EffectiveProfile = "Unknown"
+if (Test-Path $MarkerFile) {
+    $MarkerContent = Get-Content $MarkerFile -Raw
+    if ($MarkerContent -match 'GPU_PROFILE=(\w+)') {
+        $EffectiveProfile = if ($matches[1] -eq 'ON') { 'ENABLED (in llama.cpp build)' } else { 'DISABLED (in llama.cpp build)' }
+    }
+}
+
 Write-Info ""
 Write-Info "========================================"
 Write-Info "  mtmd-inference-api Build Complete"
 Write-Info "========================================"
+Write-Info ""
+Write-Info "Build Configuration:"
+Write-Info "  Rebuild llama.cpp: $(if ($All -or $NeedRebuild) { 'Yes' } else { 'No' })"
+Write-Info "  GPU Profiling:     $EffectiveProfile"
 Write-Info ""
 Write-Info "App integration files:"
 Write-Info "  Headers: $AppMtmdApiIncludeDir"

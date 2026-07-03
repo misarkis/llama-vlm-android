@@ -234,6 +234,9 @@ typedef struct {
     bool    debug_logs_enabled;     // enable debug logs (default: false)
     bool    info_logs_enabled;      // enable info logs (default: false)
 
+    // HTP profiling (Android NPU only)
+    int32_t htp_profile;            // HTP per-op profiling: 0=off, 1=basic, 2=extended
+
 } mtmd_inference_params_t;
 
 // ============================================================================

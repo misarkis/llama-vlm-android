@@ -46,8 +46,12 @@ fi
 #     - libomp.so (OpenMP runtime)
 #
 # USAGE:
-#   ./build-llamacpp-android.sh     # Full build (always cleans and rebuilds)
+#   ./build-llamacpp-android.sh         # Full build (no GPU profiling)
+#   ./build-llamacpp-android.sh -Profile # Build with OpenCL GPU profiling enabled
 #   ./build-llamacpp-android.sh --help
+#
+# NOTE:
+#   GPU profiling adds CPU overhead. Only enable when profiling GPU performance.
 #
 # NEXT STEPS:
 #   After this script completes, run:
@@ -56,6 +60,25 @@ fi
 # =============================================================================
 
 set -e
+
+# Parse command line arguments
+PROFILE_BUILD=false
+for arg in "$@"; do
+    case $arg in
+        -Profile)
+            PROFILE_BUILD=true
+            ;;
+        --help|-help)
+            echo "Usage: ./build-llamacpp-android.sh [-Profile]"
+            echo ""
+            echo "Options:"
+            echo "  -Profile  Enable OpenCL GPU profiling (adds CPU overhead)"
+            echo ""
+            echo "Note: GPU profiling is a compile-time option. Default build has no profiling overhead."
+            exit 0
+            ;;
+    esac
+done
 
 # Add MSYS2 tools to PATH early (needed for dirname, cd, etc.)
 export PATH="$MSYS2_PATH/usr/bin:$MSYS2_PATH/ucrt64/bin:$PATH"
@@ -417,8 +440,10 @@ OPENCL_SCRIPT
 # Create build-android.sh
 create_build_android_script() {
     local script="$LLAMA_DIR/build-android.sh"
+    # Always regenerate to ensure latest profiling support
     if [ -f "$script" ]; then
-        return
+        log_info "Updating existing build-android.sh..."
+        rm -f "$script"
     fi
 
     log_info "Creating build-android.sh..."
@@ -427,8 +452,21 @@ create_build_android_script() {
 #!/bin/bash
 # Build llama-mtmd for Android with OpenCL + Hexagon support
 # Run from MSYS2 UCRT64 terminal
+#
+# Usage: ./build-android.sh [-Profile]
+#   -Profile  Enable OpenCL GPU profiling (adds CPU overhead)
 
 set -e
+
+# Parse command line arguments
+PROFILE_BUILD=false
+for arg in "$@"; do
+    case $arg in
+        -Profile)
+            PROFILE_BUILD=true
+            ;;
+    esac
+done
 
 # Ensure MSYS2 tools are in PATH
 export PATH="$MSYS2_PATH/usr/bin:$MSYS2_PATH/ucrt64/bin:$PATH"
@@ -504,6 +542,15 @@ echo "Configuring CMake..."
 OPENCL_LIB="$ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/$ANDROID_ABI/libOpenCL.so"
 OPENCL_INCLUDE="$ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/include"
 
+# Set OpenCL profiling based on -Profile flag
+if [ "$PROFILE_BUILD" = true ]; then
+    OPENCL_PROFILING="ON"
+    echo "OpenCL GPU profiling: ENABLED"
+else
+    OPENCL_PROFILING="OFF"
+    echo "OpenCL GPU profiling: DISABLED (default)"
+fi
+
 # Build with RPATH set to $ORIGIN so libraries find each other without LD_LIBRARY_PATH
 cmake .. -G Ninja \
     -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake" \
@@ -511,6 +558,7 @@ cmake .. -G Ninja \
     -DANDROID_PLATFORM="$ANDROID_PLATFORM" \
     -DBUILD_SHARED_LIBS=ON \
     -DGGML_OPENCL=ON \
+    -DGGML_OPENCL_PROFILING="$OPENCL_PROFILING" \
     -DGGML_HEXAGON="$HEXAGON_ENABLED" \
     -DGGML_BACKEND_DL=ON \
     -DGGML_OPENMP=ON \
@@ -551,6 +599,11 @@ echo ""
 echo "=========================================="
 echo "Build Complete!"
 echo "=========================================="
+echo ""
+echo "Build Configuration:"
+echo "  Backends:    CPU + OpenCL (GPU) + Hexagon ($HEXAGON_ENABLED)"
+echo "  GPU Profile: $OPENCL_PROFILING"
+echo "  Target:      $ANDROID_ABI (Android $ANDROID_API_LEVEL)"
 echo ""
 echo "Output binaries:"
 ls -la bin/llama-mtmd-cli bin/*.so 2>/dev/null || echo "Check build directory for outputs"
@@ -642,13 +695,21 @@ build_llama_cpp() {
     # Build llama.cpp with OpenCL (and Hexagon if available)
     if [ -n "$HEXAGON_SDK" ]; then
         export HEXAGON_SDK_ROOT="$HEXAGON_SDK"
-        bash build-android.sh
+        if [ "$PROFILE_BUILD" = true ]; then
+            bash build-android.sh -Profile
+        else
+            bash build-android.sh
+        fi
     else
         # Build without Hexagon
-        bash build-android.sh
+        if [ "$PROFILE_BUILD" = true ]; then
+            bash build-android.sh -Profile
+        else
+            bash build-android.sh
+        fi
     fi
 
-    log_success "llama.cpp build complete"
+     log_success "llama.cpp build complete"
 }
 
 # Copy HTP kernel libraries to lib/ directory
@@ -800,16 +861,20 @@ main() {
     copy_libraries_to_jnilibs
 
     echo ""
-    echo "========================================"
-    echo "  Build Complete!"
-    echo "========================================"
-    echo ""
     echo "Output locations:"
     echo "  Binaries: $LLAMA_DIR/build-android/bin/"
     echo "  Libraries: $LLAMA_DIR/lib/ (HTP kernels + main libs)"
     echo "  jniLibs: $SCRIPT_DIR/app/src/main/jniLibs/arm64-v8a/"
     echo ""
-    echo "Next steps:"
+	# Write build configuration marker file
+    if [ "$PROFILE_BUILD" = true ]; then
+        echo "GPU_PROFILE=ON" > "${LLAMA_DIR}/build-android/.build_config"
+    else
+        echo "GPU_PROFILE=OFF" > "${LLAMA_DIR}/build-android/.build_config"
+    fi
+    echo "Build configuration saved to: ${LLAMA_DIR}/build-android/.build_config"
+    echo ""
+	echo "Next steps:"
     echo "  1. Build mtmd-inference-api: ./build-mtmd-inference-api.sh"
     echo "  2. Build APK: ./gradlew assembleDebug"
     echo "  3. Install APK: ./gradlew installDebug"

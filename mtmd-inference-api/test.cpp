@@ -34,17 +34,11 @@
 #include <cstdlib>
 
 // Set environment variables for Android backend loading
-static void set_android_env_vars(const std::string& device) {
+static void set_android_env_vars() {
     // LD_LIBRARY_PATH: current dir for finding .so files
-    setenv("LD_LIBRARY_PATH", ".:./vendor/lib64", 1);
+    setenv("LD_LIBRARY_PATH", ".:/vendor/lib64", 1);
     // ADSP_LIBRARY_PATH: needed for Hexagon backend
     setenv("ADSP_LIBRARY_PATH", ".", 1);
-    // GGML_HEXAGON_NDEV: only set to 4 for NPU (HTP), otherwise 0
-    if (device.find("HTP") != std::string::npos) {
-        setenv("GGML_HEXAGON_NDEV", "1", 1);
-    } else {
-        setenv("GGML_HEXAGON_NDEV", "0", 1);
-    }
 }
 
 // Test image storage - holds image data for bitmap test
@@ -164,7 +158,7 @@ int main(int argc, char** argv) {
     }
 
     // Set Android environment variables for backend loading (after device is known)
-    set_android_env_vars(device);
+    set_android_env_vars();
 
     // Step 1: Initialize parameters
     printf("Step 1: Initializing parameters...\n");

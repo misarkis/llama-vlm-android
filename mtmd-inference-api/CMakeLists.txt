@@ -85,3 +85,26 @@ target_compile_features(mtmd-inference-test PRIVATE cxx_std_17)
 set_target_properties(mtmd-inference-test PROPERTIES
     LINK_FLAGS "-Wl,-rpath,${DOLLAR_SIGN}ORIGIN"
 )
+
+# Profile test executable - profiling test for performance analysis
+add_executable(mtmd-profile-test ${CMAKE_CURRENT_SOURCE_DIR}/../../../profiler/mtmd-profile-test.cpp)
+target_link_libraries(mtmd-profile-test PRIVATE mtmd-inference-api)
+
+# Android logging for profile test executable
+if(ANDROID)
+    target_link_libraries(mtmd-profile-test PRIVATE log)
+endif()
+target_include_directories(mtmd-profile-test PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../ggml/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../vendor
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../vendor/stb
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../common
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../tools/mtmd
+)
+target_compile_features(mtmd-profile-test PRIVATE cxx_std_17)
+
+# Set RPATH using $ORIGIN via ASCII escape to avoid CMake variable interpretation
+set_target_properties(mtmd-profile-test PROPERTIES
+    LINK_FLAGS "-Wl,-rpath,${DOLLAR_SIGN}ORIGIN"
+)

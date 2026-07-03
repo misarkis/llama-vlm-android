@@ -105,3 +105,8 @@ llama.cpp/OpenCL-ICD-Loader/build-android/
 llama.cpp/lib/*.so
 llama.cpp/lib/*.o
 llama.cpp/lib/*.a
+
+# Profile Logs
+profiler/*.csv
+profiler/*.txt
+profiler/test_images_all
