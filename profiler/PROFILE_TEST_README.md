@@ -127,20 +127,6 @@ This script:
 - `cl_profiling.csv` - OpenCL GPU profiling data (if enabled)
 - `cl_profile_report.txt` - OpenCL GPU profile report (if enabled)
 
-### Multiple Runs (Git Bash)
-
-```bash
-./run_profiles.sh GPU-Q4KM-Clean=config_gpu.json CPU-Q4KM-Clean=config_cpu.json
-```
-
-`run_profiles.sh` takes one `folder=config` pair per run, and runs them in turn with `-HtpProfile 0`:
-1. Waits until the GPU and NPU are below 44°C and the CPU is below 47°C, for up to 15 minutes
-2. Creates the result folder and copies the config into it
-3. Runs `run-profile-test.ps1` and saves its output to `console.txt`
-4. Moves the results and reports into the folder
-
-A run is skipped if its folder already exists, so earlier results are not overwritten.
-
 ### Manual Deploy
 
 ```bash
