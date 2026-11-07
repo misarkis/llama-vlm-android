@@ -3,10 +3,17 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+val envNdkPath = rootProject.file(".env").takeIf { it.exists() }
+    ?.readLines()
+    ?.firstOrNull { it.startsWith("ANDROID_NDK_HOME=") }
+    ?.substringAfter("=")?.trim()
+    ?.replace(Regex("^/([a-zA-Z])/")) { "${it.groupValues[1]}:/" }
+    ?: error("ANDROID_NDK_HOME not found in .env. Run setup-config first.")
+
 android {
     namespace = "com.misar.vlmanalyze"
     compileSdk = 34
-
+    ndkVersion = envNdkPath.substringAfterLast("/")
     defaultConfig {
         applicationId = "com.misar.vlmanalyze"
         minSdk = 26

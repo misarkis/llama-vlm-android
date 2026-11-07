@@ -448,15 +448,15 @@ class CameraCaptureActivity : AppCompatActivity() {
                 0L
             }
 
-            val tokensPerSecond = if (totalTimeMs > 0) {
-                val totalTokens = when (result) {
-                    is InferenceBackend.InferenceResult -> (result.timings?.promptTokens ?: 0) + (result.timings?.completionTokens ?: 0)
-                    is HttpClient.ApiResult -> result.promptTokens + result.completionTokens
-                    else -> 0
+            // Local results report decode speed. The remote API has no decode timing
+            val tokensPerSecond = when (result) {
+                is InferenceBackend.InferenceResult -> result.timings?.predictedPerSecond ?: 0.0
+                is HttpClient.ApiResult -> if (totalTimeMs > 0) {
+                    ((result.promptTokens + result.completionTokens) * 1000.0) / totalTimeMs
+                } else {
+                    0.0
                 }
-                (totalTokens * 1000.0) / totalTimeMs
-            } else {
-                0.0
+                else -> 0.0
             }
 
             // Broadcast result to overlay for display and TTS (via LocalBroadcastManager)

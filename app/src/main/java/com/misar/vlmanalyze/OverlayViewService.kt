@@ -644,7 +644,8 @@ class OverlayViewService : Service() {
             "<|box_end|>",
             "<|box_start|>"
         )
-        var cleaned = text
+        // Strip thinking first: a garbage token inside it would otherwise cut off the end tag
+        var cleaned = ModelOutput.stripThinking(text)
         for (pattern in garbagePatterns) {
             val idx = cleaned.indexOf(pattern)
             if (idx != -1) {

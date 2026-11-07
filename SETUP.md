@@ -78,7 +78,7 @@ This guide explains how to set up the build environment on a new computer.
 4. Install:
    - Android SDK Platform 34
    - Android SDK Build-Tools 34.0.0
-   - Android NDK 25.1.8937393
+   - Android NDK 27.3.13750724
    - Android SDK Command-line Tools
 
 **Default SDK Location:** `C:\Users\<username>\AppData\Local\Android\Sdk`
@@ -93,8 +93,8 @@ This guide explains how to set up the build environment on a new computer.
 
 **Download from Qualcomm:**
 1. Register at [Qualcomm Developer Portal](https://developer.qualcomm.com/)
-2. Download Hexagon SDK 6.6.0.0: [Direct Download](https://softwarecenter.qualcomm.com/api/download/software/sdks/Hexagon_SDK/Windows/6.6.0.0/Hexagon_SDK_WinNT.zip)
-3. Extract to `C:\Hexagon_SDK\6.6.0.0`
+2. Install Hexagon SDK 6.7.0.1. Qualcomm no longer offers a direct download, so use their download tool from the [Qualcomm Software Center](https://softwarecenter.qualcomm.com/)
+3. Install to `C:\Hexagon_SDK\6.7.0.1`
 
 **Note:** Required for NPU/HTP acceleration on Qualcomm Snapdragon devices. Without this, only CPU and GPU backends will be available.
 
@@ -127,13 +127,13 @@ source ./setup-config.sh
 
 The setup script creates `.env` with these variables:
 
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `MSYS2_PATH` | MSYS2 installation location | `C:\msys64` |
-| `ANDROID_SDK_ROOT` | Android SDK location | `%LOCALAPPDATA%\Android\Sdk` |
-| `ANDROID_NDK_HOME` | Android NDK location | `$ANDROID_SDK_ROOT/ndk/25.1.8937393` |
-| `JAVA_HOME` | Java JDK location | `$ANDROID_SDK_ROOT/jbr` |
-| `HEXAGON_SDK_ROOT` | Hexagon SDK location | `C:\Hexagon_SDK\6.6.0.0` |
+| Variable           | Purpose                     | Default                               |
+| ------------------ | --------------------------- | ------------------------------------- |
+| `MSYS2_PATH`       | MSYS2 installation location | `C:\msys64`                           |
+| `ANDROID_SDK_ROOT` | Android SDK location        | `%LOCALAPPDATA%\Android\Sdk`          |
+| `ANDROID_NDK_HOME` | Android NDK location        | `$ANDROID_SDK_ROOT/ndk/27.3.13750724` |
+| `JAVA_HOME`        | Java JDK location           | `$ANDROID_SDK_ROOT/jbr`               |
+| `HEXAGON_SDK_ROOT` | Hexagon SDK location        | `C:\Hexagon_SDK\6.7.0.1`              |
 
 **Note:** OpenCL ICD loader is auto-downloaded during build - no environment variable needed.
 
@@ -216,8 +216,8 @@ pacman -S mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-cmake
 
 ### "Hexagon SDK not found"
 
-1. Download from Qualcomm Developer Portal
-2. Extract to `C:\Hexagon_SDK\6.6.0.0`
+1. Install with Qualcomm's download tool from the [Qualcomm Software Center](https://softwarecenter.qualcomm.com/)
+2. Install to `C:\Hexagon_SDK\6.7.0.1`
 3. Run `source ./setup-config.sh` and enter the path
 
 ### ".env file paths incorrect"
@@ -278,13 +278,15 @@ VLM-Analyze-Android/
 ## Model Setup (After First Build)
 
 1. Download model files:
-   - `Qwen2-VL-2B-Q4_K_M.gguf`
-   - `mmproj-f16.gguf`
+   - Qwen2-VL 2B: `Qwen2-VL-2B-Q4_K_M.gguf` and `mmproj-f16.gguf`
+   - Qwen3.8 2B ([download](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)): `Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf` and `Qwen3.8-2B-Distill-heretic.mmproj-f16.gguf`
 
 2. Push to device:
    ```bash
    adb push Qwen2-VL-2B-Q4_K_M.gguf /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/
    adb push mmproj-f16.gguf /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/
+   adb push Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf /data/local/tmp/llama.cpp/models/Qwen3.8-2B/
+   adb push Qwen3.8-2B-Distill-heretic.mmproj-f16.gguf /data/local/tmp/llama.cpp/models/Qwen3.8-2B/
    ```
 
 3. Configure in app settings

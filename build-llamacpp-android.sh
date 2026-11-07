@@ -15,7 +15,7 @@ fi
 # files for integration into the VLM-Analyze Android app.
 #
 # PREREQUISITES:
-#   - Android NDK 25.1.8937393 installed
+#   - Android NDK 27.3.13750724 installed
 #   - CMake 3.21+ installed
 #   - MSYS2 UCRT64 environment (for Windows)
 #   - Python 3.x (optional - for model conversion scripts)
@@ -84,10 +84,10 @@ done
 export PATH="$MSYS2_PATH/usr/bin:$MSYS2_PATH/ucrt64/bin:$PATH"
 
 # Configuration
-NDK_VERSION="25.1.8937393"
+NDK_VERSION="27.3.13750724"
 ANDROID_ABI="arm64-v8a"
 ANDROID_API_LEVEL="31"
-LLAMA_COMMIT="b9439"  # Known working commit
+LLAMA_COMMIT="b12181"  # Known working commit
 
 # Paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -479,7 +479,7 @@ BUILD_DIR="build-android"
 
 # Hexagon SDK (optional - for NPU support)
 HEXAGON_SDK_ROOT="${HEXAGON_SDK_ROOT:-}"
-HEXAGON_TOOLS_ROOT="${HEXAGON_TOOLS_ROOT:-$HEXAGON_SDK_ROOT/tools/HEXAGON_Tools/19.0.07}"
+HEXAGON_TOOLS_ROOT="${HEXAGON_TOOLS_ROOT:-$HEXAGON_SDK_ROOT/tools/HEXAGON_Tools/21.0.04}"
 
 echo "=========================================="
 echo "Building llama-mtmd for Android"
@@ -540,7 +540,7 @@ cd "$BUILD_DIR"
 # Configure with CMake
 echo "Configuring CMake..."
 OPENCL_LIB="$ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/$ANDROID_ABI/libOpenCL.so"
-OPENCL_INCLUDE="$ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/include"
+OPENCL_INCLUDE="$(cd .. && pwd)/OpenCL-headers"
 
 # Set OpenCL profiling based on -Profile flag
 if [ "$PROFILE_BUILD" = true ]; then
@@ -578,9 +578,9 @@ cmake .. -G Ninja \
     -DLLAMA_OPENSSL=OFF \
     -DCMAKE_C_FLAGS="-march=armv8.7a+fp16+dotprod+i8mm -fvectorize -ffp-model=fast -flto -fno-finite-math-only -D_GNU_SOURCE" \
     -DCMAKE_CXX_FLAGS="-march=armv8.7a+fp16+dotprod+i8mm -fvectorize -ffp-model=fast -flto -fno-finite-math-only -D_GNU_SOURCE" \
-    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,'\$ORIGIN'" \
-    -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-rpath,'\$ORIGIN'" \
-    -DCMAKE_SHARED_LIBRARY_RPATH_COMMAND="-Wl,-rpath,'\$ORIGIN'" \
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,\$ORIGIN" \
+    -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-rpath,\$ORIGIN" \
+    -DCMAKE_SHARED_LIBRARY_RPATH_COMMAND="-Wl,-rpath,\$ORIGIN" \
     -DOpenCL_LIBRARY="$OPENCL_LIB" \
     -DOpenCL_INCLUDE_DIR="$OPENCL_INCLUDE" \
     ${HEXAGON_SDK_ROOT:+-DHEXAGON_SDK_ROOT="$HEXAGON_SDK_ROOT"}
@@ -831,7 +831,7 @@ copy_libraries_to_jnilibs() {
     fi
 
     # Copy libomp.so from NDK (OpenMP runtime for llama.cpp CPU backend)
-    OMP_LIB="$ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/lib64/clang/14.0.6/lib/linux/aarch64/libomp.so"
+    OMP_LIB=$(ls "$ANDROID_NDK"/toolchains/llvm/prebuilt/windows-x86_64/lib*/clang/*/lib/linux/aarch64/libomp.so 2>/dev/null | head -n 1)
     if [ -f "$OMP_LIB" ]; then
         cp "$OMP_LIB" "$JNI_LIBS/"
         SIZE=$(ls -lh "$JNI_LIBS/libomp.so" | awk '{print $5}')
@@ -852,7 +852,7 @@ main() {
 
     check_prerequisites
     setup_llama_cpp
-    apply_opencl_patches
+    #apply_opencl_patches
     setup_opencl_headers
     build_opencl_icd
     build_llama_cpp

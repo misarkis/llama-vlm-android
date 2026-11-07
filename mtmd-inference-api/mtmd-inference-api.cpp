@@ -20,7 +20,9 @@
 #include "mtmd-helper.h"
 #include "chat.h"
 
+#include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
@@ -203,6 +205,7 @@ void mtmd_inference_params_default(mtmd_inference_params_t* params) {
     params->model.path = "";
     params->model.mmproj_path = "";
     params->model.mmproj_use_gpu = true;
+    params->model.mmproj_device = "";
     params->model.no_mmproj = false;
 
     // Backend
@@ -297,6 +300,15 @@ static double get_time_ms() {
 
 // Parse comma-separated device names into device pointers
 // Matches llama.cpp's parse_device_list behavior
+// Hexagon sessions needed by a device list: highest HTPn index plus one, 0 if none
+static int hexagon_sessions_needed(const std::string & devices) {
+    int sessions = 0;
+    for (size_t pos = devices.find("HTP"); pos != std::string::npos; pos = devices.find("HTP", pos + 3)) {
+        sessions = std::max(sessions, atoi(devices.c_str() + pos + 3) + 1);
+    }
+    return sessions;
+}
+
 static std::vector<ggml_backend_dev_t> parse_device_list(const std::string & value) {
     std::vector<ggml_backend_dev_t> devices;
     if (value.empty()) {
@@ -414,23 +426,15 @@ mtmd_api_status mtmd_inference_init(
 	setenv("D", params.device.c_str(),1);
     GGML_LOG_INFO("Set D=%s", params.device.c_str());
 
-    // Set GGML_HEXAGON_NDEV based on device
-    if (params.device.find("HTP0,HTP1,HTP2,HTP3") != std::string::npos) {
-        setenv("GGML_HEXAGON_NDEV", "4",1);
-        GGML_LOG_INFO("Set GGML_HEXAGON_NDEV=4 for NPU backend");
-    }else if (params.device.find("HTP0,HTP1,HTP2") != std::string::npos) {
-        setenv("GGML_HEXAGON_NDEV", "3",1);
-        GGML_LOG_INFO("Set GGML_HEXAGON_NDEV=3 for NPU backend");
-    }else if (params.device.find("HTP0,HTP1") != std::string::npos) {
-        setenv("GGML_HEXAGON_NDEV", "2",1);
-        GGML_LOG_INFO("Set GGML_HEXAGON_NDEV=2 for NPU backend");
-    }else if (params.device.find("HTP0") != std::string::npos) {
-        setenv("GGML_HEXAGON_NDEV", "1",1);
-        GGML_LOG_INFO("Set GGML_HEXAGON_NDEV=1 for NPU backend");
-    }else {
-        setenv("GGML_HEXAGON_NDEV", "0",1);
-        GGML_LOG_INFO("Set GGML_HEXAGON_NDEV=0 for CPU/GPU backend");
-    }
+    // Sessions must cover the LLM devices and the vision encoder device.
+    // Newer tags read GGML_HEXAGON_DEVICES and ignore NDEV when it is set; older tags read NDEV.
+    // Newer tags also clamp 0 to 1, so a CPU/GPU run still registers HTP0 with nothing placed on it.
+    const int hexagon_sessions = std::max(hexagon_sessions_needed(params.device),
+                                          hexagon_sessions_needed(params.model.mmproj_device));
+    const std::string hexagon_sessions_str = std::to_string(hexagon_sessions);
+    setenv("GGML_HEXAGON_DEVICES", hexagon_sessions_str.c_str(), 1);
+    setenv("GGML_HEXAGON_NDEV", hexagon_sessions_str.c_str(), 1);
+    GGML_LOG_INFO("Set GGML_HEXAGON_DEVICES=%d", hexagon_sessions);
 
     if(params.verbose_prompt){
 		setenv("GGML_HEXAGON_VERBOSE", "1",1);
@@ -566,8 +570,15 @@ mtmd_api_status mtmd_inference_init(
     GGML_LOG_INFO("  n_ctx: %d", cparams.n_ctx);
 
     // Memory
+#ifdef MTMD_HAS_LOAD_MODE
+    // use_mmap=false and use_mlock=false must stay NONE: the default, AUTO, would change how the model loads
+    cparams.load_mode = params.use_mmap
+        ? (params.use_mlock ? LLAMA_LOAD_MODE_MMAP_MLOCK : LLAMA_LOAD_MODE_MMAP)
+        : (params.use_mlock ? LLAMA_LOAD_MODE_MLOCK      : LLAMA_LOAD_MODE_NONE);
+#else
     cparams.use_mmap = params.use_mmap;
     cparams.use_mlock = params.use_mlock;
+#endif
     cparams.no_kv_offload = params.no_kv_offload;
     cparams.swa_full = params.swa_full;
     cparams.kv_unified = params.kv_unified;
@@ -651,6 +662,29 @@ mtmd_api_status mtmd_inference_init(
     mtmd_params.print_timings = params.show_timings;
     mtmd_params.n_threads = params.cpuparams.n_threads;
     mtmd_params.warmup = params.warmup;
+
+    // Explicit encoder placement; empty keeps the default set by use_gpu above
+    const std::string & encoder_device = params.model.mmproj_device;
+    if (encoder_device == "CPU") {
+        mtmd_params.use_gpu = false;
+    } else if (!encoder_device.empty()) {
+        ggml_backend_dev_t encoder_dev = ggml_backend_dev_by_name(encoder_device.c_str());
+        if (!encoder_dev) {
+            GGML_LOG_ERROR("Vision encoder device not found: %s", encoder_device.c_str());
+            common_sampler_free(ctx->smpl);
+            llama_backend_free();
+            delete ctx;
+            return MTMD_API_ERROR_BACKEND_INIT;
+        }
+        mtmd_params.use_gpu = true;
+#ifdef MTMD_HAS_CTX_DEVICE
+        mtmd_params.device = encoder_dev;
+#else
+        setenv("MTMD_BACKEND_DEVICE", encoder_device.c_str(), 1);
+#endif
+    }
+    GGML_LOG_INFO("Vision encoder device: %s, use_gpu: %d",
+                  encoder_device.empty() ? "default" : encoder_device.c_str(), mtmd_params.use_gpu);
 
     ctx->ctx_vision.reset(mtmd_init_from_file(
         params.model.mmproj_path.c_str(),
@@ -771,11 +805,18 @@ mtmd_api_status mtmd_inference_run(
         ctx->chat_history.clear();
     }
 
-    // Add system message to chat history if provided (mimic mtmd-cli eval_system_prompt_if_present)
+    // Must be checked before the system message goes into chat_history
+    bool is_first_inference = ctx->chat_history.empty();
+
+    // Format the system turn here: common_chat_format_single() only returns what is new
+    // relative to chat_history, so once it is in the history it is no longer sent
+    std::string formatted_prompt;
     if (!prompt.system_prompt.empty()) {
         common_chat_msg system_msg;
         system_msg.role = "system";
         system_msg.content = prompt.system_prompt;
+        formatted_prompt = common_chat_format_single(
+            ctx->tmpls.get(), ctx->chat_history, system_msg, false, ctx->use_jinja);
         ctx->chat_history.push_back(std::move(system_msg));
     }
 
@@ -794,12 +835,9 @@ mtmd_api_status mtmd_inference_run(
     user_msg.role = "user";
     user_msg.content = user_content;
 
-    // Track if this is first inference for BOS token (before adding to chat_history)
-    bool is_first_inference = ctx->chat_history.empty();
-
     // Format using the model's chat template (mimic chat_add_and_format)
     // add_user_prefix = true means this is the first user message being formatted
-    std::string formatted_prompt = common_chat_format_single(
+    std::string user_part = common_chat_format_single(
         ctx->tmpls.get(),
         ctx->chat_history,
         user_msg,
@@ -807,10 +845,18 @@ mtmd_api_status mtmd_inference_run(
         ctx->use_jinja
     );
 
+    // The formatter re-adds a '\n' the system turn already ends with
+    if (!formatted_prompt.empty() && formatted_prompt.back() == '\n' &&
+        !user_part.empty() && user_part.front() == '\n') {
+        user_part.erase(0, 1);
+    }
+    formatted_prompt += user_part;
+
     // Add user message to chat history after formatting
     ctx->chat_history.push_back(std::move(user_msg));
 
     // Load images from memory as bitmaps
+    ctx->bitmaps.entries.clear();  // drop anything left by a failed run
     for (int i = 0; i < n_images; i++) {
         const mtmd_image_data_t& img = images[i];
         if (img.data == nullptr || img.width == 0 || img.height == 0) {
@@ -833,6 +879,9 @@ mtmd_api_status mtmd_inference_run(
     // Use formatted prompt from chat template
     mtmd_input_text text;
     text.text = formatted_prompt.c_str();
+#ifdef MTMD_HAS_TEXT_LEN
+    text.text_len = formatted_prompt.size();
+#endif
     // Only add BOS token on first message (matches mtmd-cli: "bool add_bos = ctx.chat_history.empty();")
     text.add_special = is_first_inference;
     text.parse_special = true;
@@ -935,8 +984,12 @@ mtmd_api_status mtmd_inference_run(
         }
 
         // Eval token (mimic mtmd-cli)
-        common_batch_clear(ctx->batch);
-        common_batch_add(ctx->batch, token_id, ctx->n_past++, {0}, true);
+        ctx->batch.n_tokens     = 1;
+        ctx->batch.token[0]     = token_id;
+        ctx->batch.pos[0]       = ctx->n_past++;
+        ctx->batch.n_seq_id[0]  = 1;
+        ctx->batch.seq_id[0][0] = 0;
+        ctx->batch.logits[0]    = true;
 
         if (llama_decode(ctx->lctx, ctx->batch)) {
             GGML_LOG_ERROR("Decoding failed at token %d", i);

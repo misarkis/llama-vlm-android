@@ -45,6 +45,24 @@ target_link_libraries(mtmd-inference-api
         Threads::Threads
 )
 
+# Newer llama.cpp replaced use_mmap/use_mlock with load_mode; older tags still build without this
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../../include/llama.h" LLAMA_H)
+if(LLAMA_H MATCHES "enum llama_load_mode")
+    target_compile_definitions(mtmd-inference-api PRIVATE MTMD_HAS_LOAD_MODE)
+endif()
+
+# Newer llama.cpp reads mtmd_input_text.text_len; older tags do not have the field
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../mtmd/mtmd.h" MTMD_H)
+if(MTMD_H MATCHES "size_t text_len")
+    target_compile_definitions(mtmd-inference-api PRIVATE MTMD_HAS_TEXT_LEN)
+endif()
+
+# Newer llama.cpp selects the vision encoder device through mtmd_context_params.device;
+# older tags use the MTMD_BACKEND_DEVICE environment variable
+if(MTMD_H MATCHES "ggml_backend_dev_t device")
+    target_compile_definitions(mtmd-inference-api PRIVATE MTMD_HAS_CTX_DEVICE)
+endif()
+
 # Android logging
 if(ANDROID)
     target_link_libraries(mtmd-inference-api PRIVATE log)

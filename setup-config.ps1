@@ -102,7 +102,7 @@ Write-Host "3. Android NDK (REQUIRED):" -ForegroundColor Yellow
 if ($env:ANDROID_NDK_HOME) {
     Write-Host "   Using existing: $($env:ANDROID_NDK_HOME)"
 } else {
-    $defaultNdk = "$env:ANDROID_SDK_ROOT\ndk\25.1.8937393"
+    $defaultNdk = "$env:ANDROID_SDK_ROOT\ndk\27.3.13750724"
     Write-Host "   Default: $defaultNdk"
     $input = Read-Host "   Enter path (press Enter for default)"
     if ([string]::IsNullOrWhiteSpace($input)) {
@@ -151,7 +151,7 @@ Write-Host "5. Hexagon SDK (REQUIRED - for NPU/HTP acceleration):" -ForegroundCo
 if ($env:HEXAGON_SDK_ROOT) {
     Write-Host "   Using existing: $($env:HEXAGON_SDK_ROOT)"
 } else {
-    $defaultHex = "C:\Hexagon_SDK\6.6.0.0"
+    $defaultHex = "C:\Hexagon_SDK\6.7.0.1"
     Write-Host "   Default: $defaultHex"
     $input = Read-Host "   Enter path (press Enter for default)"
     if ([string]::IsNullOrWhiteSpace($input)) {

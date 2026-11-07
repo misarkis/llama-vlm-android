@@ -3,24 +3,23 @@
 #
 # Usage: .\run-profile-test.ps1 [-Config <path>] [-HtpProfile <0|1|2>] [-Help]
 #
-# Environment variables set BEFORE running:
-#   GGML_HEXAGON_PROFILE=1  - Enable per-operation HTP profiling (REQUIRED for profiling output)
-#   GGML_HEXAGON_NDEV=1     - Number of HTP devices/cores
-#   LD_LIBRARY_PATH=.       - Find shared libraries in current directory
+# -HtpProfile overrides htp_profile in the config. mtmd-profile-test turns that value into
+# GGML_HEXAGON_PROFILE before the Hexagon backend loads. 0 is the clean timing mode: per-op,
+# debug and verbose logging all stay off, and the HTP reports are skipped.
 #
 # Environment variables from .env (auto-loaded):
 #   ANDROID_SDK_ROOT    - Path to Android SDK (for ADB)
 #   ANDROID_NDK_HOME    - Path to Android NDK (for libomp.so)
 param(
     [string]$Config = "",
-    [int]$HtpProfile = 1,  # 0=off, 1=basic, 2=extended (must be set via env var before exec)
+    [int]$HtpProfile = -1,  # 0=off, 1=basic, 2=extended, omitted=use htp_profile from the config
     [switch]$Help
 )
 
 if ($Help) {
     Write-Host "Usage: .\run-profile-test.ps1 [-Config <path>] [-HtpProfile <0|1|2>]"
     Write-Host ""
-    Write-Host "IMPORTANT: GGML_HEXAGON_PROFILE must be set BEFORE the process starts"
+    Write-Host "Use -HtpProfile 0 for clean timing: per-op, debug and verbose logging stay off"
     Write-Host "           This script sets it automatically."
     Write-Host ""
     Write-Host "GPU Profiling:"
@@ -30,7 +29,7 @@ if ($Help) {
     Write-Host ""
     Write-Host "Options:"
     Write-Host "  -Config       Path to JSON config file (default: configs/config_htp_1core.json)"
-    Write-Host "  -HtpProfile   HTP profiling level: 0=off, 1=basic, 2=extended (default: 1)"
+    Write-Host "  -HtpProfile   HTP profiling level: 0=off, 1=basic, 2=extended (default: htp_profile in the config)"
     Write-Host "  -Help         Show this help"
     Write-Host ""
     Write-Host "Example:"
@@ -71,12 +70,14 @@ $AdbPath = if ($env:ANDROID_SDK_ROOT) {
     "C:\Users\misar\AppData\Local\Android\Sdk\platform-tools\adb.exe"
 }
 
-# OMP LIB path from ANDROID_NDK_HOME
-$OMP_LIB = if ($env:ANDROID_NDK_HOME) {
-    ConvertTo-WindowsPath -Path "$env:ANDROID_NDK_HOME\toolchains\llvm\prebuilt\windows-x86_64\lib64\clang\14.0.6\lib\linux\aarch64\libomp.so"
+# OMP LIB path from ANDROID_NDK_HOME (lib dir and clang version differ between NDKs)
+$NdkRoot = if ($env:ANDROID_NDK_HOME) {
+    ConvertTo-WindowsPath -Path "$env:ANDROID_NDK_HOME"
 } else {
-    "c:\Users\misar\AppData\Local\Android\Sdk\ndk\25.1.8937393\toolchains\llvm\prebuilt\windows-x86_64\lib64\clang\14.0.6\lib\linux\aarch64\libomp.so"
+    "c:\Users\misar\AppData\Local\Android\Sdk\ndk\27.3.13750724"
 }
+$OMP_LIB = Get-ChildItem -Path "$NdkRoot\toolchains\llvm\prebuilt\windows-x86_64\lib*\clang\*\lib\linux\aarch64\libomp.so" -ErrorAction SilentlyContinue |
+    Select-Object -First 1 -ExpandProperty FullName
 
 # Default config
 if ([string]::IsNullOrEmpty($Config)) {
@@ -196,7 +197,7 @@ foreach ($Lib in $HTPLibs) {
 }
 
 # Also push libOMP if it exists
-if (Test-Path $OMP_LIB) {
+if ($OMP_LIB -and (Test-Path $OMP_LIB)) {
         & $AdbPath push $OMP_LIB $DeviceDir/ 2>&1 | Out-Null
         Write-Info "  Pushed $OMP_LIB"
     } else {
@@ -207,23 +208,24 @@ Write-Success "Pushed libraries"
 
 Write-Info "Clearing Old LOGCAT on device..."
 
-# Step 7: Run with HTP profiling ENABLED
-# CRITICAL: GGML_HEXAGON_PROFILE must be set BEFORE the process starts
-# This is done by exporting it in the shell before running the executable
+# Step 7: Run
+# mtmd-profile-test sets GGML_HEXAGON_PROFILE itself, before the Hexagon backend loads.
+# Passing --htp-profile is what changes it: the flag overrides htp_profile in the config.
+$ProfileArg = if ($HtpProfile -ge 0) { " --htp-profile $HtpProfile" } else { "" }
+$EffectiveHtpProfile = if ($HtpProfile -ge 0) { $HtpProfile } else { [int](Get-Content $Config -Raw | ConvertFrom-Json).htp_profile }
 
 Write-Info ""
-Write-Info "Running mtmd-profile-test with HTP profiling..."
-Write-Info "  GGML_HEXAGON_PROFILE=$HtpProfile"
+Write-Info "Running mtmd-profile-test..."
+Write-Info "  HTP profiling level: $EffectiveHtpProfile"
 Write-Info "  Config: config.json"
 Write-Info ""
 Write-Info "========================================"
 
 & $AdbPath shell "logcat -c" 2>&1 | Out-Null
 
-# Export environment variables and run the test
-# Note: GGML_HEXAGON_PROFILE must be set BEFORE the process starts for HTP profiling
-# GGML_HEXAGON_VERBOSE=1 shows ops from all backends (CPU, GPU, HTP)
-$Cmd = "cd $DeviceDir; ./mtmd-profile-test --config config.json"
+# logcat streams to a file for the whole run: this phone caps the main buffer at 5 MiB
+# (logcat -G is refused), and dumping it afterwards keeps only the last few seconds
+$Cmd = "logcat -s mtmd-profile-test:V mtmd-inference-api:V *:F > /sdcard/profile_log.txt & LOGCAT_PID=`$!; cd $DeviceDir; ./mtmd-profile-test --config config.json$ProfileArg; sleep 2; kill `$LOGCAT_PID"
 
 Write-Info "Command: $Cmd"
 Write-Info ""
@@ -235,21 +237,33 @@ Write-Info "========================================"
 Write-Info ""
 
 # Step 8: Pull results
-$ResultsFile = Join-Path $ProfilerDir "profile_results.csv"
+# The results path comes from output_csv in the config, so each backend keeps its own file
+$DeviceResultsFile = (Get-Content $Config -Raw | ConvertFrom-Json).output_csv
+if ([string]::IsNullOrEmpty($DeviceResultsFile)) {
+    $DeviceResultsFile = "/sdcard/profile_results.csv"
+}
+$ResultsFile = Join-Path $ProfilerDir ($DeviceResultsFile -split "/")[-1]
 $LogFile = Join-Path $ProfilerDir "profile_log.txt"
 $ClProfileFile = Join-Path $ProfilerDir "cl_profiling.csv"
 
-Write-Info "Pulling profile_results.csv from device..."
-& $AdbPath pull "/sdcard/profile_results.csv" $ResultsFile 2>&1 | Out-Null
+Write-Info "Pulling $DeviceResultsFile from device..."
+if (Test-Path $ResultsFile) {
+    Remove-Item $ResultsFile -Confirm:$false
+}
+& $AdbPath pull $DeviceResultsFile $ResultsFile 2>&1 | Out-Null
 if (Test-Path $ResultsFile) {
     Write-Success "Results pulled to: $ResultsFile"
+} else {
+    Write-Host "WARNING: could not pull results from $DeviceResultsFile" -ForegroundColor Yellow
 }
 
-Write-Info "Running LOGCAT on device..."
-& $AdbPath shell "logcat -s -d mtmd-profile-test:V mtmd-inference-api:V *:F> /sdcard/profile_log.txt" 2>&1 | Out-Null
+Write-Info "Pulling log from device..."
 & $AdbPath pull "/sdcard/profile_log.txt" $LogFile 2>&1 | Out-Null
 if (Test-Path $LogFile) {
     Write-Success "Log pulled to: $LogFile"
+    if (-not (Select-String -Path $LogFile -Pattern "Backend:" -SimpleMatch -Quiet)) {
+        Write-Host "WARNING: log has no 'Backend:' line, so the start of the run is missing" -ForegroundColor Yellow
+    }
 }
 
 # Pull OpenCL profiling data (if built with GGML_OPENCL_PROFILING=ON)
@@ -266,8 +280,18 @@ Write-Success "Profile test completed"
 Write-Info ""
 
 # Step 9: Generate profile reports
-# Generate HTP reports if log file exists
+# Timing and temperatures come from info logs, so this report works on clean runs too
 if (Test-Path $LogFile) {
+    $ThermalReport = Join-Path $ProfilerDir "thermal_report.txt"
+    Write-Info "Generating timing and thermal report (parse_profile.py)..."
+    & python "$ScriptDir\parse_profile.py" $LogFile $ThermalReport --mode thermal
+}
+
+# Generate HTP reports if log file exists. A run with profiling off has no HTP data,
+# so skipping them keeps the reports from the last profiling run
+if ($EffectiveHtpProfile -eq 0) {
+    Write-Info "HTP profiling off, skipping HTP reports (existing reports are kept)"
+} elseif (Test-Path $LogFile) {
     Write-Info "Generating HTP profile reports..."
 
     # Convert log to UTF-8 for Python scripts (Android logcat outputs UTF-8 on most devices)
@@ -335,5 +359,6 @@ Write-Info ""
 Write-Info "To analyze profiling output manually:"
 Write-Info "  HTP Official:      python ../llama.cpp/scripts/snapdragon/ggml-hexagon-profile.py <log_file>"
 Write-Info "  HTP Block Report:  python parse_profile.py <log_file> [output_file]"
+Write-Info "  Thermal Report:    python parse_profile.py <log_file> [output_file] --mode thermal"
 Write-Info "  OpenCL Report:     python parse_profile.py <cl_profiling.csv> [output_file] --mode opencl"
 Write-Info ""

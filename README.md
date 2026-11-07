@@ -2,7 +2,7 @@
 
 A mobile live camera & screen capture analysis tool that uses Vision Language Models (VLM) to analyze what's on your screen. Remote mode uses [llama.cpp](https://github.com/ggml-org/llama.cpp) server API; local mode uses a custom JNI wrapper built on top of llama.cpp's [mtmd-cli](https://github.com/ggml-org/llama.cpp/tree/master/tools/mtmd) multimodal inference engine. Offline text-to-speech powered by [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx).
 
-Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https://www.khronos.org/opencl/)), or NPU (Hexagon HTP, using [Hexagon SDK](https://softwarecenter.qualcomm.com/api/download/software/sdks/Hexagon_SDK/Windows/6.6.0.0/Hexagon_SDK_WinNT.zip)).
+Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https://www.khronos.org/opencl/)), or NPU (Hexagon HTP, using [Hexagon SDK](https://softwarecenter.qualcomm.com/)).
 
 **Development:** This repository was fully developed using [Claude CLI](https://claude.ai/code) with local llama.cpp server running the `unsloth/Qwen3.5-122B-A10B-GGUF:UD-Q4_K_XL` model ([HuggingFace](https://huggingface.co/unsloth/Qwen3.5-122B-A10B-GGUF)).
 
@@ -39,6 +39,7 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 - **Visual Analysis**: Ask questions about what's on your screen
 - **Offline TTS**: Text-to-speech output using offline engine
 - **Streaming Response**: Real-time token streaming from VLM
+- **Thinking Models**: `<think>` blocks are hidden from the display and from speech
 
 ### Backend Options
 
@@ -50,11 +51,11 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 
 ### Local Backend Acceleration
 
-| Backend | Hardware        | Performance (Fold 7)     |
-|---------|-----------------|--------------------------|
-| CPU     | ARM cores       | ~4.8 tk/s (baseline)     |
-| NPU     | Hexagon HTP     | ~9.9 tk/s (2x vs CPU)    |
-| GPU     | Adreno (OpenCL) | ~12.5 tk/s (2.6x vs CPU) |
+| Backend | Hardware        | Qwen2-VL 2B Decode (Fold 7) | Qwen3.8 2B Decode (Fold 7) |
+|---------|-----------------|-----------------------------|----------------------------|
+| CPU     | ARM cores       | 11.5 tk/s                   | 10.4 tk/s                  |
+| NPU     | Hexagon HTP     | 40.9 tk/s                   | 30.9 tk/s                  |
+| GPU     | Adreno (OpenCL) | 29.7 tk/s                   | 24.7 tk/s                  |
 
 
 ---
@@ -106,9 +107,9 @@ See [SETUP.md](SETUP.md) for complete build instructions.
 
 **Prerequisites:**
 - MSYS2 UCRT64 environment (required for building llama.cpp)
-- Android SDK with NDK 25.1.8937393
+- Android SDK with NDK 27.3.13750724
 - Java JDK 17+
-- Hexagon SDK 6.6.0.0 ([Download](https://softwarecenter.qualcomm.com/api/download/software/sdks/Hexagon_SDK/Windows/6.6.0.0/Hexagon_SDK_WinNT.zip)) - for NPU support
+- Hexagon SDK 6.7.0.1 - for NPU support. Qualcomm no longer offers a direct download, so install it with their download tool from the [Qualcomm Software Center](https://softwarecenter.qualcomm.com/)
 
 **Quick Build:**
 ```bash
@@ -215,8 +216,10 @@ Runs inference directly on your Android device using llama.cpp.
 - **Backend**: CPU, GPU (Adreno), or NPU (Hexagon HTP)
 - **Context Size**: Token context window (default: 16384)
 - **Batch Size**: Processing batch size (default: 512)
-- **HTP Sessions**: Number of Hexagon sessions (1-4, for NPU)
+- **HTP Sessions**: Number of Hexagon sessions (1-4, for NPU). 1 is recommended
 - **Inference Params**: top-k, top-p, temperature, repetition penalty
+
+**NPU mode:** The language model and the vision encoder both run on Hexagon HTP. The encoder always uses `HTP0`, so changing HTP Sessions only affects the language model. In CPU and GPU modes the encoder stays on that backend.
 
 **Usage:**
 1. Select "LOCAL" mode
@@ -307,7 +310,7 @@ Analyze what the camera sees. Works in both REMOTE and LOCAL modes.
 | Backend            | CPU / GPU / NPU           | CPU         |
 | Context Size       | Token context window      | `16384`     |
 | Batch Size         | Processing batch size     | `512`       |
-| HTP Sessions       | Hexagon sessions (NPU)    | `1`  * HTP Sessions is Device-dependent: Samsung Fold 7 supports up to 4, Samsung Flip 6 supports 1 only*       |
+| HTP Sessions       | Hexagon sessions (NPU)    | `1`  * HTP Sessions is Device-dependent: Samsung Fold 7 supports up to 4, Samsung Flip 6 supports 1 only. 1 ran faster than 4 on the Fold 7*       |
 | Image Min Tokens   | Minimum image tokens      | `-1` (auto) |
 | Top-k              | Sampling top-k            | `40`        |
 | Top-p              | Sampling top-p            | `0.95`      |
@@ -329,6 +332,12 @@ Enable debug or info logs for troubleshooting:
 - **Debug Logs**: Detailed operation logs
 - **Info Logs**: Component-specific logs
 
+### Speed Display
+
+- **LOCAL mode**: The t/s value is decode speed, the same value as `Decode throughput` in logcat. It does not include prefill.
+- **REMOTE mode**: The API gives no decode timing, so t/s is (prompt + completion tokens) / total time. Do not compare it directly with LOCAL mode.
+- **Thinking models**: Thinking tokens count towards completion tokens and t/s, even though the text is hidden.
+
 ---
 
 ## Model Setup
@@ -349,6 +358,9 @@ For multimodal VLM inference, you need:
 | Qwen2-VL-2B-Bartowski-Q4_K_M       | ~1.5 GB | Balanced quality/speed (recommended) |
 | Qwen2-VL-2B-Bartowski-Q4_0         | ~1.4 GB | Smaller footprint, good quality      |
 | Qwen2-VL-2B-Bartowski-Q8_0         | ~2.8 GB | Higher quality, more memory          |
+| Qwen3.8-2B-Distill-heretic-Q4_K_M  | ~1.3 GB | Thinking model, 31–32 tk/s on NPU    |
+
+Qwen3.8 download: [Qwen3.8-2B-Distill-heretic](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
 
 
 ### Pushing Models to Device
@@ -372,29 +384,55 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 ### Local Inference Benchmarks
 
 **Test Configuration:**
-- Device: Samsung Galaxy Fold 7
-- Model: Qwen2-VL-2B-Bartowski-Q4_K_M
-- Screen Mode, Image Size Input to Llama.cpp: 492x514, Scale Factor: 0.25 (from Screen Capture)
-- HTP Sessions: 4 (NPU), 999 GPU Layers (GPU)
+- Device: Samsung Galaxy Fold 7 (Adreno 830, Hexagon v79)
+- Build: llama.cpp b12181, Hexagon SDK 6.7.0.1
+- Models: Qwen2-VL-2B-Instruct-Q4_K_M, Qwen3.8-2B-Distill-heretic Q4_K_M, both with f16 mmproj
+- 10 test images, Image Min Tokens: 1000, Temperature: 0.9
+- NPU uses 1 HTP session with the vision encoder on HTP
+- Profiler with HTP profiling off (`-HtpProfile 0`). See [PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)
 
-| Backend | Image 1      | Image 2      | Image 3      | Overall Latency | Avg Throughput |
-|---------|--------------|--------------|--------------|-----------------|----------------|
-| GPU     | 13.64 tk/s   | 11.05 tk/s   | 12.68 tk/s   | 10–12 secs      | **~12.5 tk/s** |
-| NPU     | 10.74 tk/s   | 10.51 tk/s   | 8.55 tk/s    | 12–13 secs      | **~9.9 tk/s**  |
-| CPU     | 5.31 tk/s    | 4.29 tk/s    | 4.93 tk/s    | 30–32 secs      | **~4.8 tk/s**  |
+| Model (Q4_K_M) | Backend | Decode    | Prefill Mean (Range)    | 130-Token Answer | Peak Temp    |
+|----------------|---------|-----------|-------------------------|------------------|--------------|
+| Qwen2-VL 2B    | **NPU** | **40.9 tk/s** | **0.72 s (0.50–0.96)** | **3.9 s**    | NPU 89.9°C   |
+| Qwen2-VL 2B    | GPU     | 29.7 tk/s | 5.99 s (1.63–8.91)      | 10.4 s           | GPU 91.9°C   |
+| Qwen2-VL 2B    | CPU     | 11.5 tk/s | 33.46 s (10.19–43.55)   | 44.8 s           | CPU 105.4°C  |
+| Qwen3.8 2B     | **NPU** | **30.9 tk/s** | **0.50 s (0.34–0.60)** | **4.7 s**    | NPU 89.2°C   |
+| Qwen3.8 2B     | GPU     | 24.7 tk/s | 3.20 s (0.85–5.44)      | 8.5 s            | GPU 83.0°C   |
+| Qwen3.8 2B     | CPU     | 10.4 tk/s | 15.42 s (4.23–20.83)    | 27.9 s           | CPU 105.4°C  |
+
+*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. Each run processed the 10 images with no pause, after a cooldown. The GPU clock throttled from 1200 MHz to as low as 222–342 MHz, which is why GPU prefill varies so much. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.*
+
+**Encoder Placement (Decode on NPU, Qwen2-VL-2B-Instruct-Q4_0):**
+
+| Configuration                                       | Decode        | Prefill per Image | 130-Token Answer |
+|-----------------------------------------------------|---------------|-------------------|------------------|
+| **Decode on NPU (1 session), encoder on NPU (app)** | **41.7 tk/s** | **0.50–0.96 s**   | **3.8 s**        |
+| Decode on NPU (1 session), encoder on GPU           | 41.8 tk/s     | 1.51–6.36 s       | 6.9 s            |
+| Decode on NPU (4 sessions), encoder on GPU          | 37.4 tk/s     | 1.50–6.08 s       | 7.2 s            |
+
+*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. The slowest GPU encoder times came from thermal throttling: the GPU clock dropped from 1200 MHz to about 500 MHz after 30–40 seconds.*
+
+**In the app (NPU, 1 session, encoder on HTP, later images):**
+
+| Model                  | Decode       | Prefill     |
+|------------------------|--------------|-------------|
+| Qwen2-VL-2B-Q4_K_M     | 42–45 tk/s   | 0.72–0.74 s |
+| Qwen3.8-2B-Q4_K_M      | 31–32 tk/s   | 0.49–0.51 s |
+
+The first image after loading a model takes longer: 0.8–1.7 s prefill in these runs.
 
 
 ### Factors Affecting Performance
 
 1. **Image Scale**: Lower scale = faster processing
 2. **Model Size**: Smaller quantizations = faster
-3. **Backend**: GPU > NPU > CPU (based on measurements above)
+3. **Encoder Placement**: Running the vision encoder on HTP cuts prefill to under 1 second and avoids the GPU thermal cap
 4. **Context Size**: Larger context = more memory, slower
 
 ### Tips for Better Performance
 
 1. Use Q4_K_M quantization for balance
-2. Enable GPU/NPU if available
+2. Enable GPU/NPU if available, and use 1 HTP session in NPU mode
 3. Reduce image scale for faster capture
 4. Set appropriate context size for your use case
 
@@ -443,7 +481,12 @@ adb logcat -s VLM-Application:V VLM-MainActivity:V VLM-Service:V VLM-Capture:V V
 adb logcat -s VLM-Camera:V VLM-CameraPreview:V VLM-CameraCapture:V *:F
 
 # Enable debug logs in app settings first
+
+# Vision encoder device and per-image timing
+adb logcat | grep -E "Vision encoder device|CLIP using|Prefill time|Decode throughput"
 ```
+
+In NPU mode, a correct setup logs `Vision encoder device: HTP0` and `CLIP using HTP0 backend` when the model loads.
 
 ---
 
@@ -453,6 +496,7 @@ For detailed build instructions:
 
 - **[SETUP.md](SETUP.md)** - Complete setup and build guide
 - **[BUILD_LLAMACPP_ANDROID_README.md](BUILD_LLAMACPP_ANDROID_README.md)** - llama.cpp build details (in case needed)
+- **[PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)** - On-device profiling and timing runs
 
 ---
 

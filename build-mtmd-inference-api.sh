@@ -7,7 +7,7 @@
 #
 # PREREQUISITES:
 #   - MSYS2 UCRT64 environment with bash
-#   - Android NDK 25.1.8937393 (set via ANDROID_NDK_HOME env var)
+#   - Android NDK 27.3.13750724 (set via ANDROID_NDK_HOME env var)
 #   - CMake 3.21+
 #
 #   Note: For -All, llama.cpp will be built automatically.

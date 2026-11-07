@@ -694,7 +694,7 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
                 ""
             }
             val imageText = imagePath?.let { "\n\nImage saved: $it" } ?: ""
-            findViewById<android.widget.TextView>(R.id.result_text)?.text = result + statsText + imageText
+            findViewById<android.widget.TextView>(R.id.result_text)?.text = ModelOutput.stripThinking(result) + statsText + imageText
             val tokensTotal = promptTokens + completionTokens
             val tps = if (tokensPerSecond > 0) tokensPerSecond.toString().take(4) + " t/s" else ""
             updateStatus(if (totalTimeMs > 0) "Analysis complete | ${tokensTotal} tokens ${tps}" else "Analysis complete")

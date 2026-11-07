@@ -19,7 +19,7 @@ This document describes how to build llama.cpp for Android with support for CPU,
    - Use the UCRT64 terminal (not MINGW64)
    - Run `pacman -Syu` to update all packages
 
-2. **Android NDK**: Version `25.1.8937393` (critical - other versions may fail)
+2. **Android NDK**: Version `27.3.13750724` (critical - other versions may fail)
    - Download from: https://developer.android.com/ndk/downloads
    - Or via Android Studio: SDK Tools → Android NDK
 
@@ -37,19 +37,19 @@ This document describes how to build llama.cpp for Android with support for CPU,
    ```
 
 6. **Hexagon SDK** (Optional - for NPU support)
-   - Qualcomm Hexagon SDK 6.6.0.0 (Community Edition)
+   - Qualcomm Hexagon SDK 6.7.0.1 (Community Edition)
    - Required for Snapdragon Hexagon NPU support
 
 ### Environment Variables
 
 The `.env` file (created by `setup-config`) sets these automatically:
 
-| Variable | Purpose |
-|----------|---------|
-| `MSYS2_PATH` | MSYS2 installation (e.g., `/c/msys64`) |
-| `ANDROID_NDK_HOME` | Android NDK location |
-| `ANDROID_SDK_ROOT` | Android SDK location |
-| `HEXAGON_SDK_ROOT` | Hexagon SDK location (optional) |
+| Variable           | Purpose                                 |
+| ------------------ | --------------------------------------- |
+| `MSYS2_PATH`       | MSYS2 installation (e.g., `/c/msys64` ) |
+| `ANDROID_NDK_HOME` | Android NDK location                    |
+| `ANDROID_SDK_ROOT` | Android SDK location                    |
+| `HEXAGON_SDK_ROOT` | Hexagon SDK location (optional)         |
 
 ## Automated Build
 
@@ -61,13 +61,15 @@ bash build-llamacpp-android.sh
 ```
 
 This script:
-1. Clones llama.cpp at known working commit (b9439)
-2. Applies OpenCL Adreno optimizations
-3. Builds OpenCL ICD loader
+1. Clones llama.cpp at known working commit (b12181)
+2. Applies required llama.cpp patches
+3. Clones OpenCL headers and builds the OpenCL ICD loader
 4. Builds llama.cpp with CPU, OpenCL, and Hexagon backends
 5. Copies HTP kernel libraries to lib/ directory
 6. **Copies all libraries to app/src/main/jniLibs/arm64-v8a/ for APK packaging**
 7. **Copies libomp.so from NDK for OpenMP runtime support**
+
+**Note:** The OpenCL Adreno patches are turned off at b12181. `apply_opencl_patches` stays in the script for older tags: uncomment its call in `build-llamacpp-android.sh` if you go back to one.
 
 ## Manual Build Steps
 
@@ -79,12 +81,12 @@ If the automation script fails, follow these manual steps:
 cd VLM-Analyze-Android
 git clone https://github.com/ggml-org/llama.cpp.git
 cd llama.cpp
-git checkout b9439  # Known working commit
+git checkout b12181  # Known working commit
 ```
 
 ### Step 2: Apply OpenCL Adreno Optimizations
 
-The OpenCL kernels need patches for Adreno GPU optimization:
+Skip this step at b12181. For older tags, the OpenCL kernels need patches for Adreno GPU optimization:
 
 ```bash
 # Change MoE kernel alignment from 32 to 64
@@ -121,7 +123,7 @@ cp libOpenCL.so $ANDROID_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr
 cd ..
 
 # With Hexagon SDK
-export HEXAGON_SDK_ROOT="/c/Hexagon_SDK/6.6.0.0"
+export HEXAGON_SDK_ROOT="/c/Hexagon_SDK/6.7.0.1"
 ./build-android.sh
 
 # Without Hexagon (OpenCL only)
@@ -138,23 +140,23 @@ The `build-android.sh` script:
 
 ### build-android/bin/
 
-| File | Size | Purpose |
-|------|------|---------|
-| `libllama.so` | ~36 MB | llama inference library |
-| `libmtmd.so` | ~10.6 MB | Multimodal library (used by JNI wrapper) |
-| `libllama-common.so` | ~7.2 MB | Common utilities |
-| `libggml-opencl.so` | ~8.0 MB | OpenCL GPU backend |
-| `libggml-base.so` | ~7.1 MB | Base ggml library |
-| `libggml-hexagon.so` | ~5.2 MB | Hexagon NPU backend |
-| `libggml-cpu.so` | ~4.5 MB | CPU backend |
-| `libggml.so` | ~1.3 MB | ggml main library |
+| File                 | Size     | Purpose                                  |
+| -------------------- | -------- | ---------------------------------------- |
+| `libllama.so`        | ~45.5 MB | llama inference library                  |
+| `libmtmd.so`         | ~16.2 MB | Multimodal library (used by JNI wrapper) |
+| `libllama-common.so` | ~72.2 MB | Common utilities                         |
+| `libggml-opencl.so`  | ~13.4 MB | OpenCL GPU backend                       |
+| `libggml-base.so`    | ~6.5 MB  | Base ggml library                        |
+| `libggml-hexagon.so` | ~5.5 MB  | Hexagon NPU backend                      |
+| `libggml-cpu.so`     | ~4.2 MB  | CPU backend                              |
+| `libggml.so`         | ~0.6 MB  | ggml main library                        |
 
 **Note:** `libllama-server-impl.so` is built but deprecated - not used in current app version.
 
 ### lib/ (HTP Kernel Libraries)
 
-| File | Purpose |
-|------|---------|
+| File                 | Purpose                     |
+| -------------------- | --------------------------- |
 | `libggml-htp-v73.so` | HTP kernels for Hexagon v73 |
 | `libggml-htp-v75.so` | HTP kernels for Hexagon v75 |
 | `libggml-htp-v79.so` | HTP kernels for Hexagon v79 |
@@ -185,16 +187,32 @@ adb shell "cd /data/local/tmp/llama.cpp && LD_LIBRARY_PATH=./lib:./bin ./bin/lla
 adb shell "cd /data/local/tmp/llama.cpp && LD_LIBRARY_PATH=./lib:./bin:/vendor/lib64 ADSP_LIBRARY_PATH=./lib GGML_HEXAGON_NDEV=4 ./bin/llama-mtmd-cli --device HTP0,HTP1,HTP2,HTP3 -m model.gguf --n-gpu-layers 999 -n 10 -p 'Hello'"
 ```
 
+This example uses 4 sessions. HTP sessions are virtual on one cDSP, and 1 session ran faster than 4 on the Fold 7 (41.8 vs 37.4 t/s decode), so the app defaults to 1.
+
+## Vision Encoder Placement
+
+`mtmd_model_params_t.mmproj_device` selects the vision encoder device in `mtmd-inference-api`: `"GPU0"`, `"HTP0"` or `"CPU"`. An empty string keeps the default placement.
+
+- The app sets `HTP0` when the device string contains `HTP`. CPU and GPU modes are unchanged.
+- `GGML_HEXAGON_NDEV` and `GGML_HEXAGON_DEVICES` are set to cover both the LLM devices and the encoder device.
+- `mtmd-inference-api/CMakeLists.txt` checks the llama.cpp headers, so older tags still build:
+
+| Definition            | Set when                                     | Without it                                 |
+| --------------------- | -------------------------------------------- | ------------------------------------------ |
+| `MTMD_HAS_CTX_DEVICE` | `mtmd_context_params` has `device`           | Uses the `MTMD_BACKEND_DEVICE` env variable |
+| `MTMD_HAS_LOAD_MODE`  | `llama.h` has `enum llama_load_mode`         | Uses `use_mmap` and `use_mlock`            |
+| `MTMD_HAS_TEXT_LEN`   | `mtmd_input_text` has `text_len`             | Field is not set                           |
+
 ## Android App Integration
 
 The build script automatically copies all libraries to `app/src/main/jniLibs/arm64-v8a/`. The Android Gradle build compiles JNI wrappers that link against the prebuilt llama.cpp libraries.
 
 **JNI Libraries Built by Gradle:**
 
-| Library | Source | Purpose |
-|---------|--------|---------|
-| `libvlmanalyze.so` | `native-lib.cpp` | Main app native library (screen capture, TTS, remote API) |
-| `libmtmd-inference-jni.so` | `mtmd-inference-jni.cpp` | Local multimodal inference (Qwen2-VL) |
+| Library                    | Source                   | Purpose                                                   |
+| -------------------------- | ------------------------ | --------------------------------------------------------- |
+| `libvlmanalyze.so`         | `native-lib.cpp`         | Main app native library (screen capture, TTS, remote API) |
+| `libmtmd-inference-jni.so` | `mtmd-inference-jni.cpp` | Local multimodal inference (Qwen2-VL)                     |
 
 **Note:** The app uses remote HTTP API for server-based inference and `libmtmd-inference-jni.so` for local multimodal inference.
 
@@ -204,11 +222,13 @@ The build script automatically copies all libraries to `app/src/main/jniLibs/arm
 ./gradlew installDebug
 ```
 
+`app/build.gradle.kts` reads the NDK path and version from `ANDROID_NDK_HOME` in `.env`, so the build fails if `.env` is missing.
+
 **Library Loading:** The app loads libraries via `System.loadLibrary()` in the Kotlin service classes.
 
 ## OpenCL Optimizations
 
-The following optimizations were applied for Adreno GPU:
+The following optimizations apply to older tags only. They are turned off at b12181:
 
 1. **MoE Kernel Alignment**: Changed from 32 to 64-element alignment for better Adreno performance
 2. **Global Work Size**: Direct ne01 values instead of padded calculations
@@ -221,7 +241,11 @@ These optimizations are in `ggml/src/ggml-opencl/ggml-opencl.cpp` and all `.cl` 
 ### Error: "ANDROID_NDK_HOME not set"
 - Run `setup-config.ps1` or `source ./setup-config.sh` to create `.env`
 - Verify `ANDROID_NDK_HOME` is set in `.env` file
-- Check NDK version is `25.1.8937393`
+- Check NDK version is `27.3.13750724`
+
+### Error: "SDK location not found"
+- `.env` does not set the SDK location for Gradle
+- Set `ANDROID_HOME` in the terminal, or add `sdk.dir` to `local.properties`
 
 ### Error: "CMake configuration failed"
 - Ensure CMake version is `3.21+`
@@ -243,10 +267,10 @@ These optimizations are in `ggml/src/ggml-opencl/ggml-opencl.cpp` and all `.cl` 
 ## Notes
 
 - **Vulkan backend**: NOT included - OpenCL has explicit Adreno optimization
-- **Quantization**: Q4_K_M recommended for Hexagon, Q4_0 for OpenCL
+- **Quantization**: Q4_K_M or Q4_0 for Hexagon (similar speed on the Fold 7: 40.9 vs 41.7 t/s decode), Q4_0 for OpenCL (not measured on this build)
 - **Memory**: Minimum 4GB RAM recommended for 2B models
 - **Device compatibility**: Snapdragon 8xx series recommended for Hexagon support
-- **Known working commit**: b9439
+- **Known working commit**: b12181
 - **Setup**: Run `setup-config.ps1` or `source ./setup-config.sh` first - see [SETUP.md](SETUP.md)
 - **Local inference**: Uses `libmtmd-inference-jni.so` for multimodal VLM inference (Qwen2-VL)
 - **Remote inference**: App connects to remote HTTP API (llama.cpp server)

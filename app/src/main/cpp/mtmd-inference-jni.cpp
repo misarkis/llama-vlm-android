@@ -369,6 +369,10 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeInit(
     params.model.path = model;
     params.model.mmproj_path = mmproj;
     params.model.mmproj_use_gpu = (nGpuLayers > 0);
+    // Run the vision encoder on HTP in NPU mode: faster than the GPU and avoids its thermal cap
+    if (dev.find("HTP") != std::string::npos) {
+        params.model.mmproj_device = "HTP0";
+    }
     params.device = dev;
     params.library_directory = lib_dir;  // Pass lib_dir for env setup and backend loading
     params.n_gpu_layers = nGpuLayers;
@@ -619,7 +623,7 @@ static std::string run_inference(InferenceContext* ctx, mtmd_image_data_t* image
 
     // Prepare prompt
     mtmd_prompt_params_t prompt_params;
-    prompt_params.system_prompt = system_prompt.empty() ? nullptr : system_prompt.c_str();
+    prompt_params.system_prompt = system_prompt;
     prompt_params.user_prompt = user_prompt;
     prompt_params.add_ass_prefix = true;
 

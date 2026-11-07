@@ -665,15 +665,11 @@ class ScreenCaptureService : Service() {
                 i( "Analysis complete: ${result.content.take(100)}...")
                 i( "Tokens: prompt=${result.timings?.promptTokens} completion=${result.timings?.completionTokens}")
                 i( "Total time: ${result.timings?.totalTimeMs}ms")
-                // Calculate tokensPerSecond: (prompt + completion) / totalTimeMs (matches Camera mode)
                 val promptTokens = result.timings?.promptTokens ?: 0
                 val completionTokens = result.timings?.completionTokens ?: 0
                 val totalTimeMs = result.timings?.totalTimeMs ?: 0L
-                val tokensPerSecond = if (totalTimeMs > 0) {
-                    ((promptTokens + completionTokens) * 1000.0) / totalTimeMs
-                } else {
-                    0.0
-                }
+                // Decode speed from the native API (matches Camera mode)
+                val tokensPerSecond = result.timings?.predictedPerSecond ?: 0.0
                 handler.post {
                     sendStreamComplete(result.content, promptTokens, completionTokens, totalTimeMs, imagePath, tokensPerSecond)
                 }
@@ -771,15 +767,11 @@ class ScreenCaptureService : Service() {
                 i( "Analysis complete: ${result.content.take(100)}...")
                 i( "Tokens: prompt=${result.timings?.promptTokens} completion=${result.timings?.completionTokens}")
                 i( "Total time: ${result.timings?.totalTimeMs}ms")
-                // Calculate tokensPerSecond: (prompt + completion) / totalTimeMs (matches Camera mode)
                 val promptTokens = result.timings?.promptTokens ?: 0
                 val completionTokens = result.timings?.completionTokens ?: 0
                 val totalTimeMs = result.timings?.totalTimeMs ?: 0L
-                val tokensPerSecond = if (totalTimeMs > 0) {
-                    ((promptTokens + completionTokens) * 1000.0) / totalTimeMs
-                } else {
-                    0.0
-                }
+                // Decode speed from the native API (matches Camera mode)
+                val tokensPerSecond = result.timings?.predictedPerSecond ?: 0.0
                 handler.post {
                     sendStreamComplete(result.content, promptTokens, completionTokens, totalTimeMs, imagePath, tokensPerSecond)
                 }

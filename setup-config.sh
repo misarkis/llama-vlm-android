@@ -65,7 +65,7 @@ echo "3. Android NDK (REQUIRED):"
 if [ -n "$ANDROID_NDK_HOME" ]; then
     echo "   Using existing: $ANDROID_NDK_HOME"
 else
-    DEFAULT_NDK="$ANDROID_SDK_ROOT/ndk/25.1.8937393"
+    DEFAULT_NDK="$ANDROID_SDK_ROOT/ndk/27.3.13750724"
     echo "   Default: $DEFAULT_NDK"
     read -p "   Enter path (press Enter for default): " ANDROID_NDK_HOME
     ANDROID_NDK_HOME="${ANDROID_NDK_HOME:-$DEFAULT_NDK}"
@@ -106,7 +106,7 @@ echo "5. Hexagon SDK (REQUIRED - for NPU/HTP acceleration):"
 if [ -n "$HEXAGON_SDK_ROOT" ]; then
     echo "   Using existing: $HEXAGON_SDK_ROOT"
 else
-    DEFAULT_HEX="/c/Hexagon_SDK/6.6.0.0"
+    DEFAULT_HEX="/c/Hexagon_SDK/6.7.0.1"
     echo "   Default: $DEFAULT_HEX"
     read -p "   Enter path (press Enter for default): " HEXAGON_SDK_ROOT
     HEXAGON_SDK_ROOT="${HEXAGON_SDK_ROOT:-$DEFAULT_HEX}"

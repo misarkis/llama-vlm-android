@@ -142,6 +142,7 @@ typedef struct {
     std::string path;               // model path
     std::string mmproj_path;        // multimodal projector path
     bool    mmproj_use_gpu;         // use GPU for mmproj
+    std::string mmproj_device;      // vision encoder device ("GPU0", "HTP0", "CPU"); empty = default placement
     bool    no_mmproj;              // disable multimodal
 } mtmd_model_params_t;
 
