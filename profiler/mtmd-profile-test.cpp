@@ -578,7 +578,7 @@ int main(int argc, char** argv) {
         params.device = "CPU";
         params.n_gpu_layers = 0;
     } else if (settings.backend == "GPU") {
-        params.device = "GPU0";
+        params.device = "GPUOpenCL";
         params.n_gpu_layers = 999;
     } else if (settings.backend == "NPU-4Core") {
         params.device = "HTP0,HTP1,HTP2,HTP3";

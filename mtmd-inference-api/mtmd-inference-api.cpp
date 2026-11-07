@@ -428,7 +428,7 @@ mtmd_api_status mtmd_inference_init(
 
     // Sessions must cover the LLM devices and the vision encoder device.
     // Newer tags read GGML_HEXAGON_DEVICES and ignore NDEV when it is set; older tags read NDEV.
-    // Newer tags also clamp 0 to 1, so a CPU/GPU run still registers HTP0 with nothing placed on it.
+    // Newer tags also clamp 0 to 1, so HTP0 stays registered: name a device, or auto-detect uses it too.
     const int hexagon_sessions = std::max(hexagon_sessions_needed(params.device),
                                           hexagon_sessions_needed(params.model.mmproj_device));
     const std::string hexagon_sessions_str = std::to_string(hexagon_sessions);

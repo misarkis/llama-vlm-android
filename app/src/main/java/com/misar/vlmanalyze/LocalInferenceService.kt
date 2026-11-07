@@ -110,7 +110,7 @@ class LocalInferenceService {
 
         val device = when (backend) {
             "NPU" -> buildHtpDeviceString(htpSessions)
-            "GPU" -> "GPU"
+            "GPU" -> "GPUOpenCL"
             else -> "CPU"
         }
 

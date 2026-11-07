@@ -235,11 +235,13 @@ Fold 7, 10 test images, Q4_K_M models, clean runs (`-HtpProfile 0`), llama.cpp b
 | Result Folder                | Model    | Backend | Decode    | Prefill Mean (Range)  | Peak Temp   |
 | ---------------------------- | -------- | ------- | --------- | --------------------- | ----------- |
 | `HTP-1Core-ViT-Q4KM-Clean`   | Qwen2-VL | NPU     | 40.9 t/s  | 0.72 s (0.50–0.96)    | NPU 89.9°C  |
-| `GPU-Q4KM-Clean`             | Qwen2-VL | GPU     | 29.7 t/s  | 5.99 s (1.63–8.91)    | GPU 91.9°C  |
+| `GPU-Only-Q4KM-Clean`        | Qwen2-VL | GPU     | 29.5 t/s  | 4.62 s (1.87–7.74)    | GPU 93.0°C  |
 | `CPU-Q4KM-Clean`             | Qwen2-VL | CPU     | 11.5 t/s  | 33.46 s (10.19–43.55) | CPU 105.4°C |
 | `HTP-1Core-ViT-Qwen38-Clean` | Qwen3.8  | NPU     | 30.9 t/s  | 0.50 s (0.34–0.60)    | NPU 89.2°C  |
-| `GPU-Qwen38-Clean`           | Qwen3.8  | GPU     | 24.7 t/s  | 3.20 s (0.85–5.44)    | GPU 83.0°C  |
+| `GPU-Only-Qwen38-Clean`      | Qwen3.8  | GPU     | 21.8 t/s  | 3.52 s (1.06–5.08)    | GPU 89.6°C  |
 | `CPU-Qwen38-Clean`           | Qwen3.8  | CPU     | 10.4 t/s  | 15.42 s (4.23–20.83)  | CPU 105.4°C |
+
+`GPU-Q4KM-Clean` and `GPU-Qwen38-Clean` are older runs that asked for device `GPU0`, which does not exist, so the language model ran on the GPU and NPU together. They are kept for comparison.
 
 Decode is the mean across images. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.
 

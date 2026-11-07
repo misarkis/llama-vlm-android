@@ -55,7 +55,7 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 |---------|-----------------|-----------------------------|----------------------------|
 | CPU     | ARM cores       | 11.5 tk/s                   | 10.4 tk/s                  |
 | NPU     | Hexagon HTP     | 40.9 tk/s                   | 30.9 tk/s                  |
-| GPU     | Adreno (OpenCL) | 29.7 tk/s                   | 24.7 tk/s                  |
+| GPU     | Adreno (OpenCL) | 29.5 tk/s                   | 21.8 tk/s                  |
 
 
 ---
@@ -394,13 +394,13 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 | Model (Q4_K_M) | Backend | Decode    | Prefill Mean (Range)    | 130-Token Answer | Peak Temp    |
 |----------------|---------|-----------|-------------------------|------------------|--------------|
 | Qwen2-VL 2B    | **NPU** | **40.9 tk/s** | **0.72 s (0.50–0.96)** | **3.9 s**    | NPU 89.9°C   |
-| Qwen2-VL 2B    | GPU     | 29.7 tk/s | 5.99 s (1.63–8.91)      | 10.4 s           | GPU 91.9°C   |
+| Qwen2-VL 2B    | GPU     | 29.5 tk/s | 4.62 s (1.87–7.74)      | 9.0 s            | GPU 93.0°C   |
 | Qwen2-VL 2B    | CPU     | 11.5 tk/s | 33.46 s (10.19–43.55)   | 44.8 s           | CPU 105.4°C  |
 | Qwen3.8 2B     | **NPU** | **30.9 tk/s** | **0.50 s (0.34–0.60)** | **4.7 s**    | NPU 89.2°C   |
-| Qwen3.8 2B     | GPU     | 24.7 tk/s | 3.20 s (0.85–5.44)      | 8.5 s            | GPU 83.0°C   |
+| Qwen3.8 2B     | GPU     | 21.8 tk/s | 3.52 s (1.06–5.08)      | 9.5 s            | GPU 89.6°C   |
 | Qwen3.8 2B     | CPU     | 10.4 tk/s | 15.42 s (4.23–20.83)    | 27.9 s           | CPU 105.4°C  |
 
-*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. Each run processed the 10 images with no pause, after a cooldown. The GPU clock throttled from 1200 MHz to as low as 222–342 MHz, which is why GPU prefill varies so much. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.*
+*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. Each run processed the 10 images with no pause, after a cooldown. The GPU clock throttled from 1200 MHz to as low as 443 MHz, which is why GPU prefill varies so much. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.*
 
 **Encoder Placement (Decode on NPU, Qwen2-VL-2B-Instruct-Q4_0):**
 
