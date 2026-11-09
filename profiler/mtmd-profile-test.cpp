@@ -55,7 +55,7 @@ struct profile_test_settings {
     std::string model_path;
     std::string mmproj_path;
     std::string backend;           // "CPU", "GPU", "NPU-4Core", "NPU-1Core"
-    std::string vit_device;        // vision encoder device ("GPU0", "HTP0", "CPU"); empty = default
+    std::string vit_device;        // vision encoder device ("GPUOpenCL", "HTP0", "CPU"); empty = default
     int32_t htp_sessions;
     int32_t n_ctx;
     int32_t n_batch;

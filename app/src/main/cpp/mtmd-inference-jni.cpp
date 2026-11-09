@@ -303,7 +303,7 @@ extern "C" {
  *
  * @param modelPath    Path to model GGUF file
  * @param mmprojPath   Path to multimodal projector GGUF file
- * @param device       Device string: "CPU0", "GPU0", "HTP0,HTP1,HTP2,HTP3"
+ * @param device       Device string: "CPU", "GPUOpenCL", "HTP0,HTP1,HTP2,HTP3"
  * @param nGpuLayers   Number of layers to offload (0 = CPU, 999 = all GPU/NPU)
  * @param nCtx         Context size
  * @param nBatch       Batch size
@@ -337,7 +337,7 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeInit(
     }
 
     if (dev.empty()) {
-        dev = "CPU0";
+        dev = "CPU";
     }
 
     LOGI("Model: %s", model.c_str());

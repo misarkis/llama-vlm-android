@@ -191,7 +191,7 @@ This example uses 4 sessions. HTP sessions are virtual on one cDSP, and 1 sessio
 
 ## Vision Encoder Placement
 
-`mtmd_model_params_t.mmproj_device` selects the vision encoder device in `mtmd-inference-api`: `"GPU0"`, `"HTP0"` or `"CPU"`. An empty string keeps the default placement.
+`mtmd_model_params_t.mmproj_device` selects the vision encoder device in `mtmd-inference-api`: `"GPUOpenCL"`, `"HTP0"` or `"CPU"`. An empty string keeps the default placement.
 
 - The app sets `HTP0` when the device string contains `HTP`. CPU and GPU modes are unchanged.
 - `GGML_HEXAGON_NDEV` and `GGML_HEXAGON_DEVICES` are set to cover both the LLM devices and the encoder device.

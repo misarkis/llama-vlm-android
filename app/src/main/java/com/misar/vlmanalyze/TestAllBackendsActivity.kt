@@ -14,8 +14,8 @@ import java.io.File
  * Test all backends (CPU, GPU, NPU) for multimodal inference.
  *
  * This activity tests each backend sequentially:
- * 1. CPU backend (device="CPU0", nGpuLayers=0)
- * 2. GPU backend (device="GPU0", nGpuLayers=999)
+ * 1. CPU backend (device="CPU", nGpuLayers=0)
+ * 2. GPU backend (device="GPUOpenCL", nGpuLayers=999)
  * 3. NPU backend (device="HTP0,HTP1,HTP2,HTP3", nGpuLayers=999)
  *
  * Run with: adb shell am start -n com.misar.vlmanalyze/.TestAllBackendsActivity

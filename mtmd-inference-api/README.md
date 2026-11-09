@@ -49,7 +49,7 @@ params.model.mmproj_path = "/data/local/tmp/models/mmproj-f16.gguf";
 
 // Configure device (choose one):
 params.device = "CPU";                    // CPU only
-// params.device = "GPU0";                // GPU (OpenCL)
+// params.device = "GPUOpenCL";           // GPU (OpenCL)
 // params.device = "HTP0,HTP1,HTP2,HTP3"; // NPU (Hexagon)
 
 // Configure GPU layers (0 = CPU, 999 = all layers)
@@ -251,7 +251,7 @@ Options:
   --bitmap-test         Use generated test bitmap instead of file
   --system <text>       System prompt (optional)
   --user <text>         User prompt (required if not --bitmap-test)
-  --device <dev>        Device: CPU, GPU0, HTP0,HTP1,HTP2,HTP3 (default: CPU)
+  --device <dev>        Device: CPU, GPUOpenCL, HTP0,HTP1,HTP2,HTP3 (default: CPU)
   --n-gpu-layers <n>    GPU layers (0=CPU, 999=all, default: 999)
   --n-ctx <n>           Context size (default: 16384)
   --n-predict <n>       Max tokens to generate (default: 128)
@@ -267,7 +267,7 @@ Options:
 |-------|------|---------|-------------|
 | `model.path` | string | "" | Path to model GGUF file |
 | `model.mmproj_path` | string | "" | Path to multimodal projector |
-| `device` | string | "CPU" | Device string (CPU, GPU0, HTP0, etc.) |
+| `device` | string | "CPU" | Device string (CPU, GPUOpenCL, HTP0, etc.) |
 | `n_gpu_layers` | int32 | 999 | Layers to offload (0=CPU, 999=all) |
 | `n_ctx` | int32 | 16384 | Context size |
 | `n_batch` | int32 | 512 | Batch size for prompt processing |

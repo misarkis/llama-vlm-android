@@ -96,7 +96,7 @@ Config files are in `configs/`:
 }
 ```
 
-`vit_device` sets the vision encoder device: `"GPU0"`, `"HTP0"` or `"CPU"`. Leave it out for the default placement.
+`vit_device` sets the vision encoder device: `"GPUOpenCL"`, `"HTP0"` or `"CPU"`. Leave it out for the default placement.
 
 ## Run on Device
 
@@ -202,7 +202,7 @@ Set with `-HtpProfile`, `--htp-profile` or `htp_profile` in the config. `mtmd-pr
 | Backend   | Device String         | HTP Sessions |
 | --------- | --------------------- | ------------ |
 | CPU       | `CPU`                 | N/A          |
-| GPU       | `GPU0`                | N/A          |
+| GPU       | `GPUOpenCL`           | N/A          |
 | NPU-4Core | `HTP0,HTP1,HTP2,HTP3` | 4            |
 | NPU-1Core | `HTP0`                | 1            |
 

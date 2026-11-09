@@ -90,7 +90,7 @@ static void print_usage(const char* prog) {
     printf("  --bitmap-test         Use generated test bitmap instead of file\n");
     printf("  --system <text>       System prompt (optional)\n");
     printf("  --user <text>         User prompt (required if not --bitmap-test)\n");
-    printf("  --device <dev>        Device: CPU, GPU0, HTP0,HTP1,HTP2,HTP3 (default: CPU)\n");
+    printf("  --device <dev>        Device: CPU, GPUOpenCL, HTP0,HTP1,HTP2,HTP3 (default: CPU)\n");
     printf("  --n-gpu-layers <n>    GPU layers (0=CPU, 999=all, default: 999)\n");
     printf("  --n-ctx <n>           Context size (default: 16384)\n");
     printf("  --n-predict <n>       Max tokens to generate (default: 128)\n");
