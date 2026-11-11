@@ -510,6 +510,7 @@ MIT License - See LICENSE file for details
 - **llama.cpp** - https://github.com/ggml-org/llama.cpp
 - **Qwen2-VL-2B GGUF** - https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF (quantized by Bartowski)
 - **Qwen3.5-122B GGUF** - https://huggingface.co/unsloth/Qwen3.5-122B-A10B-GGUF (quantized by Unsloth)
+- **Qwen3.8-2B GGUF** - (https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic) (quantized by Kenneth Gregory Strawn)
 - **sherpa-onnx** - https://github.com/k2-fsa/sherpa-onnx (TTS)
 - **Claude CLI** - https://claude.ai/code (development assistant)
 - **OpenCL** - https://www.khronos.org/opencl/ (GPU acceleration)
