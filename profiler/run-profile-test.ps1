@@ -106,7 +106,8 @@ Write-Info "Cleaning existing profile data from device..."
 & $AdbPath shell "rm -f /sdcard/profile_results_*.csv" 2>&1 | Out-Null
 & $AdbPath shell "rm -f /sdcard/profile_log.txt" 2>&1 | Out-Null
 & $AdbPath shell "rm -f /sdcard/profile_*_log.txt" 2>&1 | Out-Null
-& $AdbPath shell "rm -f /data/local/tmp/cl_profiling.csv" 2>&1 | Out-Null
+# OpenCL profiling writes these to the binary's working directory ($DeviceDir)
+& $AdbPath shell "rm -f $DeviceDir/cl_profiling.csv $DeviceDir/cl_trace.json" 2>&1 | Out-Null
 & $AdbPath shell "rm -f /data/local/tmp/profile_results.csv" 2>&1 | Out-Null
 Write-Success "Cleaned existing profile data"
 
@@ -275,6 +276,9 @@ if (Test-Path $ClProfileFile) {
 } else {
     Write-Warn "No OpenCL profiling data found (rebuild with GGML_OPENCL_PROFILING=ON to enable)"
 }
+$ClTraceFile = Join-Path $ProfilerDir "cl_trace.json"
+& $AdbPath pull "$DeviceDir/cl_trace.json" $ClTraceFile 2>&1 | Out-Null
+if (Test-Path $ClTraceFile) { Write-Success "OpenCL trace pulled to: $ClTraceFile" }
 
 Write-Success "Profile test completed"
 Write-Info ""

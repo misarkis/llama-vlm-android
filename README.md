@@ -349,8 +349,9 @@ For multimodal VLM inference, you need:
 1. **Model File** (`.gguf`): The VLM model weights
 2. **MMProj File** (`.gguf`): Multimodal projector for image encoding
 
-**Recommended:** [Qwen2-VL-2B-Bartowski](https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF) - Heavily tested, good quality/size balance.
-
+**Recommended: Heavily tested, good quality/size balance** 
+- [Qwen2-VL-2B-Bartowski](https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF)
+- [Qwen3.8-2B-Distill-heretic](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
 ### Recommended Models (All Tested)
 
 | Model                              | Size    | Purpose                              |
@@ -359,8 +360,6 @@ For multimodal VLM inference, you need:
 | Qwen2-VL-2B-Bartowski-Q4_0         | ~1.4 GB | Smaller footprint, good quality      |
 | Qwen2-VL-2B-Bartowski-Q8_0         | ~2.8 GB | Higher quality, more memory          |
 | Qwen3.8-2B-Distill-heretic-Q4_K_M  | ~1.3 GB | Thinking model, 31–32 tk/s on NPU    |
-
-Qwen3.8 download: [Qwen3.8-2B-Distill-heretic](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
 
 
 ### Pushing Models to Device
@@ -391,14 +390,14 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 - NPU uses 1 HTP session with the vision encoder on HTP
 - Profiler with HTP profiling off (`-HtpProfile 0`). See [PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)
 
-| Model (Q4_K_M) | Backend | Decode    | Prefill Mean (Range)    | 130-Token Answer | Peak Temp    |
-|----------------|---------|-----------|-------------------------|------------------|--------------|
-| Qwen2-VL 2B    | **NPU** | **40.9 tk/s** | **0.72 s (0.50–0.96)** | **3.9 s**    | NPU 89.9°C   |
-| Qwen2-VL 2B    | GPU     | 29.5 tk/s | 4.62 s (1.87–7.74)      | 9.0 s            | GPU 93.0°C   |
-| Qwen2-VL 2B    | CPU     | 11.5 tk/s | 33.46 s (10.19–43.55)   | 44.8 s           | CPU 105.4°C  |
-| Qwen3.8 2B     | **NPU** | **30.9 tk/s** | **0.50 s (0.34–0.60)** | **4.7 s**    | NPU 89.2°C   |
-| Qwen3.8 2B     | GPU     | 21.8 tk/s | 3.52 s (1.06–5.08)      | 9.5 s            | GPU 89.6°C   |
-| Qwen3.8 2B     | CPU     | 10.4 tk/s | 15.42 s (4.23–20.83)    | 27.9 s           | CPU 105.4°C  |
+| Model (Q4_K_M) | Backend | Decode        | Prefill Mean (Range)   | 130-Token Answer | Peak Temp   |
+| -------------- | ------- | ------------- | ---------------------- | ---------------- | ----------- |
+| Qwen2-VL 2B    | **NPU** | **40.9 tk/s** | **0.72 s (0.50–0.96)** | **3.9 s**        | NPU 89.9°C  |
+| Qwen2-VL 2B    | GPU     | 29.5 tk/s     | 4.62 s (1.87–7.74)     | 9.0 s            | GPU 93.0°C  |
+| Qwen2-VL 2B    | CPU     | 11.5 tk/s     | 33.46 s (10.19–43.55)  | 44.8 s           | CPU 105.4°C |
+| Qwen3.8 2B     | **NPU** | **30.9 tk/s** | **0.50 s (0.34–0.60)** | **4.7 s**        | NPU 89.2°C  |
+| Qwen3.8 2B     | GPU     | 21.8 tk/s     | 3.52 s (1.06–5.08)     | 9.5 s            | GPU 89.6°C  |
+| Qwen3.8 2B     | CPU     | 10.4 tk/s     | 15.42 s (4.23–20.83)   | 27.9 s           | CPU 105.4°C |
 
 *130-Token Answer is mean prefill plus 130 tokens at mean decode speed. Each run processed the 10 images with no pause, after a cooldown. The GPU clock throttled from 1200 MHz to as low as 443 MHz, which is why GPU prefill varies so much. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.*
 
