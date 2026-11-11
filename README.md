@@ -295,10 +295,10 @@ Analyze what the camera sees. Works in both REMOTE and LOCAL modes.
 
 ### General Settings (Both Modes)
 
-| Setting      | Description                    | Default |
-|--------------|--------------------------------|---------|
-| Image Scale (Screen) | Screen capture resolution (slider) | 0.4   |
-| Image Scale (Camera) | Camera capture resolution (slider) | 0.25  |
+| Setting              | Description                        | Default |
+| -------------------- | ---------------------------------- | ------- |
+| Image Scale (Screen) | Screen capture resolution (slider) | 0.4     |
+| Image Scale (Camera) | Camera capture resolution (slider) | 0.25    |
 
 
 ### Local Settings (LOCAL Mode)
@@ -354,12 +354,12 @@ For multimodal VLM inference, you need:
 - [Qwen3.8-2B-Distill-heretic](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
 ### Recommended Models (All Tested)
 
-| Model                              | Size    | Purpose                              |
-|------------------------------------|---------|--------------------------------------|
-| Qwen2-VL-2B-Bartowski-Q4_K_M       | ~1.5 GB | Balanced quality/speed (recommended) |
-| Qwen2-VL-2B-Bartowski-Q4_0         | ~1.4 GB | Smaller footprint, good quality      |
-| Qwen2-VL-2B-Bartowski-Q8_0         | ~2.8 GB | Higher quality, more memory          |
-| Qwen3.8-2B-Distill-heretic-Q4_K_M  | ~1.3 GB | Thinking model, 31–32 tk/s on NPU    |
+| Model                             | Size    | Purpose                           |
+| --------------------------------- | ------- | --------------------------------- |
+| Qwen2-VL-2B-Bartowski-Q4_K_M      | ~1.5 GB | 40–41 tk/s on NPU                 |
+| Qwen2-VL-2B-Bartowski-Q4_0        | ~1.4 GB | Smaller footprint, good quality   |
+| Qwen2-VL-2B-Bartowski-Q8_0        | ~2.8 GB | Higher quality, more memory       |
+| Qwen3.8-2B-Distill-heretic-Q4_K_M | ~1.3 GB | Thinking model, 31–32 tk/s on NPU |
 
 
 ### Pushing Models to Device
