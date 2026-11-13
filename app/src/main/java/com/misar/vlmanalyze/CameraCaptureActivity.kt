@@ -77,6 +77,9 @@ class CameraCaptureActivity : AppCompatActivity() {
     // Streaming state
     private var isStreaming = false
     private var isCapturing = false  // True while processing capture
+    private var holdsInferenceClaim = false  // Main thread: claimed busy flag not yet handed to the inference coroutine
+    @Volatile private var sessionClosed = false  // Set in onDestroy: results of runs from this screen are dropped
+    @Volatile private var runInFlight = false  // A local run started from this screen is still going: onDestroy cancels only its own run
 
     // Backend mode (set when activity starts)
     private var backendMode: String = "REMOTE"  // "REMOTE" or "LOCAL"
@@ -144,6 +147,9 @@ class CameraCaptureActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         i("CameraCaptureActivity destroying")
+        sessionClosed = true
+        releaseInferenceClaim()  // only if a capture was claimed but never reached inference
+        if (runInFlight) VlmApplication.localInferenceBackend?.cancel()  // stop generating an answer nobody will hear
 
         // Stop camera stream
         stopCameraStream()
@@ -323,6 +329,21 @@ class CameraCaptureActivity : AppCompatActivity() {
             return
         }
 
+        // A run from an earlier camera session may still be on the model
+        if (backendMode == "LOCAL") {
+            if (!VlmApplication.inferenceBusy.compareAndSet(false, true)) {
+                i("Previous inference still running, ignoring capture")
+                updateStatus("Still finishing the previous answer")
+                // Overlay already shows "Analyzing" and paused voice; an error resets it
+                val intent = Intent(ScreenCaptureService.ACTION_ANALYSIS_ERROR).apply {
+                    putExtra(ScreenCaptureService.EXTRA_ERROR_MESSAGE, "Still finishing the previous answer, try again in a moment")
+                }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                return
+            }
+            holdsInferenceClaim = true
+        }
+
         i("Capture triggered")
 
         isCapturing = true
@@ -347,6 +368,7 @@ class CameraCaptureActivity : AppCompatActivity() {
         val rgbBytes = latestFrameRgbBytes
         if (rgbBytes == null) {
             d("No frame available for capture")
+            releaseInferenceClaim()
             handler.post {
                 resumeCameraStream()
                 updateStatus("No frame available")
@@ -386,17 +408,36 @@ class CameraCaptureActivity : AppCompatActivity() {
             }
 
             // Step 3: Send to inference backend (run on IO thread to avoid UI freeze)
+            // The job now owns the busy flag. invokeOnCompletion fires once the job is fully done
+            // (including the native call), and even if it was cancelled before starting
+            val ownsBusyFlag = holdsInferenceClaim
+            holdsInferenceClaim = false
+            runInFlight = ownsBusyFlag
             kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                 sendToInference(scaledRgbBytes, scaledWidth, scaledHeight)
+            }.invokeOnCompletion {
+                if (ownsBusyFlag) {
+                    runInFlight = false
+                    VlmApplication.inferenceBusy.set(false)
+                }
             }
 
         } catch (e: Exception) {
             Log.e(TAG, "Frame processing failed", e)
+            releaseInferenceClaim()
             handler.post {
                 updateStatus("Error: ${e.message}")
                 resumeCameraStream()
                 isCapturing = false
             }
+        }
+    }
+
+    // Main thread only. Frees the busy flag if this screen claimed it and never started the run
+    private fun releaseInferenceClaim() {
+        if (holdsInferenceClaim) {
+            holdsInferenceClaim = false
+            VlmApplication.inferenceBusy.set(false)
         }
     }
 
@@ -459,6 +500,12 @@ class CameraCaptureActivity : AppCompatActivity() {
                 else -> 0.0
             }
 
+            // The screen that asked was closed: a new session would show and speak this old answer
+            if (sessionClosed) {
+                i("Camera session closed during inference - dropping result")
+                return
+            }
+
             // Broadcast result to overlay for display and TTS (via LocalBroadcastManager)
             val intent = Intent(ScreenCaptureService.ACTION_ANALYSIS_STREAM_COMPLETE).apply {
                 putExtra(ScreenCaptureService.EXTRA_STREAM_CONTENT, when (result) {
@@ -483,6 +530,7 @@ class CameraCaptureActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             d("Inference failed: ${e.message}")
+            if (sessionClosed) return  // same as above: nobody to tell
             // Broadcast error to overlay (via LocalBroadcastManager)
             val intent = Intent(ScreenCaptureService.ACTION_ANALYSIS_ERROR).apply {
                 putExtra(ScreenCaptureService.EXTRA_ERROR_MESSAGE, e.message ?: "Unknown error")

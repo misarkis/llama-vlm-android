@@ -94,13 +94,15 @@ class LocalInferenceService {
         htpSessions: Int = 1,
         // Inference parameters
         imageMinTokens: Int = -1,
-        topK: Int = 40,
+        imageMaxTokens: Int = -1,
+        enableThinking: Boolean = false,
+        topK: Int = 20,
         topP: Float = 0.95f,
-        temperature: Float = 0.80f,
+        temperature: Float = 0.60f,
         repetitionPenalty: Float = 1.00f
     ): Boolean {
         d("Initializing: model=$modelPath, mmproj=$mmprojPath, backend=$backend, ctx=$nCtx, batch=$nBatch, nPredict=$nPredict, verbose=$verbose, htpSessions=$htpSessions")
-        d("  Inference params: imageMinTokens=$imageMinTokens, topK=$topK, topP=$topP, temperature=$temperature, repetitionPenalty=$repetitionPenalty")
+        d("  Inference params: imageMinTokens=$imageMinTokens, imageMaxTokens=$imageMaxTokens, enableThinking=$enableThinking, topK=$topK, topP=$topP, temperature=$temperature, repetitionPenalty=$repetitionPenalty")
 
         val nGpuLayers = when (backend) {
             "NPU" -> DEFAULT_N_GPU_LAYERS
@@ -130,6 +132,8 @@ class LocalInferenceService {
                 nPredict = nPredict,
                 verbose = verbose,
                 imageMinTokens = imageMinTokens,
+                imageMaxTokens = imageMaxTokens,
+                enableThinking = enableThinking,
                 topK = topK,
                 topP = topP,
                 temperature = temperature,
@@ -297,6 +301,13 @@ class LocalInferenceService {
      */
     fun isValid(): Boolean {
         return isInitialized && handle != 0L && nativeIsValid(handle)
+    }
+
+    /**
+     * Ask the running inference to stop at the next token. No effect when idle.
+     */
+    fun cancel() {
+        if (handle != 0L) nativeCancel(handle)
     }
 
     /**
@@ -473,6 +484,8 @@ class LocalInferenceService {
         nPredict: Int,
         verbose: Boolean,
         imageMinTokens: Int,
+        imageMaxTokens: Int,
+        enableThinking: Boolean,
         topK: Int,
         topP: Float,
         temperature: Float,
@@ -505,6 +518,8 @@ class LocalInferenceService {
     ): String
 
     private external fun nativeFree(handle: Long)
+
+    private external fun nativeCancel(handle: Long)
 
     private external fun nativeIsValid(handle: Long): Boolean
 

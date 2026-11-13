@@ -25,7 +25,7 @@ object Config {
     // Default values
     private const val DEFAULT_MODEL = "unsloth/Qwen3.5-122B-A10B-GGUF:UD-Q4_K_XL"
     private const val DEFAULT_API_URL = "http://192.168.1.46:8080/v1/chat/completions"
-    private const val DEFAULT_SYSTEM_PROMPT = "You are a AI assistant. Please answer in details in English only. Just English. Do not use chineese. No chineese."
+    private const val DEFAULT_SYSTEM_PROMPT = "You are a AI assistant. Describe what is on a phone screen or camera view to the person looking at it. Answer in English only, in three or four detailed sentences, under 100 words. Plain speech: no lists, no markdown, no headings."
     private const val DEFAULT_USER_PROMPT = "What is on this screen right now? What should the person see? Tell them what matters. Keep it casual like you are explaining it to a friend."
     private const val DEFAULT_CAPTURE_COOLDOWN = 3
     private const val DEFAULT_MAX_TOKENS = 512

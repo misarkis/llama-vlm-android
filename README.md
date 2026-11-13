@@ -51,12 +51,13 @@ Supports local acceleration with CPU (ARM cores), GPU (Adreno via [OpenCL](https
 
 ### Local Backend Acceleration
 
-| Backend | Hardware        | Qwen2-VL 2B Decode (Fold 7) | Qwen3.8 2B Decode (Fold 7) |
-|---------|-----------------|-----------------------------|----------------------------|
-| CPU     | ARM cores       | 11.5 tk/s                   | 10.4 tk/s                  |
-| NPU     | Hexagon HTP     | 40.9 tk/s                   | 30.9 tk/s                  |
-| GPU     | Adreno (OpenCL) | 29.5 tk/s                   | 21.8 tk/s                  |
+| Backend | Hardware        | Decode Range, 9 Models |
+| ------- | --------------- | ---------------------- |
+| CPU     | ARM cores       | 4.5–19 tk/s            |
+| NPU     | Hexagon HTP     | 15–59 tk/s             |
+| GPU     | Adreno (OpenCL) | 7–41 tk/s              |
 
+See [Local Inference Benchmarks](#local-inference-benchmarks) for each model. These were running on the Samsung Galaxy Z Fold 7 Ultra (Qualcomm Snapdragon 8 Elite).
 
 ---
 
@@ -303,19 +304,19 @@ Analyze what the camera sees. Works in both REMOTE and LOCAL modes.
 
 ### Local Settings (LOCAL Mode)
 
-| Setting            | Description               | Default     |
-|--------------------|---------------------------|-------------|
-| Model Path         | Path to `.gguf` model     | -           |
-| MMProj Path        | Path to projector file    | -           |
-| Backend            | CPU / GPU / NPU           | CPU         |
-| Context Size       | Token context window      | `16384`     |
-| Batch Size         | Processing batch size     | `512`       |
-| HTP Sessions       | Hexagon sessions (NPU)    | `1`  * HTP Sessions is Device-dependent: Samsung Fold 7 supports up to 4, Samsung Flip 6 supports 1 only. 1 ran faster than 4 on the Fold 7*       |
-| Image Min Tokens   | Minimum image tokens      | `-1` (auto) |
-| Top-k              | Sampling top-k            | `40`        |
-| Top-p              | Sampling top-p            | `0.95`      |
-| Temperature        | Sampling temperature      | `0.80`      |
-| Repetition Penalty | Repetition penalty        | `1.00`      |
+| Setting            | Description            | Default                                                                                                                                            |
+| ------------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Model Path         | Path to `.gguf` model  | -                                                                                                                                                  |
+| MMProj Path        | Path to projector file | -                                                                                                                                                  |
+| Backend            | CPU / GPU / NPU        | CPU                                                                                                                                                |
+| Context Size       | Token context window   | `16384`                                                                                                                                            |
+| Batch Size         | Processing batch size  | `512`                                                                                                                                              |
+| HTP Sessions       | Hexagon sessions (NPU) | `1`  * HTP Sessions is Device-dependent: Samsung Galaxy Z Fold 7 Ultra supports up to 4, 1 ran faster than 4. Samsung Galaxy Z Flip 6 supports 1.* |
+| Image Min Tokens   | Minimum image tokens   | `-1` (auto)                                                                                                                                        |
+| Top-k              | Sampling top-k         | `40`                                                                                                                                               |
+| Top-p              | Sampling top-p         | `0.95`                                                                                                                                             |
+| Temperature        | Sampling temperature   | `0.80`                                                                                                                                             |
+| Repetition Penalty | Repetition penalty     | `1.00`                                                                                                                                             |
 
  
 
@@ -349,17 +350,21 @@ For multimodal VLM inference, you need:
 1. **Model File** (`.gguf`): The VLM model weights
 2. **MMProj File** (`.gguf`): Multimodal projector for image encoding
 
-**Recommended: Heavily tested, good quality/size balance** 
-- [Qwen2-VL-2B-Bartowski](https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF)
-- [Qwen3.8-2B-Distill-heretic](https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
-### Recommended Models (All Tested)
+### Supported Models
 
-| Model                             | Size    | Purpose                           |
-| --------------------------------- | ------- | --------------------------------- |
-| Qwen2-VL-2B-Bartowski-Q4_K_M      | ~1.5 GB | 40–41 tk/s on NPU                 |
-| Qwen2-VL-2B-Bartowski-Q4_0        | ~1.4 GB | Smaller footprint, good quality   |
-| Qwen2-VL-2B-Bartowski-Q8_0        | ~2.8 GB | Higher quality, more memory       |
-| Qwen3.8-2B-Distill-heretic-Q4_K_M | ~1.3 GB | Thinking model, 31–32 tk/s on NPU |
+All llama.cpp models should be supported. These 9 models are tested on NPU, GPU and CPU. Other llama.cpp multimodal (mtmd) models were tested on Samsung Galaxy Z Fold 7 Ultra (Qualcomm Snapdragon 8 Elite).
+
+| Model                      | GGUF Source (Hugging Face)                                                          | Model Q4_K_M | mmproj f16 | Notes                                            |
+| -------------------------- | ----------------------------------------------------------------------------------- | ------------ | ---------- | ------------------------------------------------ |
+| Qwen2-VL-2B-Instruct       | [bartowski](https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF)             | 0.99 GB      | 1.33 GB    |                                                  |
+| Qwen3-VL-2B-Instruct       | [unsloth](https://huggingface.co/unsloth/Qwen3-VL-2B-Instruct-GGUF)                 | 1.11 GB      | 0.82 GB    | GPU: sometimes very long answers                 |
+| Qwen3.5-0.8B               | [unsloth](https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF)                         | 0.53 GB      | 0.21 GB    |                                                  |
+| Qwen3.5-2B                 | [unsloth](https://huggingface.co/unsloth/Qwen3.5-2B-GGUF)                           | 1.28 GB      | 0.67 GB    |                                                  |
+| Qwen3.5-4B                 | [unsloth](https://huggingface.co/unsloth/Qwen3.5-4B-GGUF)                           | 2.74 GB      | 0.67 GB    |                                                  |
+| Qwen3.8-2B-Distill-heretic | [mradermacher](https://huggingface.co/mradermacher/Qwen3.8-2B-Distill-heretic-GGUF) | 1.27 GB      | 0.67 GB    | Thinking model (tested with thinking off)        |
+| LFM2.5-VL-1.6B             | [lmstudio-community](https://huggingface.co/lmstudio-community/LFM2.5-VL-1.6B-GGUF) | 0.73 GB      | 0.85 GB    |                                                  |
+| SmolVLM2-2.2B-Instruct     | [ggml-org](https://huggingface.co/ggml-org/SmolVLM2-2.2B-Instruct-GGUF)             | 1.11 GB      | 0.87 GB    | GPU: garbage output                              |
+| Granite-Vision-3.2-2B      | [ibm-research](https://huggingface.co/ibm-research/granite-vision-3.2-2b-GGUF)      | 1.55 GB      | 0.89 GB    | About 3,600 image tokens per image: slow prefill |
 
 
 ### Pushing Models to Device
@@ -383,42 +388,49 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 ### Local Inference Benchmarks
 
 **Test Configuration:**
-- Device: Samsung Galaxy Fold 7 (Adreno 830, Hexagon v79)
+- Device: Samsung Galaxy Z Fold 7 Ultra (Adreno 830, Hexagon v79)
 - Build: llama.cpp b12181, Hexagon SDK 6.7.0.1
-- Models: Qwen2-VL-2B-Instruct-Q4_K_M, Qwen3.8-2B-Distill-heretic Q4_K_M, both with f16 mmproj
-- 10 test images, Image Min Tokens: 1000, Temperature: 0.9
+- Models: the 9 [tested models](#supported-models), Q4_K_M with f16 mmproj
+- Context size 16384 (`n_ctx`)
+- 10 test images, image tokens at each model's default
+- Thinking off, Jinja template on, short-answer prompt
+- Sampling: temperature 0.6, top_k 20, top_p 0.95, min_p 0.05
 - NPU uses 1 HTP session with the vision encoder on HTP
-- Profiler with HTP profiling off (`-HtpProfile 0`). See [PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)
+- The phone is not rooted, so the CPU clock can't be fixed. After image 1 the thermal limit holds the CPU at about 1 GHz
+- Profiler with HTP profiling off (`-HtpProfile 0`), after a cooldown. See [PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)
 
-| Model (Q4_K_M) | Backend | Decode        | Prefill Mean (Range)   | 130-Token Answer | Peak Temp   |
-| -------------- | ------- | ------------- | ---------------------- | ---------------- | ----------- |
-| Qwen2-VL 2B    | **NPU** | **40.9 tk/s** | **0.72 s (0.50–0.96)** | **3.9 s**        | NPU 89.9°C  |
-| Qwen2-VL 2B    | GPU     | 29.5 tk/s     | 4.62 s (1.87–7.74)     | 9.0 s            | GPU 93.0°C  |
-| Qwen2-VL 2B    | CPU     | 11.5 tk/s     | 33.46 s (10.19–43.55)  | 44.8 s           | CPU 105.4°C |
-| Qwen3.8 2B     | **NPU** | **30.9 tk/s** | **0.50 s (0.34–0.60)** | **4.7 s**        | NPU 89.2°C  |
-| Qwen3.8 2B     | GPU     | 21.8 tk/s     | 3.52 s (1.06–5.08)     | 9.5 s            | GPU 89.6°C  |
-| Qwen3.8 2B     | CPU     | 10.4 tk/s     | 15.42 s (4.23–20.83)   | 27.9 s           | CPU 105.4°C |
+Values are medians over images 2–10 (warm). TTFT (time to first token) covers image encode and prefill.
 
-*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. Each run processed the 10 images with no pause, after a cooldown. The GPU clock throttled from 1200 MHz to as low as 443 MHz, which is why GPU prefill varies so much. Answer lengths differ between runs, and Qwen3.8 decode includes thinking tokens.*
+| Model          | Image Tokens | TTFT NPU | TTFT GPU | TTFT CPU | Decode NPU | Decode GPU  | Decode CPU |
+| -------------- | ------------ | -------- | -------- | -------- | ---------- | ----------- | ---------- |
+| Qwen3.5-0.8B   | 252          | 0.30 s   | 1.3 s    | 7.0 s    | 54.0 tk/s  | 41.0 tk/s   | 15.9 tk/s  |
+| Qwen3.8-2B     | 252          | 0.53 s   | 4.7 s    | 21.1 s   | 31.0 tk/s  | 17.4 tk/s   | 9.0 tk/s   |
+| Qwen3.5-2B     | 252          | 0.53 s   | 5.0 s    | 21.1 s   | 31.3 tk/s  | 17.4 tk/s   | 9.1 tk/s   |
+| Qwen3-VL-2B    | 252          | 0.57 s   | 4.1 s ⚠  | 20.9 s   | 33.2 tk/s  | 16.2 tk/s ⚠ | 10.8 tk/s  |
+| Qwen2-VL-2B    | 315          | 0.78 s   | 8.4 s    | 42.5 s   | 41.3 tk/s  | 16.7 tk/s   | 11.1 tk/s  |
+| Qwen3.5-4B     | 252          | 1.0 s    | 9.3 s    | 33.2 s   | 14.9 tk/s  | 7.7 tk/s    | 4.7 tk/s   |
+| LFM2.5-VL-1.6B | 252          | 1.5 s    | 12.7 s   | 22.2 s   | 59.2 tk/s  | 29.5 tk/s   | 19.1 tk/s  |
+| SmolVLM2-2.2B  | 243          | 4.2 s    | ❌       | 47.0 s   | 33.8 tk/s  | ❌          | 13.0 tk/s  |
+| Granite-3.2-2B | 3645         | 13.7 s   | 84.7 s   | 271 s    | 15.1 tk/s  | 6.8 tk/s    | 4.5 tk/s   |
 
-**Encoder Placement (Decode on NPU, Qwen2-VL-2B-Instruct-Q4_0):**
+*⚠ On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of the 9 warm images); its GPU numbers are the average of the other 6 images. It works on NPU and CPU. ❌ On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. GPU decode slows by 20–37% over a run from thermal throttling. The first image after loading a model is slower, so it is not counted.*
+*⚠ On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of the 9 warm images); its GPU numbers are the average of the other 6 images. It works on NPU and CPU. ❌ On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. GPU decode slows by 20–37% over a run from thermal throttling. The first image after loading a model is slower, so it is not counted.*
 
-| Configuration                                       | Decode        | Prefill per Image | 130-Token Answer |
-|-----------------------------------------------------|---------------|-------------------|------------------|
-| **Decode on NPU (1 session), encoder on NPU (app)** | **41.7 tk/s** | **0.50–0.96 s**   | **3.8 s**        |
-| Decode on NPU (1 session), encoder on GPU           | 41.8 tk/s     | 1.51–6.36 s       | 6.9 s            |
-| Decode on NPU (4 sessions), encoder on GPU          | 37.4 tk/s     | 1.50–6.08 s       | 7.2 s            |
+**Samsung Galaxy Z Flip 6 (Qualcomm Snapdragon 8 Gen 3; Adreno 750, Hexagon v75)**, same build and settings as above, with a context size of 4096 (`n_ctx`):
 
-*130-Token Answer is mean prefill plus 130 tokens at mean decode speed. The slowest GPU encoder times came from thermal throttling: the GPU clock dropped from 1200 MHz to about 500 MHz after 30–40 seconds.*
+| Model          | Image Tokens | TTFT NPU | TTFT CPU | Decode NPU | Decode CPU |
+| -------------- | ------------ | -------- | -------- | ---------- | ---------- |
+| Qwen3.5-0.8B   | 252          | 0.48 s   | 4.8 s    | 35.5 tk/s  | 16.7 tk/s  |
+| Qwen3.8-2B     | 252          | 0.92 s   | 30.8 s   | 19.3 tk/s  | 6.0 tk/s   |
+| Qwen3.5-2B     | 252          | 0.91 s   | 19.5 s   | 19.9 tk/s  | 9.9 tk/s   |
+| Qwen3-VL-2B    | 252          | 0.91 s   | 31.3 s   | 20.3 tk/s  | 6.8 tk/s   |
+| Qwen2-VL-2B    | 315          | 1.2 s    | 61.0 s   | 26.5 tk/s  | 7.6 tk/s   |
+| Qwen3.5-4B     | 252          | ❌       | 31.7 s   | ❌         | 4.6 tk/s   |
+| LFM2.5-VL-1.6B | 252          | 3.5 s    | 32.6 s   | 34.6 tk/s  | 12.3 tk/s  |
+| SmolVLM2-2.2B  | 243          | 7.9 s    | 40.6 s   | 19.2 tk/s  | 13.1 tk/s  |
+| Granite-3.2-2B | 3645         | 26.0 s   | 245 s    | 8.9 tk/s   | 6.0 tk/s   |
 
-**In the app (NPU, 1 session, encoder on HTP, later images):**
-
-| Model                  | Decode       | Prefill     |
-|------------------------|--------------|-------------|
-| Qwen2-VL-2B-Q4_K_M     | 42–45 tk/s   | 0.72–0.74 s |
-| Qwen3.8-2B-Q4_K_M      | 31–32 tk/s   | 0.49–0.51 s |
-
-The first image after loading a model takes longer: 0.8–1.7 s prefill in these runs.
+*❌ Qwen3.5-4B does not fit on the Flip 6 NPU. GPU: Q4_K_M models are not supported on the Adreno 750. The Flip 6 throttles more than the Fold 7, so CPU numbers vary a lot over a run.*
 
 
 ### Factors Affecting Performance
@@ -430,10 +442,9 @@ The first image after loading a model takes longer: 0.8–1.7 s prefill in these
 
 ### Tips for Better Performance
 
-1. Use Q4_K_M quantization for balance
-2. Enable GPU/NPU if available, and use 1 HTP session in NPU mode
-3. Reduce image scale for faster capture
-4. Set appropriate context size for your use case
+1. Enable GPU/NPU if available, and use 1 HTP session in NPU mode
+2. Reduce image scale for faster capture
+3. Set appropriate context size for your use case
 
 ---
 
@@ -508,9 +519,16 @@ MIT License - See LICENSE file for details
 ## Credits
 
 - **llama.cpp** - https://github.com/ggml-org/llama.cpp
-- **Qwen2-VL-2B GGUF** - https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF (quantized by Bartowski)
-- **Qwen3.5-122B GGUF** - https://huggingface.co/unsloth/Qwen3.5-122B-A10B-GGUF (quantized by Unsloth)
-- **Qwen3.8-2B GGUF** - https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic (quantized by Kenneth Gregory Strawn)
+- **Qwen2-VL-2B-Instruct GGUF** - https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF (quantized by Bartowski)
+- **Qwen3-VL-2B-Instruct GGUF** - https://huggingface.co/unsloth/Qwen3-VL-2B-Instruct-GGUF (quantized by Unsloth)
+- **Qwen3.5-0.8B GGUF** - https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF (quantized by Unsloth)
+- **Qwen3.5-2B GGUF** - https://huggingface.co/unsloth/Qwen3.5-2B-GGUF (quantized by Unsloth)
+- **Qwen3.5-4B GGUF** - https://huggingface.co/unsloth/Qwen3.5-4B-GGUF (quantized by Unsloth)
+- **Qwen3.8-2B-Distill-heretic GGUF** - https://huggingface.co/mradermacher/Qwen3.8-2B-Distill-heretic-GGUF (quantized by mradermacher; original model: https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic)
+- **LFM2.5-VL-1.6B GGUF** - https://huggingface.co/lmstudio-community/LFM2.5-VL-1.6B-GGUF (quantized by LM Studio Community)
+- **SmolVLM2-2.2B-Instruct GGUF** - https://huggingface.co/ggml-org/SmolVLM2-2.2B-Instruct-GGUF (quantized by ggml-org)
+- **Granite-Vision-3.2-2B GGUF** - https://huggingface.co/ibm-research/granite-vision-3.2-2b-GGUF (IBM Research)
+- **Qwen3.5-122B GGUF** - https://huggingface.co/unsloth/Qwen3.5-122B-A10B-GGUF (quantized by Unsloth, remote mode)
 - **sherpa-onnx** - https://github.com/k2-fsa/sherpa-onnx (TTS)
 - **Claude CLI** - https://claude.ai/code (development assistant)
 - **OpenCL** - https://www.khronos.org/opencl/ (GPU acceleration)

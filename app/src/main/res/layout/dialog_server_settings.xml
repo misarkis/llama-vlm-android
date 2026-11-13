@@ -316,7 +316,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:inputType="numberSigned"
-                android:hint="-1 (unlimited)"
+                android:hint="-1 (model default)"
                 android:textColor="#ffffff"
                 android:textColorHint="#666666"
                 android:background="#333333"
@@ -326,7 +326,43 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Minimum image tokens (-1 = unlimited)"
+                android:text="Minimum image tokens (-1 = model default)"
+                android:textSize="10sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Image Max Tokens -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image Max Tokens"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff" />
+
+            <EditText
+                android:id="@+id/et_image_max_tokens"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:inputType="numberSigned"
+                android:hint="-1 (model default)"
+                android:textColor="#ffffff"
+                android:textColorHint="#666666"
+                android:background="#333333"
+                android:padding="10dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maximum image tokens (-1 = model default)"
                 android:textSize="10sp"
                 android:textColor="#666666"
                 android:layout_marginTop="2dp" />
@@ -475,6 +511,17 @@
                 android:textColor="#666666"
                 android:layout_marginTop="2dp" />
         </LinearLayout>
+
+        <!-- Thinking (reasoning models) -->
+        <CheckBox
+            android:id="@+id/cb_enable_thinking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thinking - Let reasoning models think before answering (slower)"
+            android:textColor="#ffffff"
+            android:buttonTint="#9C27B0"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
 
         <!-- Verbose -->
         <CheckBox

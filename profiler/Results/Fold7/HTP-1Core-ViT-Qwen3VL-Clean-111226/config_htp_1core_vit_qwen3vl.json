@@ -1,0 +1,22 @@
+{
+  "model_path": "/data/local/tmp/llama.cpp/models/Qwen3-VL-2B-Unsloth/Qwen3-VL-2B-Instruct-Q4_K_M.gguf",
+  "mmproj_path": "/data/local/tmp/llama.cpp/models/Qwen3-VL-2B-Unsloth/mmproj-F16.gguf",
+  "backend": "NPU-1Core",
+  "vit_device": "HTP0",
+  "htp_sessions": 1,
+  "n_ctx": 16384,
+  "n_batch": 512,
+  "n_predict": 512,
+  "image_min_tokens": -1,
+  "image_max_tokens": -1,
+  "top_k": 20,
+  "top_p": 0.95,
+  "temperature": 0.6,
+  "repetition_penalty": 1.0,
+  "image_dir": "/data/local/tmp/mtmd-profile-test/test_images/",
+  "htp_profile": 1,
+  "system_prompt": "You are a AI assistant. Describe what is on a phone screen or camera view to the person looking at it. Answer in English only, in three or four detailed sentences, under 100 words. Plain speech: no lists, no markdown, no headings.",
+  "user_prompt": "What is on this screen right now? What should the person see? Tell them what matters. Keep it casual like you are explaining it to a friend.",
+  "output_csv": "/sdcard/profile_results_1core_vit_qwen3vl.csv",
+  "output_log": "/sdcard/profile_htp_1core_vit_qwen3vl_log.txt"
+}

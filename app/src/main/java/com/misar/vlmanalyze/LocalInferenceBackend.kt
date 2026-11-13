@@ -57,7 +57,9 @@ class LocalInferenceBackend(private val context: Context) : InferenceBackend {
      * @param nBatch Batch size (default: 512)
      * @param verbose Enable verbose logging (default: false)
      * @param htpSessions Number of HTP sessions for NPU backend (default: 4)
-     * @param imageMinTokens Minimum image tokens (-1 = unlimited)
+     * @param imageMinTokens Minimum image tokens (-1 = model default)
+     * @param imageMaxTokens Maximum image tokens (-1 = model default)
+     * @param enableThinking Let reasoning models think before answering (default: false)
      * @param topK Top-k sampling (default: 40)
      * @param topP Top-p sampling (default: 0.95)
      * @param temperature Sampling temperature (default: 0.80)
@@ -70,6 +72,8 @@ class LocalInferenceBackend(private val context: Context) : InferenceBackend {
         verbose: Boolean = DEFAULT_VERBOSE,
         htpSessions: Int = 1,
         imageMinTokens: Int = -1,
+        imageMaxTokens: Int = -1,
+        enableThinking: Boolean = false,
         topK: Int = 40,
         topP: Float = 0.95f,
         temperature: Float = 0.80f,
@@ -84,6 +88,8 @@ class LocalInferenceBackend(private val context: Context) : InferenceBackend {
         i("  verbose: $verbose")
         i("  htpSessions: $htpSessions")
         i("  imageMinTokens: $imageMinTokens")
+        i("  imageMaxTokens: $imageMaxTokens")
+        i("  enableThinking: $enableThinking")
         i("  topK: $topK")
         i("  topP: $topP")
         i("  temperature: $temperature")
@@ -106,6 +112,8 @@ class LocalInferenceBackend(private val context: Context) : InferenceBackend {
             verbose = verbose,
             htpSessions = htpSessions,
             imageMinTokens = imageMinTokens,
+            imageMaxTokens = imageMaxTokens,
+            enableThinking = enableThinking,
             topK = topK,
             topP = topP,
             temperature = temperature,
@@ -135,6 +143,14 @@ class LocalInferenceBackend(private val context: Context) : InferenceBackend {
         d("Running inference: image=${imageFile.absolutePath}, prompt=$prompt")
 
         return inferenceService.generateFromImageWithTiming(imageFile, prompt, maxTokens).content
+    }
+
+    /**
+     * Ask the running inference to stop; its analyze call then returns an error result.
+     */
+    fun cancel() {
+        i("Cancelling running inference")
+        inferenceService.cancel()
     }
 
     /**

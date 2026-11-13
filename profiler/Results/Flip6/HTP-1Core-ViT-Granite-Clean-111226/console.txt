@@ -1,0 +1,326 @@
+[34m[INFO][0m Cleaning existing profile data from device...
+[32m[SUCCESS][0m Cleaned existing profile data
+[34m[INFO][0m Checking build outputs...
+[32m[SUCCESS][0m Found mtmd-profile-test executable
+[34m[INFO][0m Creating device directory /data/local/tmp/mtmd-profile-test...
+[32m[SUCCESS][0m Created directories
+[34m[INFO][0m Pushing mtmd-profile-test to device...
+[32m[SUCCESS][0m Pushed executable
+[34m[INFO][0m Pushing config file...
+[32m[SUCCESS][0m Pushed config
+[34m[INFO][0m Pushing test images...
+[32m[SUCCESS][0m Pushed 10 image(s)
+[34m[INFO][0m Pushing shared libraries...
+[34m[INFO][0m   Pushed bin/libllama.so
+[34m[INFO][0m   Pushed bin/libmtmd.so
+[34m[INFO][0m   Pushed bin/libggml.so
+[34m[INFO][0m   Pushed bin/libggml-base.so
+[34m[INFO][0m   Pushed bin/libggml-cpu.so
+[34m[INFO][0m   Pushed bin/libggml-opencl.so
+[34m[INFO][0m   Pushed bin/libggml-hexagon.so
+[34m[INFO][0m   Pushed bin/libllama-common.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v73.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v75.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v79.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v81.so
+[34m[INFO][0m   Pushed C:\Users\misar\AppData\Local\Android\Sdk\ndk\27.3.13750724\toolchains\llvm\prebuilt\windows-x86_64\lib\clang\18\lib\linux\aarch64\libomp.so
+[32m[SUCCESS][0m Pushed libraries
+[34m[INFO][0m Clearing Old LOGCAT on device...
+[34m[INFO][0m 
+[34m[INFO][0m Running mtmd-profile-test...
+[34m[INFO][0m   HTP profiling level: 0
+[34m[INFO][0m   Config: config.json
+[34m[INFO][0m 
+[34m[INFO][0m ========================================
+[34m[INFO][0m Command: logcat -s mtmd-profile-test:V mtmd-inference-api:V *:F > /sdcard/profile_log.txt & LOGCAT_PID=$!; cd /data/local/tmp/mtmd-profile-test; ./mtmd-profile-test --config config.json --htp-profile 0; sleep 2; kill $LOGCAT_PID
+[34m[INFO][0m 
+[31;1mcommon_get_device_memory_data_impl: device HTP0 did not report memory; --fit will not use it[0m
+[31;1mcommon_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 999, abort[0m
+[31;1mcmn          init: llama threadpool init, n_threads = 4[0m
+[31;1m=== Processing image 1/10: VLM_CAMERA_1782100068514.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2608 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 18 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 591 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2358 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 29 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 707 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2430 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 30 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 846 ms[0m
+[31;1m=== Processing image 2/10: VLM_CAMERA_1782100091800.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2484 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 46 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 635 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2659 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 50 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 759 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2710 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 47 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 911 ms[0m
+[31;1m=== Processing image 3/10: VLM_CAMERA_1782100189050.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2661 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 40 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 694 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2845 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 44 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 824 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2898 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 45 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 987 ms[0m
+[31;1m=== Processing image 4/10: VLM_CAMERA_1782100225319.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2677 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 19 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 687 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2830 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 29 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 821 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2913 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 42 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 987 ms[0m
+[31;1m=== Processing image 5/10: VLM_CAMERA_1782105927664.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3080 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 44 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 818 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3266 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 27 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 975 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3355 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 38 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1149 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3379 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 48 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1255 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3460 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 47 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1408 ms[0m
+[31;1m=== Processing image 6/10: VLM_CAMERA_1782106045294.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3427 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 53 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 969 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3645 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 40 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1153 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3737 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 45 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1331 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3766 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 47 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1449 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3867 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 36 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1478 ms[0m
+[31;1m=== Processing image 7/10: VLM_CAMERA_1782176095192.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3414 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 36 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 970 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3641 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 29 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1144 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3739 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 53 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1327 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3768 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 27 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1443 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3871 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 51 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1623 ms[0m
+[31;1m=== Processing image 8/10: VLM_CAMERA_1782176126527.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3411 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 39 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 974 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3659 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 30 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1133 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3722 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 48 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1337 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3782 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 42 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1457 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3843 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 32 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1614 ms[0m
+[31;1m=== Processing image 9/10: VLM_CAMERA_1782176185284.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3431 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 32 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 977 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3644 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 35 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1135 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3744 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 54 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1336 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3763 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 41 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1441 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3866 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 51 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1628 ms[0m
+[31;1m=== Processing image 10/10: VLM_CAMERA_1782176228820.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 4417 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 38 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1451 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 4803 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 46 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1673 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 4870 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 42 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 1910 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 4951 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 34 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 2060 ms[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 5042 ms[0m
+[31;1mdecoding image batch 1/2, n_tokens_batch = 512[0m
+[31;1mimage decoded (batch 1/2) in 45 ms[0m
+[31;1mdecoding image batch 2/2, n_tokens_batch = 217[0m
+[31;1mimage decoded (batch 2/2) in 2270 ms[0m
+[34m[INFO][0m 
+[34m[INFO][0m ========================================
+[34m[INFO][0m 
+[34m[INFO][0m Pulling /sdcard/profile_results_1core_vit_granite.csv from device...
+[32m[SUCCESS][0m Results pulled to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_results_1core_vit_granite.csv
+[34m[INFO][0m Pulling log from device...
+[32m[SUCCESS][0m Log pulled to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_log.txt
+[34m[INFO][0m Pulling cl_profiling.csv from device...
+[33m[WARN][0m No OpenCL profiling data found (rebuild with GGML_OPENCL_PROFILING=ON to enable)
+[32m[SUCCESS][0m Profile test completed
+[34m[INFO][0m 
+[34m[INFO][0m Generating timing and thermal report (parse_profile.py)...
+Parsing profile: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_log.txt
+Detected type: thermal
+Found 10 images
+Report written to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\thermal_report.txt
+[34m[INFO][0m HTP profiling off, skipping HTP reports (existing reports are kept)
+[33m[WARN][0m No OpenCL profiling data found, skipping OpenCL report
+[34m[INFO][0m 
+[34m[INFO][0m To analyze profiling output manually:
+[34m[INFO][0m   HTP Official:      python ../llama.cpp/scripts/snapdragon/ggml-hexagon-profile.py <log_file>
+[34m[INFO][0m   HTP Block Report:  python parse_profile.py <log_file> [output_file]
+[34m[INFO][0m   Thermal Report:    python parse_profile.py <log_file> [output_file] --mode thermal
+[34m[INFO][0m   OpenCL Report:     python parse_profile.py <cl_profiling.csv> [output_file] --mode opencl
+[34m[INFO][0m 

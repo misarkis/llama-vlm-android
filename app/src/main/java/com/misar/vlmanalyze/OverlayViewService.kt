@@ -191,6 +191,7 @@ class OverlayViewService : Service() {
 
     override fun onDestroy() {
         i( "Overlay service destroying")
+        cancelTtsTimer()  // a pending fallback timer would fire TTS_COMPLETE into the next session
         stopVoiceTriggerMonitoring()
         stopAudioRecording()  // Completely stop recorder and foreground service
         // Shut down TTS if active

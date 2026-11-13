@@ -1,0 +1,632 @@
+--------- beginning of main
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test: === mtmd-profile-test START ===
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test: Settings:
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Model: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/granite-vision-3.2-2b-Q4_K_M.gguf
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   MMProj: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/mmproj-model-f16.gguf
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Backend: NPU-1Core
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   ViT device: HTP0
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   HTP Sessions: 1
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   N Context: 16384
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   N Batch: 512
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   N Predict: 512
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Image tokens min/max: -1 / -1
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Jinja: 1, thinking: 0
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Image Dir: /data/local/tmp/mtmd-profile-test/test_images/
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test:   Output CSV: /sdcard/profile_results_1core_vit_granite.csv
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test: Note: Set GGML_HEXAGON_PROFILE=1 in shell before running for HTP per-op profiling
+11-12 16:04:02.084 30264 30264 I mtmd-profile-test: Found 10 image(s) to test
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Android log callback installed (llama + mtmd + ggml)
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Model: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/granite-vision-3.2-2b-Q4_K_M.gguf
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: MMProj: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/mmproj-model-f16.gguf
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Device: HTP0, GPU layers: 999
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Context: 16384, Batch: 512, Predict: 512
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Verbose: 0
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Set D=HTP0
+11-12 16:04:02.084 30264 30264 I mtmd-inference-api: Set GGML_HEXAGON_DEVICES=1
+11-12 16:04:02.085 30264 30264 I mtmd-inference-api: Backend reg count: 0
+11-12 16:04:02.150 30264 30264 I mtmd-inference-api: ggml_opencl: selected platform: 'QUALCOMM Snapdragon(TM)'
+11-12 16:04:02.157 30264 30264 I mtmd-inference-api: 
+11-12 16:04:02.157 30264 30264 I mtmd-inference-api: ggml_opencl: device: 'QUALCOMM Adreno(TM) 830 (OpenCL 3.0 Adreno(TM) 830)'
+11-12 16:04:02.157 30264 30264 I mtmd-inference-api: ggml_opencl: default device: 'QUALCOMM Adreno(TM) 830 (OpenCL 3.0 Adreno(TM) 830)'
+11-12 16:04:02.157 30264 30264 I mtmd-inference-api: load_backend: loaded OpenCL backend from /data/local/tmp/mtmd-profile-test/libggml-opencl.so
+11-12 16:04:02.157 30264 30264 I mtmd-inference-api: ggml-hex: Loading driver libcdsprpc.so
+11-12 16:04:02.158 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/rpcmem_android.c:210: set up allocator 0xb400007b73846f10 for DMA buf heap system, ION heap system, heap mask 0x2000000, flags 0x1, legacy flags 0x1
+11-12 16:04:02.158 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_config.c:336: Reading configuration file: mtmd-profile-test.debugconfig
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_config.c:367: fastrpc_config_init: Couldn't find file mtmd-profile-test.debugconfig, errno (No such file or directory) at ., /vendor/lib64/rfs/dsp, /vendor/lib/rfsa/adsp, 
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4957: fastrpc_apps_user_init done  with default domain:3 and &fastrpc_trace:0x79ee078680
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:5071: multidsplib_env_init: libcdsprpc.so loaded
+11-12 16:04:02.159 30264 30264 W mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2569:Warning: remote_handle_control: Non-domain usage of FastRPC will be deprecated, use domains to offload to DSP using FastRPC
+11-12 16:04:02.159 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2570: remote_handle_control request ID 2 received
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2526: Info: remote_handle_control_domain capability request of attribute 6 for domain 3
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 6 for domain 3 is 35961
+11-12 16:04:02.159 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3706: close_device_node: closed dev 9 on domain 3
+11-12 16:04:02.159 30264 30264 I mtmd-inference-api: ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1
+11-12 16:04:02.159 30264 30264 I mtmd-inference-api: ggml-hex: Hexagon Arch version v79, DMA64 disabled
+11-12 16:04:02.159 30264 30264 I mtmd-inference-api: ggml-hex: device 0: HTP0 (phys=0, virt=0, domain=cdsp:3)
+11-12 16:04:02.159 30264 30264 I mtmd-inference-api: load_backend: loaded HTP backend from /data/local/tmp/mtmd-profile-test/libggml-hexagon.so
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: load_backend: loaded CPU backend from /data/local/tmp/mtmd-profile-test/libggml-cpu.so
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: llama_backend_init completed, reg count: 3
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: Device 'HTP0' found: Hexagon
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: Devices set: 2 device(s)
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api:   n_batch: 512
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api:   n_ubatch: 512
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api:   n_ctx: 16384
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api:   Flash attention type: 1
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api:   Flash attention enabled: yes
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: Model path: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/granite-vision-3.2-2b-Q4_K_M.gguf
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: MMProj path: /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/mmproj-model-f16.gguf
+11-12 16:04:02.161 30264 30264 I mtmd-inference-api: Device: HTP0, GPU layers: 999
+11-12 16:04:02.219 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2890: remote_session_control Unsigned PD enable 1 request for domain 3
+11-12 16:04:02.219 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 133 for domain 3 is 1
+11-12 16:04:02.219 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3706: close_device_node: closed dev 10 on domain 3
+11-12 16:04:02.220 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3868: Error 0xd: open_shell failed for domain 3 search paths used are /usr/lib/dsp/, /vendor/dsp/, /vendor/dsp/xdsp/ (errno Permission denied)
+11-12 16:04:02.247 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3948: Created user PD on domain 3, dbg_trace 0x0, enabled attr=> RPC timeout:0, Dbg Mode:N, CRC:N, Unsigned:Y, Signed:N, Adapt QOS:N, PD dump: (Config:N, Dbg:N), Perf: (Kernel:N, DSP:N), Iregion:N, QTF:N, UAF:N userPD initmem len:0x500000, Log pkt: N
+11-12 16:04:02.248 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3903: Error 0xffffffff: fastrpc_enable_kernel_optimizations failed for domain 3 (Bad address)
+11-12 16:04:02.248 30264 30268 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/listener_android.c:119: listener thread starting
+11-12 16:04:02.248 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:608:Error : Unable to add watcher for folder /vendor/lib64/rfs/dsp : errno is Permission denied
+11-12 16:04:02.248 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:608:Error : Unable to add watcher for folder /vendor/lib/rfsa/adsp : errno is Permission denied
+11-12 16:04:02.248 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_perf.c:292: fastrpc_perf_init: enabled systrace 0x0 and RPC traces (kernel 0, dsp 0) with frequency 1000
+11-12 16:04:02.248 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 129 for domain 3 is 1
+11-12 16:04:02.248 30264 30269 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:360: file_watcher_thread starting for domain 3
+11-12 16:04:02.248 30264 30269 W mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:380:file_watcher_thread: Couldn't find file mtmd-profile-test.farf, errno (No such file or directory) at ;/vendor/lib64/rfs/dsp;/vendor/lib/rfsa/adsp;/vendor/lib/rfsa/dsp;/vendor/dsp;
+11-12 16:04:02.250 30264 30268 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:701: open_mod_table_open_from_static: reverse module apps_std opened with handle 0xee07b3e8 (idx 0)
+11-12 16:04:02.250 30264 30268 D mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:382: apps_std_fopen_fd done for ./cdsp/./libggml-htp-v79.so with       fopen:12us, read:0us, rpc_alloc:0us,       mmap:0us fd 0x0 error_code 0x2
+11-12 16:04:02.252 30264 30268 D mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:382: apps_std_fopen_fd done for ././libggml-htp-v79.so with       fopen:27us, read:952us, rpc_alloc:80us,       mmap:322us fd 0x13 error_code 0x0
+11-12 16:04:02.252 30264 30268 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:1160: Successfully opened file ././libggml-htp-v79.so
+11-12 16:04:02.254 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1800: remote_handle64_open: opened handle 0xb400007bc3bad8d0 (remote 0x2d2f60) for file:///libggml-htp-v79.so?htp_iface_skel_handle_invoke&_modver=1.0&_dom=cdsp&_session=0 on domain 3 (spawn time 28633 us, load time 6481 us), refs 1
+11-12 16:04:02.255 30264 30270 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:98: fastrpc_latency_thread_handler started for QoS with activity window 100 ms
+11-12 16:04:02.255 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2515: remote_handle_control_domain: requested QOS 1, latency 6 for domain 3 handle 0xb400007bc3bad8d0
+11-12 16:04:02.255 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1800: remote_handle64_open: opened handle 0xb400007bc3bae210 (remote 0x2d2d60) for file:///libdspqueue_rpc_skel.so?dspqueue_rpc_skel_handle_invoke&_modver=1.0&_dom=cdsp&_session=0 on domain 3 (spawn time 0 us, load time 304 us), refs 2
+11-12 16:04:02.255 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 10 for domain 3 is 1
+11-12 16:04:02.255 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:103: fastrpc_notif_domain_init: FastRPC notification worker thread launched
+11-12 16:04:02.255 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3026: remote_session_control Register PD status notification request for domain 3
+11-12 16:04:02.255 30264 30271 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2205: get_remote_notif_response: received status notification 0 for domain 3, session 0
+11-12 16:04:02.256 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 130 for domain 3 is 1
+11-12 16:04:02.256 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 259 for domain 3 is 1
+11-12 16:04:02.257 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 257 for domain 3 is 1
+11-12 16:04:02.257 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1477: Error 0x80000414: remote_handle64_invoke failed for handle 0xb400007bc3bae210, interface libdspqueue_rpc_skel.so method 3 on domain 3 (sc 0x3010100) (errno Success) (user err 0x80000414)
+11-12 16:04:02.257 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:642: dspqueue_create: created Queue 0, 0xb400007b73843390, DSP 0x00000000 for domain 3
+11-12 16:04:02.261 30264 30268 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:701: open_mod_table_open_from_static: reverse module apps_mem opened with handle 0xee07b4e8 (idx 1)
+11-12 16:04:02.261 30264 30268 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2332: Info: remote_get_info capability of attribute 258 for domain 3 is 1
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: loaded meta data with 32 key-value pairs and 362 tensors from /data/local/tmp/llama.cpp/models/GraniteVision3.2-2B/granite-vision-3.2-2b-Q4_K_M.gguf (version GGUF V3 (latest))
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   0:                       general.architecture str              = granite
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   1:                               general.type str              = model
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   2:                               general.name str              = Granite_Vision_Llm
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   3:                         general.size_label str              = 2.5B
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   4:                        granite.block_count u32              = 40
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   5:                     granite.context_length u32              = 16384
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   6:                   granite.embedding_length u32              = 2048
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   7:                granite.feed_forward_length u32              = 8192
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   8:               granite.attention.head_count u32              = 32
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv   9:            granite.attention.head_count_kv u32              = 8
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  10:                     granite.rope.freq_base f32              = 300000.000000
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  11:   granite.attention.layer_norm_rms_epsilon f32              = 0.000010
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  12:                         granite.vocab_size u32              = 49156
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  13:               granite.rope.dimension_count u32              = 64
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  14:                    granite.attention.scale f32              = 0.015625
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  15:                    granite.embedding_scale f32              = 12.000000
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  16:                     granite.residual_scale f32              = 0.220000
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  17:                        granite.logit_scale f32              = 8.000000
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  18:                       tokenizer.ggml.model str              = gpt2
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  19:                         tokenizer.ggml.pre str              = refact
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  20:                      tokenizer.ggml.tokens arr[str,49156]   = ["<|end_of_text|>", "<fim_prefix>", "...
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  21:                  tokenizer.ggml.token_type arr[i32,49156]   = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, ...
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  22:                      tokenizer.ggml.merges arr[str,48891]   = ["Ġ Ġ", "ĠĠ ĠĠ", "ĠĠĠĠ ĠĠ...
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  23:                tokenizer.ggml.bos_token_id u32              = 0
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  24:                tokenizer.ggml.eos_token_id u32              = 0
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  25:            tokenizer.ggml.unknown_token_id u32              = 0
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  26:            tokenizer.ggml.padding_token_id u32              = 0
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  27:               tokenizer.ggml.add_bos_token bool             = false
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  28:                    tokenizer.chat_template str              = {%- if tools %}\n    {{- '<|start_of_r...
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  29:            tokenizer.ggml.add_space_prefix bool             = false
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  30:               general.quantization_version u32              = 2
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - kv  31:                          general.file_type u32              = 15
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - type  f32:   81 tensors
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - type q4_K:  240 tensors
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_model_loader: - type q6_K:   41 tensors
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: print_info: file format = GGUF V3 (latest)
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: print_info: file type   = Q4_K - Medium
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: print_info: file size   = 1.44 GiB (4.87 BPW) 
+11-12 16:04:02.324 30264 30264 I mtmd-inference-api: llama_prepare_model_devices: using device HTP0 (Hexagon) (unknown id) - 0 MiB free
+11-12 16:04:02.341 30264 30264 I mtmd-inference-api: load: 0 unused tokens
+11-12 16:04:02.345 30264 30264 I mtmd-inference-api: load: printing all EOG tokens:
+11-12 16:04:02.345 30264 30264 I mtmd-inference-api: load:   - 0 ('<|end_of_text|>')
+11-12 16:04:02.345 30264 30264 I mtmd-inference-api: load:   - 4 ('<fim_pad>')
+11-12 16:04:02.345 30264 30264 I mtmd-inference-api: load:   - 18 ('<reponame>')
+11-12 16:04:02.345 30264 30264 I mtmd-inference-api: load: special tokens cache size = 23
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: load: token to piece cache size = 0.2826 MB
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: arch                  = granite
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: vocab_only            = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: no_alloc              = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_ctx_train           = 16384
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_inp            = 2048
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd                = 2048
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_out            = 2048
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_layer               = 40
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_layer_all           = 40
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_head                = 32
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_head_kv             = 8
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_rot                 = 64
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_swa                 = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: is_swa_any            = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: non_causal_type       = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_head_k         = 64
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_head_v         = 64
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_gqa                 = 4
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_k_gqa          = 512
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_embd_v_gqa          = 512
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_norm_eps            = 0.0e+00
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_norm_rms_eps        = 1.0e-05
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_clamp_kqv           = 0.0e+00
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_max_alibi_bias      = 0.0e+00
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_logit_scale         = 8.0e+00
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_attn_scale          = 1.6e-02
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_attn_value_scale    = 0.0000
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_ff                  = 8192
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_expert              = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_expert_used         = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_expert_groups       = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_group_used          = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: causal attn           = 1
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: pooling type          = -1
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: rope type             = 0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: rope scaling          = linear
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: freq_base_train       = 300000.0
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: freq_scale_train      = 1
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_ctx_orig_yarn       = 16384
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: rope_yarn_log_mul     = 0.0000
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: rope_finetuned        = yes
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: model type            = 2B
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: model params          = 2.53 B
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: general.name          = Granite_Vision_Llm
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_embedding_scale     = 12.000000
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_residual_scale      = 0.220000
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: f_attention_scale     = 0.015625
+11-12 16:04:02.356 30264 30264 I mtmd-inference-api: print_info: n_ff_shexp            = 0
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: vocab type            = BPE
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: n_vocab               = 49156
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: n_merges              = 48891
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: BOS token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: EOS token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: EOT token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: UNK token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: PAD token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: LF token              = 203 'Ċ'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: FIM PRE token         = 1 '<fim_prefix>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: FIM SUF token         = 3 '<fim_suffix>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: FIM MID token         = 2 '<fim_middle>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: FIM PAD token         = 4 '<fim_pad>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: FIM REP token         = 18 '<reponame>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: EOG token             = 0 '<|end_of_text|>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: EOG token             = 4 '<fim_pad>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: EOG token             = 18 '<reponame>'
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: print_info: max token length      = 512
+11-12 16:04:02.357 30264 30264 I mtmd-inference-api: load_tensors: loading model tensors, this can take a while... (load_mode = none)
+11-12 16:04:02.468 30264 30264 I mtmd-inference-api: load_tensors: offloading output layer to GPU
+11-12 16:04:02.468 30264 30264 I mtmd-inference-api: load_tensors: offloading 39 repeating layers to GPU
+11-12 16:04:02.468 30264 30264 I mtmd-inference-api: load_tensors: offloaded 41/41 layers to GPU
+11-12 16:04:02.468 30264 30264 I mtmd-inference-api: load_tensors:         HTP0 model buffer size =  1619.69 MiB
+11-12 16:04:02.468 30264 30264 I mtmd-inference-api: load_tensors:    HTP0-HOST model buffer size =    78.76 MiB
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: constructing llama_context
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_seq_max             = 1
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_ctx                 = 16384
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_ctx_seq             = 16384
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_batch               = 512
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_ubatch              = 512
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: causal_attn           = 1
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: flash_attn            = enabled
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: kv_unified            = false
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: freq_base             = 300000.0
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: freq_scale            = 1
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_rs_seq              = 0
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_outputs_max         = 512
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context: n_outputs_max_per_seq = 1
+11-12 16:04:03.352 30264 30264 I mtmd-inference-api: llama_context:  HTP0-HOST  output buffer size =     0.19 MiB
+11-12 16:04:03.474 30264 30264 I mtmd-inference-api: llama_kv_cache:       HTP0 KV buffer size =  1280.00 MiB
+11-12 16:04:03.474 30264 30264 I mtmd-inference-api: llama_kv_cache: size = 1280.00 MiB ( 16384 cells,  40 layers,  1/1 seqs), K (f16):  640.00 MiB, V (f16):  640.00 MiB
+11-12 16:04:03.474 30264 30264 I mtmd-inference-api: llama_kv_cache: n_rot_k = 0, n_embd_head_k_all = 64
+11-12 16:04:03.474 30264 30264 I mtmd-inference-api: llama_kv_cache: n_rot_v = 0, n_embd_head_k_all = 64
+11-12 16:04:03.474 30264 30264 I mtmd-inference-api: sched_reserve: reserving ...
+11-12 16:04:03.475 30264 30264 I mtmd-inference-api: resolve_fused_ops: resolving fused DeepSeek V4 HC support:
+11-12 16:04:04.433 30264 30264 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC pre enabled
+11-12 16:04:04.435 30264 30264 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC comb enabled
+11-12 16:04:04.436 30264 30264 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC post enabled
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: sched_reserve:       HTP0 compute buffer size =   108.01 MiB
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: sched_reserve:  HTP0-HOST compute buffer size =    24.02 MiB
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: sched_reserve: graph: nodes = 1331, splits = 1, input objects = 4, input tensors = 9
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: sched_reserve: reserve took 974.77 ms, sched copies = 1
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: Model loaded successfully
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: Initializing sampler...
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: Initializing multimodal context...
+11-12 16:04:04.449 30264 30264 I mtmd-inference-api: Vision encoder device: HTP0, use_gpu: 1
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: model name:   siglip-model
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: description:  image encoder for LLaVA
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: GGUF version: 3
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: alignment:    32
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: n_tensors:    451
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: n_kv:         22
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: 
+11-12 16:04:04.451 30264 30264 I mtmd-inference-api: clip_model_loader: has vision encoder
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: clip_ctx: CLIP using HTP0 backend
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: projector:          mlp
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_embd:             1152
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_head:             16
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_ff:               4304
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_layer:            27
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: ffn_op:             gelu_quick
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: projection_dim:     0
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: 
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: --- vision hparams ---
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: image_size:         384
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: patch_size:         14
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: has_llava_proj:     1
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: minicpmv_version:   0
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_merge:            1
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: n_wa_pattern: 0
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: 
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: model size:         851.17 MiB
+11-12 16:04:04.452 30264 30264 I mtmd-inference-api: load_hparams: metadata size:      0.16 MiB
+11-12 16:04:04.453 30264 30264 W mtmd-inference-api: load_tensors: ffn up/down are swapped
+11-12 16:04:05.471 30264 30264 I mtmd-inference-api: get_dummy_batch: warmup with image size = 384 x 384
+11-12 16:04:05.472 30264 30264 I mtmd-inference-api: Initializing chat templates...
+11-12 16:04:05.480 30264 30264 I mtmd-inference-api: Chat template initialized, use_jinja=1 enable_thinking=0 (template supports thinking switch: 0)
+11-12 16:04:05.492 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100068514.png (334x446, 4 channels)
+11-12 16:04:05.492 30264 30264 I mtmd-profile-test: === Processing image 1/10: VLM_CAMERA_1782100068514.png ===
+11-12 16:04:05.492 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: Formatted prompt (first run, use_jinja=1 enable_thinking=0):
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: <|system|>
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: You are a AI assistant. Describe what is on a phone screen or camera view to the person looking at it. Answer in English only, in three or four detailed sentences, under 100 words. Plain speech: no lists, no markdown, no headings.
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: <|user|>
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: What is on this screen right now? What should the person see? Tell them what matters. Keep it casual like you are explaining it to a friend. <__media__>
+11-12 16:04:05.493 30264 30264 I mtmd-inference-api: <|assistant|>
+11-12 16:04:06.015 30264 30264 I mtmd-inference-api: reserve_compute_meta:       HTP0 compute buffer size =    33.73 MiB
+11-12 16:04:06.015 30264 30264 I mtmd-inference-api: reserve_compute_meta:        CPU compute buffer size =     1.69 MiB
+11-12 16:04:06.015 30264 30264 I mtmd-inference-api: reserve_compute_meta: graph splits = 1, nodes = 860
+11-12 16:04:06.015 30264 30264 I mtmd-inference-api: warmup: flash attention is enabled
+11-12 16:04:10.791 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292 (image 2187, text 105), positions: 2292
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Completion tokens: 80
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Prefill time: 5299.00 ms
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Decode time: 3918.00 ms
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Total time: 9217.00 ms
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Prefill throughput: 432.53 t/s
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Decode throughput: 20.42 t/s
+11-12 16:04:14.710 30264 30264 I mtmd-inference-api:   Overall throughput: 20.42 t/s
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test: Thermal: image=1 samples=19 gpu_temp_max=61.0 npu_temp_max=98.1 cpu_temp_max=62.6 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=1256 policy6_mhz_avg=1017
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782100068514.png:
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test:   Prompt tokens: 2292
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test:   Completion tokens: 80
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test:   Total time: 9217.00 ms
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test:   Tokens per second: 20.42
+11-12 16:04:14.755 30264 30264 I mtmd-profile-test:   Response: The person looking at the screen is seeing a man in a blue shirt talking on a cell phone. The man is wearing glasses and has a serious expression on his face. He is holding the phone up to his ear and...
+11-12 16:04:14.779 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100091800.png (334x446, 4 channels)
+11-12 16:04:14.780 30264 30264 I mtmd-profile-test: === Processing image 2/10: VLM_CAMERA_1782100091800.png ===
+11-12 16:04:14.780 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:04:19.984 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292 (image 2187, text 105), positions: 2292
+11-12 16:04:21.932 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Completion tokens: 39
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Prefill time: 5204.00 ms
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Decode time: 1948.00 ms
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Total time: 7152.00 ms
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Prefill throughput: 440.43 t/s
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Decode throughput: 20.02 t/s
+11-12 16:04:21.933 30264 30264 I mtmd-inference-api:   Overall throughput: 20.02 t/s
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test: Thermal: image=2 samples=15 gpu_temp_max=62.9 npu_temp_max=95.7 cpu_temp_max=62.5 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=732 policy6_mhz_avg=1017
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782100091800.png:
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test:   Prompt tokens: 2292
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test:   Completion tokens: 39
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test:   Total time: 7152.00 ms
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test:   Tokens per second: 20.02
+11-12 16:04:21.946 30264 30264 I mtmd-profile-test:   Response: Sure, I'd be happy to help! Please provide me with the image or the description of the scene you're referring to, and I'll do my best to describe it in detail....
+11-12 16:04:21.968 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100189050.png (334x446, 4 channels)
+11-12 16:04:21.968 30264 30264 I mtmd-profile-test: === Processing image 3/10: VLM_CAMERA_1782100189050.png ===
+11-12 16:04:21.968 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:04:24.791 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:24.791 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:24.791 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:26.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:26.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:26.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:27.618 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292 (image 2187, text 105), positions: 2292
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Completion tokens: 187
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Prefill time: 5648.00 ms
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Decode time: 9607.00 ms
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Total time: 15255.00 ms
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Prefill throughput: 405.81 t/s
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Decode throughput: 19.46 t/s
+11-12 16:04:37.226 30264 30264 I mtmd-inference-api:   Overall throughput: 19.46 t/s
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test: Thermal: image=3 samples=31 gpu_temp_max=62.5 npu_temp_max=95.7 cpu_temp_max=65.3 gpu_mhz_min=222 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=594 policy6_mhz_avg=1017
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782100189050.png:
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test:   Prompt tokens: 2292
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test:   Completion tokens: 187
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test:   Total time: 15255.00 ms
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test:   Tokens per second: 19.46
+11-12 16:04:37.250 30264 30264 I mtmd-profile-test:   Response: From your perspective, the image captures a cozy living room scene. You're sitting comfortably on a gray sofa, which is adorned with a few orange and white throw pillows. The room is brightly lit, pos...
+11-12 16:04:37.277 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100225319.png (334x446, 4 channels)
+11-12 16:04:37.277 30264 30264 I mtmd-profile-test: === Processing image 4/10: VLM_CAMERA_1782100225319.png ===
+11-12 16:04:37.277 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:04:38.487 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:38.487 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:38.487 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:40.631 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:40.631 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:40.631 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:42.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:42.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:42.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:44.365 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292 (image 2187, text 105), positions: 2292
+11-12 16:04:49.673 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:04:49.673 30264 30264 I mtmd-inference-api:   Prompt tokens: 2292
+11-12 16:04:49.673 30264 30264 I mtmd-inference-api:   Completion tokens: 96
+11-12 16:04:49.673 30264 30264 I mtmd-inference-api:   Prefill time: 7087.00 ms
+11-12 16:04:49.673 30264 30264 I mtmd-inference-api:   Decode time: 5308.00 ms
+11-12 16:04:49.674 30264 30264 I mtmd-inference-api:   Total time: 12395.00 ms
+11-12 16:04:49.674 30264 30264 I mtmd-inference-api:   Prefill throughput: 323.41 t/s
+11-12 16:04:49.674 30264 30264 I mtmd-inference-api:   Decode throughput: 18.09 t/s
+11-12 16:04:49.674 30264 30264 I mtmd-inference-api:   Overall throughput: 18.09 t/s
+11-12 16:04:49.683 30264 30264 I mtmd-profile-test: Thermal: image=4 samples=25 gpu_temp_max=61.4 npu_temp_max=74.5 cpu_temp_max=61.5 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=604 policy6_mhz_avg=1017
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782100225319.png:
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test:   Prompt tokens: 2292
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test:   Completion tokens: 96
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test:   Total time: 12395.00 ms
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test:   Tokens per second: 18.09
+11-12 16:04:49.684 30264 30264 I mtmd-profile-test:   Response: The phone screen or camera view shows a cozy living room setting. On a white coffee table, there's a white mug with a handle and a small, decorative ceramic bird figurine. Next to the mug, there's a w...
+11-12 16:04:49.715 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782105927664.png (432x576, 4 channels)
+11-12 16:04:49.715 30264 30264 I mtmd-profile-test: === Processing image 5/10: VLM_CAMERA_1782105927664.png ===
+11-12 16:04:49.716 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:04:50.967 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:50.967 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:50.967 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:53.111 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:53.111 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:53.111 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:55.383 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:55.383 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:55.383 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:04:57.783 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:04:57.783 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:04:57.783 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:00.247 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:00.247 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:00.247 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:01.946 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:05:08.575 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Completion tokens: 104
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Prefill time: 12229.00 ms
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Decode time: 6629.00 ms
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Total time: 18858.00 ms
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Prefill throughput: 306.65 t/s
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Decode throughput: 15.69 t/s
+11-12 16:05:08.576 30264 30264 I mtmd-inference-api:   Overall throughput: 15.69 t/s
+11-12 16:05:08.582 30264 30264 I mtmd-profile-test: Thermal: image=5 samples=38 gpu_temp_max=59.8 npu_temp_max=72.2 cpu_temp_max=60.7 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=651 policy6_mhz_avg=1017
+11-12 16:05:08.582 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782105927664.png:
+11-12 16:05:08.582 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:05:08.582 30264 30264 I mtmd-profile-test:   Completion tokens: 104
+11-12 16:05:08.583 30264 30264 I mtmd-profile-test:   Total time: 18858.00 ms
+11-12 16:05:08.583 30264 30264 I mtmd-profile-test:   Tokens per second: 15.69
+11-12 16:05:08.583 30264 30264 I mtmd-profile-test:   Response: The image shows a bookshelf filled with books. The books are arranged in a vertical stack, with some placed horizontally on the top shelf. The bookshelf appears to be made of wood or a similar materia...
+11-12 16:05:08.617 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782106045294.png (432x576, 4 channels)
+11-12 16:05:08.617 30264 30264 I mtmd-profile-test: === Processing image 6/10: VLM_CAMERA_1782106045294.png ===
+11-12 16:05:08.617 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:05:09.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:09.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:09.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:12.311 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:12.311 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:12.311 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:14.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:14.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:14.871 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:17.559 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:17.559 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:17.559 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:20.343 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:20.343 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:20.343 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:22.403 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Completion tokens: 72
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Prefill time: 13784.00 ms
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Decode time: 4754.00 ms
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Total time: 18538.00 ms
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Prefill throughput: 272.05 t/s
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Decode throughput: 15.15 t/s
+11-12 16:05:27.157 30264 30264 I mtmd-inference-api:   Overall throughput: 15.15 t/s
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test: Thermal: image=6 samples=37 gpu_temp_max=59.0 npu_temp_max=69.5 cpu_temp_max=59.9 gpu_mhz_min=160 gpu_mhz_max=160 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=588 policy6_mhz_avg=1017
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782106045294.png:
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test:   Completion tokens: 72
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test:   Total time: 18538.00 ms
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test:   Tokens per second: 15.15
+11-12 16:05:27.182 30264 30264 I mtmd-profile-test:   Response: The screen shows a computer keyboard with various keys, including letters, numbers, and function keys. There's also a pair of black headphones on the right side of the keyboard, with a red cable attac...
+11-12 16:05:27.218 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176095192.png (432x576, 4 channels)
+11-12 16:05:27.218 30264 30264 I mtmd-profile-test: === Processing image 7/10: VLM_CAMERA_1782176095192.png ===
+11-12 16:05:27.218 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:05:28.471 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:28.471 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:28.471 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:30.903 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:30.903 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:30.903 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:33.463 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:33.463 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:33.463 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:36.151 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:36.151 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:36.151 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:38.935 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:38.935 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:38.935 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:40.964 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Completion tokens: 87
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Prefill time: 13744.00 ms
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Decode time: 5767.00 ms
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Total time: 19511.00 ms
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Prefill throughput: 272.85 t/s
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Decode throughput: 15.09 t/s
+11-12 16:05:46.731 30264 30264 I mtmd-inference-api:   Overall throughput: 15.09 t/s
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test: Thermal: image=7 samples=39 gpu_temp_max=58.3 npu_temp_max=67.9 cpu_temp_max=58.8 gpu_mhz_min=160 gpu_mhz_max=160 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=632 policy6_mhz_avg=1017
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782176095192.png:
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test:   Completion tokens: 87
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test:   Total time: 19511.00 ms
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test:   Tokens per second: 15.09
+11-12 16:05:46.739 30264 30264 I mtmd-profile-test:   Response: The image shows a cozy room corner with a white wall and a window with white blinds. On the floor, there's a blue blanket and a brown teddy bear lying on its side. The room also contains a white chair...
+11-12 16:05:46.771 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176126527.png (432x576, 4 channels)
+11-12 16:05:46.771 30264 30264 I mtmd-profile-test: === Processing image 8/10: VLM_CAMERA_1782176126527.png ===
+11-12 16:05:46.771 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:05:48.023 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:48.023 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:48.023 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:50.647 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:50.647 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:50.647 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:53.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:53.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:53.879 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:57.303 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:57.303 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:57.303 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:05:59.223 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:05:59.223 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:05:59.223 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:00.855 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:00.855 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:00.855 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:02.775 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:02.775 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:02.775 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:03.593 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:06:09.342 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Completion tokens: 82
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Prefill time: 16820.00 ms
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Decode time: 5749.00 ms
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Total time: 22569.00 ms
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Prefill throughput: 222.95 t/s
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Decode throughput: 14.26 t/s
+11-12 16:06:09.343 30264 30264 I mtmd-inference-api:   Overall throughput: 14.26 t/s
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test: Thermal: image=8 samples=45 gpu_temp_max=57.9 npu_temp_max=68.3 cpu_temp_max=59.9 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=604 policy6_mhz_avg=1017
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782176126527.png:
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test:   Completion tokens: 82
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test:   Total time: 22569.00 ms
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test:   Tokens per second: 14.26
+11-12 16:06:09.360 30264 30264 I mtmd-profile-test:   Response: Hello! It seems like you're looking at a room with a white wall and a large window. There's a teddy bear lying on the floor next to the window. The room appears to be empty, with no other objects or f...
+11-12 16:06:09.392 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176185284.png (432x576, 4 channels)
+11-12 16:06:09.392 30264 30264 I mtmd-profile-test: === Processing image 9/10: VLM_CAMERA_1782176185284.png ===
+11-12 16:06:09.392 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:06:10.679 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:10.679 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:10.679 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:13.751 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:13.751 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:13.751 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:16.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:16.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:16.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:19.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:19.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:19.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:21.175 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:21.175 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:21.175 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:22.743 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:22.743 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:22.743 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:24.800 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Completion tokens: 80
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Prefill time: 15406.00 ms
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Decode time: 5361.00 ms
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Total time: 20767.00 ms
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Prefill throughput: 243.41 t/s
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Decode throughput: 14.92 t/s
+11-12 16:06:30.161 30264 30264 I mtmd-inference-api:   Overall throughput: 14.92 t/s
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test: Thermal: image=9 samples=42 gpu_temp_max=57.9 npu_temp_max=66.0 cpu_temp_max=59.2 gpu_mhz_min=160 gpu_mhz_max=160 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=675 policy6_mhz_avg=1017
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782176185284.png:
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test:   Completion tokens: 80
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test:   Total time: 20767.00 ms
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test:   Tokens per second: 14.92
+11-12 16:06:30.207 30264 30264 I mtmd-profile-test:   Response: I'm sorry, but I can't provide a detailed description of the content on the screen as I can't see it directly. However, I can tell you that the screen appears to be displaying some form of text or cod...
+11-12 16:06:30.240 30264 30264 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176228820.png (432x576, 4 channels)
+11-12 16:06:30.240 30264 30264 I mtmd-profile-test: === Processing image 10/10: VLM_CAMERA_1782176228820.png ===
+11-12 16:06:30.240 30264 30264 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 16:06:31.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:31.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:31.511 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:34.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:34.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:34.615 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:37.847 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:37.847 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:37.847 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:41.271 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:41.271 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:41.271 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:44.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1047::error: 0xc: (nErr = dspsignal_wait(q->domain, QUEUE_SIGNAL(q->id, signal_no), to_now)) == 0
+11-12 16:06:44.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1098: Error 0xc: wait_signal_locked failed for queue 0xb400007b73843390 signal 2
+11-12 16:06:44.407 30264 30264 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:1864::error: 0xc: (nErr = wait_signal_locked(q, DSPQUEUE_SIGNAL_RESP_PACKET, timeout_ts)) == 0
+11-12 16:06:46.448 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750 (image 3645, text 105), positions: 3750
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Prompt tokens: 3750
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Completion tokens: 105
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Prefill time: 16206.00 ms
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Decode time: 7187.00 ms
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Total time: 23393.00 ms
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Prefill throughput: 231.40 t/s
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Decode throughput: 14.61 t/s
+11-12 16:06:53.635 30264 30264 I mtmd-inference-api:   Overall throughput: 14.61 t/s
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test: Thermal: image=10 samples=47 gpu_temp_max=57.5 npu_temp_max=65.2 cpu_temp_max=58.8 gpu_mhz_min=160 gpu_mhz_max=222 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=598 policy6_mhz_avg=1017
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test: Results for VLM_CAMERA_1782176228820.png:
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test:   Prompt tokens: 3750
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test:   Completion tokens: 105
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test:   Total time: 23393.00 ms
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test:   Tokens per second: 14.61
+11-12 16:06:53.642 30264 30264 I mtmd-profile-test:   Response: The screen is displaying a programming interface. It seems like the user is working on a coding task. There's a line of code with a red function call at the end, suggesting that the code is being exec...
+11-12 16:06:53.712 30264 30264 I mtmd-profile-test: === mtmd-profile-test COMPLETE ===
+11-12 16:06:53.712 30264 30264 I mtmd-profile-test: Results written to: /sdcard/profile_results_1core_vit_granite.csv
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4532: close_dev: unloading library libcdsprpc.so
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 0: dev -1
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 1: dev -1
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 2: dev -1
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 3: dev 10
+11-12 16:06:53.714 30264 30271 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2205: get_remote_notif_response: received status notification 1 for domain 3, session 0
+11-12 16:06:53.714 30264 30271 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:2214: dspqueue_notif_callback for domain 3, session 0, status 1
+11-12 16:06:53.714 30264 30271 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:56:Error 0xc: notif_fastrpc_thread FastRPC notification worker thread exited for domain 3 (errno Success), notif_domain_deinit started 0
+11-12 16:06:53.714 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:123: dspsignal_domain_deinit done for domain 3
+11-12 16:06:53.714 30264 30269 W mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:394:Warning: file_watcher_thread received exit for domain 3, file mtmd-profile-test.farf
+11-12 16:06:53.714 30264 30269 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:446: file_watcher_thread exiting for domain 3
+11-12 16:06:53.715 30264 30270 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:157: FastRPC latency thread for QoS exited
+11-12 16:06:53.715 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:69: latency thread joined
+11-12 16:06:53.715 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:72: fastrpc_notif_domain_deinit: Waiting for FastRPC notification worker thread to join
+11-12 16:06:53.715 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:80: fastrpc_notif_domain_deinit: Fastrpc notification worker thread joined
+11-12 16:06:53.715 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:792: open_mod_table_close: closed reverse module apps_mem with handle 0xee07b4e8
+11-12 16:06:53.715 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:792: open_mod_table_close: closed reverse module apps_std with handle 0xee07b3e8
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3706: close_device_node: closed dev 10 on domain 3
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3548: domain_deinit: closed device 10 on domain 3 (kill time 3153 us)
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 4: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 5: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 6: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 7: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 8: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 9: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 10: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 11: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 12: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 13: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 14: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3504: domain_deinit for domain 15: dev -1
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/rpcmem_android.c:357: rpcmem_deinit_internal done
+11-12 16:06:53.718 30264 30264 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4858: fastrpc_apps_user_deinit done

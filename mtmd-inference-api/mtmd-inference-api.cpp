@@ -21,6 +21,7 @@
 #include "chat.h"
 
 #include <algorithm>
+#include <atomic>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -102,6 +103,8 @@ struct mtmd_inference_context {
     common_chat_templates_ptr tmpls;
     std::vector<common_chat_msg> chat_history;
     bool use_jinja;
+    bool enable_thinking;
+    bool prompt_logged;     // full formatted prompt logged once per model
 
     // Support for legacy templates
     llama_tokens antiprompt_tokens;
@@ -125,13 +128,18 @@ struct mtmd_inference_context {
     mtmd_token_callback_t token_cb;
     void* token_user_data;
 
+    // Set by mtmd_inference_cancel() from another thread; cleared at the start of each run
+    std::atomic<bool> cancel_requested{false};
+
     mtmd_inference_context()
         : model(nullptr)
         , lctx(nullptr)
         , vocab(nullptr)
         , smpl(nullptr)
         , n_batch(512)
-        , use_jinja(false)
+        , use_jinja(true)
+        , enable_thinking(false)
+        , prompt_logged(false)
         , verbose_prompt(false)
         , debug_logs_enabled(false)
         , info_logs_enabled(false)
@@ -139,6 +147,38 @@ struct mtmd_inference_context {
 		, n_past(0)
     {}
 };
+
+// Renders new_msgs after chat_history and returns only the new text, ending with the assistant prefix.
+// common_chat_format_single() for several messages at once, plus enable_thinking. Rendering the
+// system turn on its own is not possible: some templates (Qwen3.5) raise when there is no user message.
+// Falls back to the built-in formatter if Jinja fails.
+static std::string format_turn(mtmd_inference_context_t * ctx, const std::vector<common_chat_msg> & new_msgs) {
+    common_chat_templates_inputs inputs;
+    inputs.enable_thinking = ctx->enable_thinking;
+    for (int attempt = 0; attempt < 2; ++attempt) {
+        inputs.use_jinja = ctx->use_jinja;
+        try {
+            std::string past;
+            if (!ctx->chat_history.empty()) {
+                inputs.messages = ctx->chat_history;
+                inputs.add_generation_prompt = false;
+                past = common_chat_templates_apply(ctx->tmpls.get(), inputs).prompt.str();
+            }
+            inputs.messages = ctx->chat_history;
+            inputs.messages.insert(inputs.messages.end(), new_msgs.begin(), new_msgs.end());
+            inputs.add_generation_prompt = true;
+            std::string full = common_chat_templates_apply(ctx->tmpls.get(), inputs).prompt.str();
+            // if the past ends with a newline, keep it (as common_chat_format_single does)
+            std::string out = (!past.empty() && past.back() == '\n') ? "\n" : "";
+            return out + full.substr(std::min(past.size(), full.size()));
+        } catch (const std::exception & e) {
+            if (!ctx->use_jinja) throw;
+            GGML_LOG_WARN("Jinja template failed (%s); falling back to built-in formatter, thinking control lost", e.what());
+            ctx->use_jinja = false;   // sticky for this model
+        }
+    }
+    return "";
+}
 
 // ============================================================================
 // Default Parameters
@@ -264,7 +304,8 @@ void mtmd_inference_params_default(mtmd_inference_params_t* params) {
 
     // Chat template
     params->chat_template = "";
-    params->use_jinja = false;
+    params->use_jinja = true;
+    params->enable_thinking = false;
 
     // Chat history persistence (default: false = clear after each inference)
     params->keep_chat_history = false;
@@ -309,29 +350,43 @@ static int hexagon_sessions_needed(const std::string & devices) {
     return sessions;
 }
 
-static std::vector<ggml_backend_dev_t> parse_device_list(const std::string & value) {
-    std::vector<ggml_backend_dev_t> devices;
+// Returns false (devices cleared) if any name is not found, so a typo cannot fall back to auto-detect
+static bool parse_device_list(const std::string & value, std::vector<ggml_backend_dev_t> & devices) {
+    devices.clear();
     if (value.empty()) {
-        return devices;  // Empty = auto-detect (default llama.cpp behavior)
+        return true;  // Empty = auto-detect (default llama.cpp behavior)
     }
 
     auto dev_names = string_split<std::string>(value, ',');
     if (dev_names.size() == 1 && dev_names[0] == "none") {
         devices.push_back(nullptr);  // Disable offloading
-        return devices;
+        return true;
     }
 
+    bool all_found = true;
     for (const auto & dev_name : dev_names) {
         std::string trimmed = string_strip(dev_name);
         if (trimmed.empty()) continue;
 
         auto * dev = ggml_backend_dev_by_name(trimmed.c_str());
         if (!dev) {
-            GGML_LOG_WARN("Warning: device '%s' not found, skipping", trimmed.c_str());
+            GGML_LOG_ERROR("Device '%s' not found", trimmed.c_str());
+            all_found = false;
             continue;
         }
         devices.push_back(dev);
         GGML_LOG_INFO("Device '%s' found: %s", trimmed.c_str(), ggml_backend_dev_description(dev));
+    }
+
+    if (!all_found) {
+        std::string avail;
+        for (size_t i = 0; i < ggml_backend_dev_count(); ++i) {
+            avail += (i ? ", " : "");
+            avail += ggml_backend_dev_name(ggml_backend_dev_get(i));
+        }
+        GGML_LOG_ERROR("Available devices: %s", avail.c_str());
+        devices.clear();
+        return false;
     }
 
     // Add nullptr at end to signal CPU for remaining layers (llama.cpp convention)
@@ -339,7 +394,7 @@ static std::vector<ggml_backend_dev_t> parse_device_list(const std::string & val
         devices.push_back(nullptr);
     }
 
-    return devices;
+    return true;
 }
 
 // ============================================================================
@@ -357,6 +412,7 @@ const char* mtmd_api_status_string(mtmd_api_status status) {
         case MTMD_API_ERROR_INFERENCE: return "Inference error";
         case MTMD_API_ERROR_NOT_INITIALIZED: return "Context not initialized";
         case MTMD_API_ERROR_ALREADY_INITIALIZED: return "Context already initialized";
+        case MTMD_API_CANCELLED: return "Cancelled";
         default: return "Unknown error";
     }
 }
@@ -486,7 +542,11 @@ mtmd_api_status mtmd_inference_init(
     
 	// Device selection - parse device string and set devices
     if (!params.device.empty() && params.device != "CPU") {
-        cparams.devices = parse_device_list(params.device);
+        if (!parse_device_list(params.device, cparams.devices)) {
+            llama_backend_free();
+            delete ctx;
+            return MTMD_API_ERROR_BACKEND_INIT;
+        }
         if (!cparams.devices.empty()) {
             GGML_LOG_INFO("Devices set: %zu device(s)", cparams.devices.size());
         }
@@ -662,6 +722,8 @@ mtmd_api_status mtmd_inference_init(
     mtmd_params.print_timings = params.show_timings;
     mtmd_params.n_threads = params.cpuparams.n_threads;
     mtmd_params.warmup = params.warmup;
+    mtmd_params.image_min_tokens = params.image_min_tokens;   // -1 = model default
+    mtmd_params.image_max_tokens = params.image_max_tokens;   // -1 = model default
 
     // Explicit encoder placement; empty keeps the default set by use_gpu above
     const std::string & encoder_device = params.model.mmproj_device;
@@ -692,6 +754,20 @@ mtmd_api_status mtmd_inference_init(
         mtmd_params
     ));
 
+    // Custom image token bounds the model cannot honor (e.g. min above the model's max) make the
+    // encoder refuse to load; retry once with the model defaults so a saved setting cannot block a model
+    if (!ctx->ctx_vision && (mtmd_params.image_min_tokens > 0 || mtmd_params.image_max_tokens > 0)) {
+        GGML_LOG_WARN("Vision encoder failed with image tokens min/max %d/%d; retrying with model defaults",
+                      mtmd_params.image_min_tokens, mtmd_params.image_max_tokens);
+        mtmd_params.image_min_tokens = -1;
+        mtmd_params.image_max_tokens = -1;
+        ctx->ctx_vision.reset(mtmd_init_from_file(
+            params.model.mmproj_path.c_str(),
+            ctx->model,
+            mtmd_params
+        ));
+    }
+
     if (!ctx->ctx_vision) {
         GGML_LOG_ERROR("Failed to initialize mtmd context");
         common_sampler_free(ctx->smpl);
@@ -703,6 +779,8 @@ mtmd_api_status mtmd_inference_init(
     // Initialize chat history
     ctx->chat_history.clear();
     ctx->use_jinja = params.use_jinja;
+    ctx->enable_thinking = params.enable_thinking;
+    ctx->prompt_logged = false;
     ctx->verbose_prompt = params.verbose_prompt;
     ctx->debug_logs_enabled = params.debug_logs_enabled;
     ctx->info_logs_enabled = params.info_logs_enabled;
@@ -727,7 +805,9 @@ mtmd_api_status mtmd_inference_init(
         delete ctx;
         return MTMD_API_ERROR_MODEL_LOAD;
     }
-    GGML_LOG_INFO("Chat template initialized, use_jinja=%d", ctx->use_jinja);
+    GGML_LOG_INFO("Chat template initialized, use_jinja=%d enable_thinking=%d (template supports thinking switch: %d)",
+                  ctx->use_jinja, ctx->enable_thinking,
+                  common_chat_templates_support_enable_thinking(ctx->tmpls.get()));
 
     // Load antiprompt tokens for legacy templates (mimic mtmd-cli)
     // Note: Modern templates (Jinja-based) rely on EOG tokens, antiprompt is fallback only
@@ -792,6 +872,7 @@ mtmd_api_status mtmd_inference_run(
 
     ctx->token_cb = token_cb;
     ctx->token_user_data = user_data;
+    ctx->cancel_requested.store(false);
 
     result_out->text = "";
     result_out->n_tokens = 0;
@@ -808,18 +889,6 @@ mtmd_api_status mtmd_inference_run(
     // Must be checked before the system message goes into chat_history
     bool is_first_inference = ctx->chat_history.empty();
 
-    // Format the system turn here: common_chat_format_single() only returns what is new
-    // relative to chat_history, so once it is in the history it is no longer sent
-    std::string formatted_prompt;
-    if (!prompt.system_prompt.empty()) {
-        common_chat_msg system_msg;
-        system_msg.role = "system";
-        system_msg.content = prompt.system_prompt;
-        formatted_prompt = common_chat_format_single(
-            ctx->tmpls.get(), ctx->chat_history, system_msg, false, ctx->use_jinja);
-        ctx->chat_history.push_back(std::move(system_msg));
-    }
-
     // Build user content with media marker if needed
     const char* media_marker = mtmd_default_marker();
     std::string user_content = prompt.user_prompt;
@@ -830,30 +899,29 @@ mtmd_api_status mtmd_inference_run(
         user_content += " " + std::string(media_marker);
     }
 
-    // Create user message
+    // System and user turns are rendered together in one template call (see format_turn)
+    std::vector<common_chat_msg> new_msgs;
+    if (!prompt.system_prompt.empty()) {
+        common_chat_msg system_msg;
+        system_msg.role = "system";
+        system_msg.content = prompt.system_prompt;
+        new_msgs.push_back(std::move(system_msg));
+    }
     common_chat_msg user_msg;
     user_msg.role = "user";
     user_msg.content = user_content;
+    new_msgs.push_back(std::move(user_msg));
 
-    // Format using the model's chat template (mimic chat_add_and_format)
-    // add_user_prefix = true means this is the first user message being formatted
-    std::string user_part = common_chat_format_single(
-        ctx->tmpls.get(),
-        ctx->chat_history,
-        user_msg,
-        true,  // add_user_prefix - always true for single-turn inference
-        ctx->use_jinja
-    );
+    std::string formatted_prompt = format_turn(ctx, new_msgs);   // ends with the assistant prefix
 
-    // The formatter re-adds a '\n' the system turn already ends with
-    if (!formatted_prompt.empty() && formatted_prompt.back() == '\n' &&
-        !user_part.empty() && user_part.front() == '\n') {
-        user_part.erase(0, 1);
+    if (!ctx->prompt_logged) {
+        GGML_LOG_INFO("Formatted prompt (first run, use_jinja=%d enable_thinking=%d):\n%s",
+                      ctx->use_jinja, ctx->enable_thinking, formatted_prompt.c_str());
+        ctx->prompt_logged = true;
     }
-    formatted_prompt += user_part;
 
-    // Add user message to chat history after formatting
-    ctx->chat_history.push_back(std::move(user_msg));
+    // Add this turn's messages to chat history after formatting
+    for (auto & m : new_msgs) ctx->chat_history.push_back(std::move(m));
 
     // Load images from memory as bitmaps
     ctx->bitmaps.entries.clear();  // drop anything left by a failed run
@@ -902,12 +970,27 @@ mtmd_api_status mtmd_inference_run(
         return MTMD_API_ERROR_INFERENCE;
     }
 
+    // Real token counts (M-RoPE models use fewer positions than tokens for images)
+    const int32_t n_prompt_tok = (int32_t) mtmd_helper_get_n_tokens(chunks.ptr.get());
+    int32_t n_image_tok = 0;
+    for (size_t i = 0; i < chunks.size(); ++i) {
+        const mtmd_input_chunk * c = chunks[i];
+        if (mtmd_input_chunk_get_type(c) == MTMD_INPUT_CHUNK_TYPE_IMAGE) {
+            n_image_tok += (int32_t) mtmd_input_chunk_get_n_tokens(c);
+        }
+    }
+
     ctx->bitmaps.entries.clear();
 
     // Reset n_past and KV cache for single-turn inference (keep_chat_history = false)
     if (!ctx->params.keep_chat_history) {
         ctx->n_past = 0;
         llama_memory_clear(llama_get_memory(ctx->lctx), true);
+    }
+
+    if (ctx->cancel_requested.load()) {
+        GGML_LOG_INFO("Run cancelled before prefill");
+        return MTMD_API_CANCELLED;
     }
 
     llama_pos old_n_past = ctx->n_past;
@@ -930,13 +1013,18 @@ mtmd_api_status mtmd_inference_run(
 
     ctx->n_past = new_n_past;
 
+    if (ctx->cancel_requested.load()) {
+        GGML_LOG_INFO("Run cancelled after prefill");
+        return MTMD_API_CANCELLED;
+    }
+
     double eval_end = get_time_ms();
     result_out->prompt_eval_time_ms = eval_end - eval_start;
-    result_out->n_prompt_tokens = new_n_past - old_n_past;  // Actual prompt tokens for this call
-
-    // Calculate and log total prompt tokens (text + image)
-    int32_t total_prompt_tokens = new_n_past - old_n_past;
-    GGML_LOG_INFO("  Total prompt tokens (text + image): %d", total_prompt_tokens);
+    result_out->n_prompt_tokens = n_prompt_tok;                   // real tokens (text + image)
+    result_out->n_image_tokens  = n_image_tok;
+    result_out->n_prompt_pos    = new_n_past - old_n_past;        // KV positions used
+    GGML_LOG_INFO("  Prompt tokens: %d (image %d, text %d), positions: %d",
+                  n_prompt_tok, n_image_tok, n_prompt_tok - n_image_tok, result_out->n_prompt_pos);
 
     // Generate response
     double gen_start = get_time_ms();
@@ -947,6 +1035,11 @@ mtmd_api_status mtmd_inference_run(
 
     // Generation loop (mimic mtmd-cli generate_response)
     for (int i = 0; i < n_predict; i++) {
+        if (ctx->cancel_requested.load()) {
+            GGML_LOG_INFO("Generation cancelled after %d tokens", result_out->n_tokens);
+            return MTMD_API_CANCELLED;
+        }
+
         // Sample token
         llama_token token_id = common_sampler_sample(ctx->smpl, ctx->lctx, -1);
 
@@ -1028,6 +1121,10 @@ mtmd_api_status mtmd_inference_run(
     GGML_LOG_INFO("  Overall throughput: %.2f t/s", result_out->tokens_per_second);
 
     return MTMD_API_SUCCESS;
+}
+
+void mtmd_inference_cancel(mtmd_inference_context_t* ctx) {
+    if (ctx) ctx->cancel_requested.store(true);
 }
 
 void mtmd_inference_free(mtmd_inference_context_t* ctx) {

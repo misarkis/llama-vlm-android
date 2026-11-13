@@ -44,6 +44,10 @@ class VlmApplication : Application() {
                 i("localInferenceBackend set: ${value != null}")
             }
 
+        // One local inference at a time: camera and screen capture share one native context,
+        // and a run keeps going after its screen closes. Claimed before a run, released when it ends.
+        val inferenceBusy = java.util.concurrent.atomic.AtomicBoolean(false)
+
         // Debug logs enabled flag - controlled by user setting in Local Settings
         // JNI code can check this via isDebugLogsEnabled()
         var debugLogsEnabled: Boolean = false

@@ -482,9 +482,9 @@
             <h1>LLAMA VLM Android</h1>
             <p>Screen/Camera capture and analysis powered by Vision Language Models with on-device AI acceleration. Run your favorite VLM locally on your phone using CPU, GPU (Adreno), or NPU (Hexagon HTP).</p>
             <div class="hero-buttons">
-                <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.0" class="btn btn-primary">
+                <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.1" class="btn btn-primary">
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.84 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-                    Download v2.0
+                    Download v2.1
                 </a>
                 <a href="https://github.com/misarkis/llama-vlm-android" class="btn btn-secondary">
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -527,7 +527,7 @@
             <div class="feature-card fade-in">
                 <div class="feature-icon">🧠</div>
                 <h3>VLM Analysis</h3>
-                <p>Ask questions about what's on your screen using state-of-the-art vision language models like Qwen2-VL and Qwen3.8.</p>
+                <p>Ask questions about what's on your screen using 9 tested vision language models (Qwen, LFM, SmolVLM, Granite). Other llama.cpp models may also work.</p>
             </div>
             <div class="feature-card fade-in">
                 <div class="feature-icon">🎙️</div>
@@ -584,109 +584,142 @@
     <!-- Performance Section -->
     <section id="performance">
         <h2 class="section-title">Performance Benchmarks</h2>
-        <p class="section-subtitle table-title">Measured on Samsung Galaxy Fold 7 with Q4_K_M models over 10 test images</p>
-        <table class="performance-table fade-in">
-            <thead>
-                <tr>
-                    <th>Backend and Model</th>
-                    <th>Decode</th>
-                    <th>Prefill Mean (Range)</th>
-                    <th>130-Token Answer</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="badge badge-npu">NPU</span> Qwen2-VL 2B</td>
-                    <td>40.9 tokens/sec</td>
-                    <td>0.72 sec (0.50-0.96)</td>
-                    <td>3.9 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-gpu">GPU</span> Qwen2-VL 2B</td>
-                    <td>29.5 tokens/sec</td>
-                    <td>4.62 sec (1.87-7.74)</td>
-                    <td>9.0 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-cpu">CPU</span> Qwen2-VL 2B</td>
-                    <td>11.5 tokens/sec</td>
-                    <td>33.46 sec (10.19-43.55)</td>
-                    <td>44.8 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-npu">NPU</span> Qwen3.8 2B</td>
-                    <td>30.9 tokens/sec</td>
-                    <td>0.50 sec (0.34-0.60)</td>
-                    <td>4.7 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-gpu">GPU</span> Qwen3.8 2B</td>
-                    <td>21.8 tokens/sec</td>
-                    <td>3.52 sec (1.06-5.08)</td>
-                    <td>9.5 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-cpu">CPU</span> Qwen3.8 2B</td>
-                    <td>10.4 tokens/sec</td>
-                    <td>15.42 sec (4.23-20.83)</td>
-                    <td>27.9 sec</td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="section-subtitle table-note">130-Token Answer is mean prefill plus 130 tokens at mean decode speed. NPU uses 1 session with the vision encoder on HTP.</p>
-        <p class="section-subtitle table-title">Encoder placement with decode on NPU, Qwen2-VL-2B-Q4_0</p>
-        <table class="performance-table fade-in">
-            <thead>
-                <tr>
-                    <th>Configuration</th>
-                    <th>Decode</th>
-                    <th>Prefill per Image</th>
-                    <th>130-Token Answer</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="badge badge-npu">NPU</span> Decode on NPU (1 session), encoder on NPU</td>
-                    <td>41.7 tokens/sec</td>
-                    <td>0.50-0.96 sec</td>
-                    <td>3.8 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-npu">NPU</span> Decode on NPU (1 session), encoder on GPU</td>
-                    <td>41.8 tokens/sec</td>
-                    <td>1.51-6.36 sec</td>
-                    <td>6.9 sec</td>
-                </tr>
-                <tr>
-                    <td><span class="badge badge-npu">NPU</span> Decode on NPU (4 sessions), encoder on GPU</td>
-                    <td>37.4 tokens/sec</td>
-                    <td>1.50-6.08 sec</td>
-                    <td>7.2 sec</td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="section-subtitle table-title">Measured in the app (NPU, 1 session, encoder on HTP, Q4_K_M, after the first image)</p>
+        <p class="section-subtitle table-title">9 tested models measured on Samsung Galaxy Z Fold 7 Ultra (Qualcomm Snapdragon 8 Elite). Q4_K_M, f16 mmproj, context size 16384, 10 test images. Median over images 2-10.</p>
         <table class="performance-table fade-in">
             <thead>
                 <tr>
                     <th>Model</th>
-                    <th>Decode</th>
-                    <th>Prefill per Image</th>
+                    <th>Image Tokens</th>
+                    <th>Time to First Token, sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-gpu">GPU</span> / <span class="badge badge-cpu">CPU</span></th>
+                    <th>Decode, tokens/sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-gpu">GPU</span> / <span class="badge badge-cpu">CPU</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><span class="badge badge-npu">NPU</span> Qwen2-VL 2B</td>
-                    <td>42-45 tokens/sec</td>
-                    <td>0.72-0.74 sec</td>
+                    <td>Qwen3.5-0.8B</td>
+                    <td>252</td>
+                    <td>0.30 / 1.3 / 7.0</td>
+                    <td>54.0 / 41.0 / 15.9</td>
                 </tr>
                 <tr>
-                    <td><span class="badge badge-npu">NPU</span> Qwen3.8 2B</td>
-                    <td>31-32 tokens/sec</td>
-                    <td>0.49-0.51 sec</td>
+                    <td>Qwen3.8-2B</td>
+                    <td>252</td>
+                    <td>0.53 / 4.7 / 21.1</td>
+                    <td>31.0 / 17.4 / 9.0</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-2B</td>
+                    <td>252</td>
+                    <td>0.53 / 5.0 / 21.1</td>
+                    <td>31.3 / 17.4 / 9.1</td>
+                </tr>
+                <tr>
+                    <td>Qwen3-VL-2B</td>
+                    <td>252</td>
+                    <td>0.57 / 4.1&#9888; / 20.9</td>
+                    <td>33.2 / 16.2&#9888; / 10.8</td>
+                </tr>
+                <tr>
+                    <td>Qwen2-VL-2B</td>
+                    <td>315</td>
+                    <td>0.78 / 8.4 / 42.5</td>
+                    <td>41.3 / 16.7 / 11.1</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-4B</td>
+                    <td>252</td>
+                    <td>1.0 / 9.3 / 33.2</td>
+                    <td>14.9 / 7.7 / 4.7</td>
+                </tr>
+                <tr>
+                    <td>LFM2.5-VL-1.6B</td>
+                    <td>252</td>
+                    <td>1.5 / 12.7 / 22.2</td>
+                    <td>59.2 / 29.5 / 19.1</td>
+                </tr>
+                <tr>
+                    <td>SmolVLM2-2.2B</td>
+                    <td>243</td>
+                    <td>4.2 / &#10060; / 47.0</td>
+                    <td>33.8 / &#10060; / 13.0</td>
+                </tr>
+                <tr>
+                    <td>Granite-Vision-3.2-2B</td>
+                    <td>3645</td>
+                    <td>13.7 / 84.7 / 271</td>
+                    <td>15.1 / 6.8 / 4.5</td>
                 </tr>
             </tbody>
         </table>
+        <p class="section-subtitle table-note">Thinking off, short-answer prompt, temperature 0.6, top_k 20, top_p 0.95, min_p 0.05, image tokens at model defaults. NPU uses 1 HTP session with the vision encoder on HTP. CPU is held at about 1 GHz by the thermal limit. &#9888; On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of 9 images); its GPU numbers are the average of the other 6 images. &#10060; On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. The first image after loading a model is slower, so it is not counted.</p>
+        <p class="section-subtitle table-title">Samsung Galaxy Z Flip 6 (Qualcomm Snapdragon 8 Gen 3). Same build and settings as above, with a context size of 4096.</p>
+        <table class="performance-table fade-in">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Image Tokens</th>
+                    <th>Time to First Token, sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-cpu">CPU</span></th>
+                    <th>Decode, tokens/sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-cpu">CPU</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Qwen3.5-0.8B</td>
+                    <td>252</td>
+                    <td>0.48 / 4.8</td>
+                    <td>35.5 / 16.7</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.8-2B</td>
+                    <td>252</td>
+                    <td>0.92 / 30.8</td>
+                    <td>19.3 / 6.0</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-2B</td>
+                    <td>252</td>
+                    <td>0.91 / 19.5</td>
+                    <td>19.9 / 9.9</td>
+                </tr>
+                <tr>
+                    <td>Qwen3-VL-2B</td>
+                    <td>252</td>
+                    <td>0.91 / 31.3</td>
+                    <td>20.3 / 6.8</td>
+                </tr>
+                <tr>
+                    <td>Qwen2-VL-2B</td>
+                    <td>315</td>
+                    <td>1.2 / 61.0</td>
+                    <td>26.5 / 7.6</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-4B</td>
+                    <td>252</td>
+                    <td>&#10060; / 31.7</td>
+                    <td>&#10060; / 4.6</td>
+                </tr>
+                <tr>
+                    <td>LFM2.5-VL-1.6B</td>
+                    <td>252</td>
+                    <td>3.5 / 32.6</td>
+                    <td>34.6 / 12.3</td>
+                </tr>
+                <tr>
+                    <td>SmolVLM2-2.2B</td>
+                    <td>243</td>
+                    <td>7.9 / 40.6</td>
+                    <td>19.2 / 13.1</td>
+                </tr>
+                <tr>
+                    <td>Granite-Vision-3.2-2B</td>
+                    <td>3645</td>
+                    <td>26.0 / 245</td>
+                    <td>8.9 / 6.0</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="section-subtitle table-note">&#10060; Qwen3.5-4B does not fit on the Flip 6 NPU. GPU: Q4_K_M models are not supported on the Adreno 750. The Flip 6 throttles more than the Fold 7, so CPU numbers vary a lot over a run.</p>
     </section>
 
     <!-- Architecture Section -->
@@ -731,8 +764,8 @@
             <div class="feature-card fade-in" style="text-align: center;">
                 <h3>1️⃣ Download and install app</h3>
                 <p style="margin-bottom: 1rem;">Get the latest release and install on your Android device.</p>
-                <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.0" class="btn btn-primary" style="display: inline-flex;">
-                    Download v2.0
+                <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.1" class="btn btn-primary" style="display: inline-flex;">
+                    Download v2.1
                 </a>
             </div>
             <div class="feature-card fade-in">
@@ -744,11 +777,8 @@
                 <h3>3️⃣ LOCAL Inference</h3>
                 <p>If you want to run local inference (offline, on-device):</p>
                 <p style="margin-top: 0.5rem;">Download and push a model to your device:</p>
-                <a href="https://huggingface.co/bartowski/Qwen2-VL-2B-Instruct-GGUF" class="btn btn-secondary" style="display: inline-flex; margin: 0.5rem 0;">
-                    Qwen2-VL-2B GGUF
-                </a>
-                <a href="https://huggingface.co/htb-ac-1424625/Qwen3.8-2B-Distill-heretic" class="btn btn-secondary" style="display: inline-flex; margin: 0.5rem 0;">
-                    Qwen3.8-2B GGUF
+                <a href="https://github.com/misarkis/llama-vlm-android#supported-models" class="btn btn-secondary" style="display: inline-flex; margin: 0.5rem 0;">
+                    Tested Models (9, with download links)
                 </a>
                 <p style="margin-top: 0.5rem;">Then select model path in Local Settings, update parameters, backend and press Save. Then press Start Local and wait until you see "Backend" in green. Then press Start Analyzer.</p>
                 <img src="https://raw.githubusercontent.com/misarkis/llama-vlm-android/main/docs/images/Main-Activity-Local-Local-Settings.jpg" alt="Local Settings" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 400px; object-fit: contain;">
@@ -800,7 +830,7 @@ source ./setup-config.sh    # Configure paths<br>
         <p style="color: var(--gray); margin: 1rem 0;">AI Vision Everywhere — On‑Device or Remote</p>
         <div class="footer-links">
             <a href="https://github.com/misarkis/llama-vlm-android" target="_blank">GitHub Repository</a>
-            <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.0" target="_blank">Download v2.0</a>
+            <a href="https://github.com/misarkis/llama-vlm-android/releases/tag/ReleaseV2.1" target="_blank">Download v2.1</a>
             <a href="https://github.com/misarkis/llama-vlm-android/blob/main/LICENSE" target="_blank">MIT License</a>
         </div>
         <p style="color: var(--gray); margin-top: 2rem;">

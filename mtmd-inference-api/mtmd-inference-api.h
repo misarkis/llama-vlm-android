@@ -38,7 +38,8 @@ typedef enum {
     MTMD_API_ERROR_IMAGE_LOAD = -5,
     MTMD_API_ERROR_INFERENCE = -6,
     MTMD_API_ERROR_NOT_INITIALIZED = -7,
-    MTMD_API_ERROR_ALREADY_INITIALIZED = -8
+    MTMD_API_ERROR_ALREADY_INITIALIZED = -8,
+    MTMD_API_CANCELLED = -9
 } mtmd_api_status;
 
 // ============================================================================
@@ -222,7 +223,8 @@ typedef struct {
 
     // Chat template
     std::string chat_template;      // custom chat template
-    bool    use_jinja;              // use Jinja template engine
+    bool    use_jinja;              // use Jinja template engine (default true)
+    bool    enable_thinking;        // false = ask reasoning templates to skip <think> (default false)
 
     // Chat history persistence (default: false = clear after each inference)
     bool    keep_chat_history;      // keep chat history across inference calls
@@ -247,6 +249,8 @@ typedef struct {
     std::string text;               // generated text
     int32_t   n_tokens;             // number of tokens generated
     int32_t   n_prompt_tokens;      // number of prompt tokens (including image tokens)
+    int32_t   n_image_tokens;       // image tokens within n_prompt_tokens
+    int32_t   n_prompt_pos;         // KV positions used by the prompt (< tokens for M-RoPE images)
     double    load_time_ms;         // model load time (if applicable)
     double    prompt_eval_time_ms;  // prompt evaluation time
     double    eval_time_ms;         // generation time
@@ -319,6 +323,15 @@ mtmd_api_status mtmd_inference_run(
     mtmd_token_callback_t token_cb,
     void* user_data
 );
+
+/**
+ * Ask a running mtmd_inference_run to stop. The run returns MTMD_API_CANCELLED
+ * before prefill or at the next generated token (prefill itself is not interrupted).
+ * Safe to call from any thread; no effect when no run is active.
+ *
+ * @param ctx   Inference context
+ */
+void mtmd_inference_cancel(mtmd_inference_context_t* ctx);
 
 /**
  * Free inference context and release resources.

@@ -1,0 +1,11 @@
+Image,Backend,Model,PromptTokens,CompletionTokens,TotalTime_ms,TokensPerSecond
+VLM_CAMERA_1782100068514.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,245,107,3857.00,34.00
+VLM_CAMERA_1782100091800.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,245,89,3055.00,32.99
+VLM_CAMERA_1782100189050.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,245,86,3148.00,31.07
+VLM_CAMERA_1782100225319.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,245,63,2404.00,31.05
+VLM_CAMERA_1782105927664.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,107,3954.00,31.34
+VLM_CAMERA_1782106045294.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,155,5567.00,30.80
+VLM_CAMERA_1782176095192.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,123,4500.00,30.94
+VLM_CAMERA_1782176126527.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,146,5221.00,31.12
+VLM_CAMERA_1782176185284.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,165,5841.00,31.00
+VLM_CAMERA_1782176228820.png,NPU-1Core,Qwen3.8-2B-Distill-heretic.Q4_K_M.gguf,357,125,4609.00,30.66

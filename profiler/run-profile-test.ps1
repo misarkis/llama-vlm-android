@@ -28,12 +28,12 @@ if ($Help) {
     Write-Host "  (Default build has no GPU profiling overhead)"
     Write-Host ""
     Write-Host "Options:"
-    Write-Host "  -Config       Path to JSON config file (default: configs/config_htp_1core.json)"
+    Write-Host "  -Config       Path to JSON config file (default: configs/config_htp_1core_vit_qwen2vl.json)"
     Write-Host "  -HtpProfile   HTP profiling level: 0=off, 1=basic, 2=extended (default: htp_profile in the config)"
     Write-Host "  -Help         Show this help"
     Write-Host ""
     Write-Host "Example:"
-    Write-Host "  .\run-profile-test.ps1 -Config configs/config_htp_1core.json -HtpProfile 1"
+    Write-Host "  .\run-profile-test.ps1 -Config configs/config_htp_1core_vit_qwen2vl.json -HtpProfile 1"
     exit 0
 }
 
@@ -81,7 +81,7 @@ $OMP_LIB = Get-ChildItem -Path "$NdkRoot\toolchains\llvm\prebuilt\windows-x86_64
 
 # Default config
 if ([string]::IsNullOrEmpty($Config)) {
-    $Config = Join-Path $ProfilerDir "configs\config_htp_1core.json"
+    $Config = Join-Path $ProfilerDir "configs\config_htp_1core_vit_qwen2vl.json"
 }
 
 # Device paths

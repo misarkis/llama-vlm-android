@@ -116,6 +116,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         private const val KEY_CAMERA_HEIGHT = "camera_height"
         // Inference parameters
         private const val KEY_IMAGE_MIN_TOKENS = "image_min_tokens"
+        private const val KEY_IMAGE_MAX_TOKENS = "image_max_tokens"
+        private const val KEY_ENABLE_THINKING = "enable_thinking"
         private const val KEY_TOP_K = "top_k"
         private const val KEY_TOP_P = "top_p"
         private const val KEY_TEMPERATURE = "temperature"
@@ -848,6 +850,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
                     verbose = serverConfig.verbose,
                     htpSessions = serverConfig.htpSessions,
                     imageMinTokens = serverConfig.imageMinTokens,
+                    imageMaxTokens = serverConfig.imageMaxTokens,
+                    enableThinking = serverConfig.enableThinking,
                     topK = serverConfig.topK,
                     topP = serverConfig.topP,
                     temperature = serverConfig.temperature,
@@ -908,9 +912,11 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         val htpSessions: Int = 1,
         // Inference parameters
         val imageMinTokens: Int = -1,
-        val topK: Int = 40,
+        val imageMaxTokens: Int = -1,
+        val enableThinking: Boolean = false,
+        val topK: Int = 20,
         val topP: Float = 0.95f,
-        val temperature: Float = 0.80f,
+        val temperature: Float = 0.60f,
         val repetitionPenalty: Float = 1.00f
     )
 
@@ -923,9 +929,11 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         val infoLogsEnabled = prefs.getBoolean(KEY_INFO_LOGS_ENABLED, false)
         val htpSessions = prefs.getInt(KEY_HTP_SESSIONS, 1)
         val imageMinTokens = prefs.getInt(KEY_IMAGE_MIN_TOKENS, -1)
-        val topK = prefs.getInt(KEY_TOP_K, 40)
+        val imageMaxTokens = prefs.getInt(KEY_IMAGE_MAX_TOKENS, -1)
+        val enableThinking = prefs.getBoolean(KEY_ENABLE_THINKING, false)
+        val topK = prefs.getInt(KEY_TOP_K, 20)
         val topP = prefs.getFloat(KEY_TOP_P, 0.95f)
-        val temperature = prefs.getFloat(KEY_TEMPERATURE, 0.80f)
+        val temperature = prefs.getFloat(KEY_TEMPERATURE, 0.60f)
         val repetitionPenalty = prefs.getFloat(KEY_REPETITION_PENALTY, 1.00f)
 
         i( "=== loadServerConfig ===")
@@ -935,6 +943,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         i( "  KEY_DEBUG_LOGS_ENABLED: $debugLogsEnabled")
         i( "  KEY_HTP_SESSIONS: $htpSessions")
         i( "  KEY_IMAGE_MIN_TOKENS: $imageMinTokens")
+        i( "  KEY_IMAGE_MAX_TOKENS: $imageMaxTokens")
+        i( "  KEY_ENABLE_THINKING: $enableThinking")
         i( "  KEY_TOP_K: $topK")
         i( "  KEY_TOP_P: $topP")
         i( "  KEY_TEMPERATURE: $temperature")
@@ -949,6 +959,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
             infoLogsEnabled = infoLogsEnabled,
             htpSessions = htpSessions,
             imageMinTokens = imageMinTokens,
+            imageMaxTokens = imageMaxTokens,
+            enableThinking = enableThinking,
             topK = topK,
             topP = topP,
             temperature = temperature,
@@ -965,6 +977,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         i( "  debugLogsEnabled: ${config.debugLogsEnabled}")
         i( "  htpSessions: ${config.htpSessions}")
         i( "  imageMinTokens: ${config.imageMinTokens}")
+        i( "  imageMaxTokens: ${config.imageMaxTokens}")
+        i( "  enableThinking: ${config.enableThinking}")
         i( "  topK: ${config.topK}")
         i( "  topP: ${config.topP}")
         i( "  temperature: ${config.temperature}")
@@ -977,6 +991,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
             .putBoolean(KEY_INFO_LOGS_ENABLED, config.infoLogsEnabled)
             .putInt(KEY_HTP_SESSIONS, config.htpSessions)
             .putInt(KEY_IMAGE_MIN_TOKENS, config.imageMinTokens)
+            .putInt(KEY_IMAGE_MAX_TOKENS, config.imageMaxTokens)
+            .putBoolean(KEY_ENABLE_THINKING, config.enableThinking)
             .putInt(KEY_TOP_K, config.topK)
             .putFloat(KEY_TOP_P, config.topP)
             .putFloat(KEY_TEMPERATURE, config.temperature)
@@ -1005,6 +1021,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         val htpSessionsSpinner = dialogView.findViewById<android.widget.Spinner>(R.id.spinner_htp_sessions)
         // Inference parameters
         val imageMinTokensInput = dialogView.findViewById<android.widget.EditText>(R.id.et_image_min_tokens)
+        val imageMaxTokensInput = dialogView.findViewById<android.widget.EditText>(R.id.et_image_max_tokens)
+        val thinkingCheck = dialogView.findViewById<android.widget.CheckBox>(R.id.cb_enable_thinking)
         val topKInput = dialogView.findViewById<android.widget.EditText>(R.id.et_top_k)
         val topPInput = dialogView.findViewById<android.widget.EditText>(R.id.et_top_p)
         val temperatureInput = dialogView.findViewById<android.widget.EditText>(R.id.et_temperature)
@@ -1016,6 +1034,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         verboseCheck.isChecked = config.verbose
         maxTokensInput.setText(Config.maxTokens.toString())
         imageMinTokensInput.setText(if (config.imageMinTokens < 0) "" else config.imageMinTokens.toString())
+        imageMaxTokensInput.setText(if (config.imageMaxTokens < 0) "" else config.imageMaxTokens.toString())
+        thinkingCheck.isChecked = config.enableThinking
         topKInput.setText(config.topK.toString())
         topPInput.setText(String.format("%.2f", config.topP))
         temperatureInput.setText(String.format("%.2f", config.temperature))
@@ -1096,6 +1116,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
                 val newMaxTokens = maxTokensInput.text.toString().toIntOrNull() ?: 1024
                 val newHtpSessions = htpSessionsSpinner.selectedItemPosition + 1
                 val newImageMinTokens = imageMinTokensInput.text.toString().toIntOrNull() ?: -1
+                val newImageMaxTokens = imageMaxTokensInput.text.toString().toIntOrNull() ?: -1
+                val newEnableThinking = thinkingCheck.isChecked
                 val newTopK = topKInput.text.toString().toIntOrNull() ?: 40
                 val newTopP = topPInput.text.toString().toFloatOrNull() ?: 0.95f
                 val newTemperature = temperatureInput.text.toString().toFloatOrNull() ?: 0.80f
@@ -1118,6 +1140,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
                     infoLogsEnabled = newInfoLogsEnabled,
                     htpSessions = newHtpSessions,
                     imageMinTokens = newImageMinTokens,
+                    imageMaxTokens = newImageMaxTokens,
+                    enableThinking = newEnableThinking,
                     topK = newTopK,
                     topP = newTopP,
                     temperature = newTemperature,

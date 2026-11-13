@@ -44,6 +44,8 @@ class ScreenCaptureService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private var imageReader: ImageReader? = null
     private var isRunning = false
+    @Volatile private var sessionClosed = false  // Set in onDestroy: results of runs from this session are dropped
+    @Volatile private var runInFlight = false  // A local run started by this service is still going: onDestroy cancels only its own run
     private var displayCallback: MediaProjection.Callback? = null
     private val serviceScope = CoroutineScope(Dispatchers.Default + Job())
 
@@ -245,6 +247,8 @@ class ScreenCaptureService : Service() {
 
     override fun onDestroy() {
         i( "===== Service onDestroy =====")
+        sessionClosed = true
+        if (runInFlight) VlmApplication.localInferenceBackend?.cancel()  // stop generating an answer nobody will hear
         isRunning = false
         sIsRunning = false
         handler.removeCallbacksAndMessages(null)
@@ -429,9 +433,20 @@ class ScreenCaptureService : Service() {
 
                 iCapture( "RGB bytes length: ${rgbBytes.size}")
 
-                // Analyze with VLM
+                // A camera run may still be on the shared model
+                if (!VlmApplication.inferenceBusy.compareAndSet(false, true)) {
+                    sendError("Still finishing the previous answer, try again in a moment")
+                    return
+                }
+
+                // Analyze with VLM. invokeOnCompletion releases the flag once the job is fully done,
+                // even if serviceScope is cancelled before the job starts
+                runInFlight = true
                 serviceScope.launch(Dispatchers.IO) {
                     analyzeScreenWithRgbBytes(rgbBytes, scaledWidth, scaledHeight)
+                }.invokeOnCompletion {
+                    runInFlight = false
+                    VlmApplication.inferenceBusy.set(false)
                 }
             } else {
                 // REMOTE mode: use JPEG base64
@@ -660,6 +675,11 @@ class ScreenCaptureService : Service() {
             )
 
             iInference( "Local inference result: success=${result.success}, content length=${result.content.length}")
+
+            if (sessionClosed) {
+                i( "Screen session closed during inference - dropping result")
+                return
+            }
 
             if (result.success) {
                 i( "Analysis complete: ${result.content.take(100)}...")

@@ -61,6 +61,9 @@ struct profile_test_settings {
     int32_t n_batch;
     int32_t n_predict;
     int32_t image_min_tokens;
+    int32_t image_max_tokens;
+    bool use_jinja;
+    bool enable_thinking;
     int32_t top_k;
     float top_p;
     float temperature;
@@ -82,14 +85,17 @@ static void profile_test_settings_default(profile_test_settings* settings) {
     settings->n_ctx = 16384;
     settings->n_batch = 512;
     settings->n_predict = 512;
-    settings->image_min_tokens = 1000;
-    settings->top_k = 40;
-    settings->top_p = 0.9f;
-    settings->temperature = 0.9f;
+    settings->image_min_tokens = -1;   // -1 = model default
+    settings->image_max_tokens = -1;
+    settings->use_jinja = true;
+    settings->enable_thinking = false;
+    settings->top_k = 20;
+    settings->top_p = 0.95f;
+    settings->temperature = 0.6f;
     settings->repetition_penalty = 1.0f;
     settings->image_dir = "/data/local/tmp/test_images/";
     settings->htp_profile = 1;
-    settings->system_prompt = "You are a AI assistant. Please answer in details in English only. Just English. Do not use chineese. No chineese.";
+    settings->system_prompt = "You are a AI assistant. Describe what is on a phone screen or camera view to the person looking at it. Answer in English only, in three or four detailed sentences, under 100 words. Plain speech: no lists, no markdown, no headings.";
     settings->user_prompt = "What is on this screen right now? What should the person see? Tell them what matters. Keep it casual like you are explaining it to a friend.";
     settings->output_csv = "/sdcard/profile_results.csv";
     settings->output_log = "/sdcard/profile_htp_log.txt";
@@ -112,6 +118,20 @@ static std::string json_get_string(const std::string& json, const std::string& k
     if (end == std::string::npos) return default_val;
 
     return json.substr(start, end - start);
+}
+
+// Accepts true/false or a number (non-zero = true)
+static bool json_get_bool(const std::string& json, const std::string& key, bool default_val) {
+    size_t pos = json.find("\"" + key + "\"");
+    if (pos == std::string::npos) return default_val;
+    pos = json.find(":", pos);
+    if (pos == std::string::npos) return default_val;
+    pos = json.find_first_not_of(" \t", pos + 1);
+    if (pos == std::string::npos) return default_val;
+    if (json.compare(pos, 4, "true") == 0) return true;
+    if (json.compare(pos, 5, "false") == 0) return false;
+    if (isdigit(json[pos]) || json[pos] == '-') return atoi(json.c_str() + pos) != 0;
+    return default_val;
 }
 
 static int32_t json_get_int(const std::string& json, const std::string& key, int32_t default_val) {
@@ -181,6 +201,9 @@ static bool load_settings(const std::string& config_path, profile_test_settings*
     settings->n_batch = json_get_int(json, "n_batch", settings->n_batch);
     settings->n_predict = json_get_int(json, "n_predict", settings->n_predict);
     settings->image_min_tokens = json_get_int(json, "image_min_tokens", settings->image_min_tokens);
+    settings->image_max_tokens = json_get_int(json, "image_max_tokens", settings->image_max_tokens);
+    settings->use_jinja = json_get_bool(json, "use_jinja", settings->use_jinja);
+    settings->enable_thinking = json_get_bool(json, "enable_thinking", settings->enable_thinking);
     settings->top_k = json_get_int(json, "top_k", settings->top_k);
     settings->top_p = json_get_float(json, "top_p", settings->top_p);
     settings->temperature = json_get_float(json, "temperature", settings->temperature);
@@ -548,6 +571,8 @@ int main(int argc, char** argv) {
     LOGI("  N Context: %d", settings.n_ctx);
     LOGI("  N Batch: %d", settings.n_batch);
     LOGI("  N Predict: %d", settings.n_predict);
+    LOGI("  Image tokens min/max: %d / %d", settings.image_min_tokens, settings.image_max_tokens);
+    LOGI("  Jinja: %d, thinking: %d", settings.use_jinja, settings.enable_thinking);
     LOGI("  Image Dir: %s", settings.image_dir.c_str());
     LOGI("  Output CSV: %s", settings.output_csv.c_str());
     LOGI("Note: Set GGML_HEXAGON_PROFILE=1 in shell before running for HTP per-op profiling");
@@ -571,6 +596,10 @@ int main(int argc, char** argv) {
     params.n_ctx = settings.n_ctx;
     params.n_batch = settings.n_batch;
     params.n_predict = settings.n_predict;
+    params.image_min_tokens = settings.image_min_tokens;
+    params.image_max_tokens = settings.image_max_tokens;
+    params.use_jinja = settings.use_jinja;
+    params.enable_thinking = settings.enable_thinking;
     params.cpuparams.n_threads = 4;
 
     // Set backend device
@@ -629,6 +658,10 @@ int main(int argc, char** argv) {
         }
 
         LOGI("=== Processing image %zu/%zu: %s ===", i + 1, image_files.size(), img->filename.c_str());
+#ifdef __ANDROID__
+        // Same marker on stderr, the stream mtmd's encode logs use, so console.txt can be split per image
+        fprintf(stderr, "=== Processing image %zu/%zu: %s ===\n", i + 1, image_files.size(), img->filename.c_str());
+#endif
 
         // Prepare image data
         mtmd_image_data_t image;

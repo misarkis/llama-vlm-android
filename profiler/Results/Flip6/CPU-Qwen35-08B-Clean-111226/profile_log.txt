@@ -1,0 +1,612 @@
+--------- beginning of main
+11-12 23:36:13.527 26034 26034 I mtmd-profile-test: === mtmd-profile-test START ===
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test: Settings:
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Model: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/Qwen3.5-0.8B-Q4_K_M.gguf
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   MMProj: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/mmproj-F16.gguf
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Backend: CPU
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   ViT device: default
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   HTP Sessions: 0
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   N Context: 4096
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   N Batch: 512
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   N Predict: 512
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Image tokens min/max: -1 / -1
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Jinja: 1, thinking: 0
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Image Dir: /data/local/tmp/mtmd-profile-test/test_images/
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test:   Output CSV: /sdcard/profile_results_cpu_qwen35_08b.csv
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test: Note: Set GGML_HEXAGON_PROFILE=1 in shell before running for HTP per-op profiling
+11-12 23:36:13.528 26034 26034 I mtmd-profile-test: Found 10 image(s) to test
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Android log callback installed (llama + mtmd + ggml)
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Model: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/Qwen3.5-0.8B-Q4_K_M.gguf
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: MMProj: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/mmproj-F16.gguf
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Device: CPU, GPU layers: 0
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Context: 4096, Batch: 512, Predict: 512
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Verbose: 0
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Set D=CPU
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Set GGML_HEXAGON_DEVICES=0
+11-12 23:36:13.528 26034 26034 I mtmd-inference-api: Backend reg count: 0
+11-12 23:36:13.558 26034 26034 I mtmd-inference-api: ggml_opencl: selected platform: 'QUALCOMM Snapdragon(TM)'
+11-12 23:36:13.567 26034 26034 I mtmd-inference-api: 
+11-12 23:36:13.567 26034 26034 I mtmd-inference-api: ggml_opencl: device: 'QUALCOMM Adreno(TM) 750 (OpenCL 3.0 Adreno(TM) 750)'
+11-12 23:36:13.567 26034 26034 I mtmd-inference-api: ggml_opencl: default device: 'QUALCOMM Adreno(TM) 750 (OpenCL 3.0 Adreno(TM) 750)'
+11-12 23:36:13.567 26034 26034 I mtmd-inference-api: load_backend: loaded OpenCL backend from /data/local/tmp/mtmd-profile-test/libggml-opencl.so
+11-12 23:36:13.568 26034 26034 I mtmd-inference-api: ggml-hex: Loading driver libcdsprpc.so
+11-12 23:36:13.570 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/rpcmem_android.c:182: set up allocator 0xb4000077d3ed42d0 for DMA buf heap system, ION heap system, heap mask 0x2000000, flags 0x1, legacy flags 0x1
+11-12 23:36:13.570 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_config.c:319: Reading configuration file: mtmd-profile-test.debugconfig
+11-12 23:36:13.570 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_config.c:350: fastrpc_config_init: Couldn't find file mtmd-profile-test.debugconfig, errno (No such file or directory) at ., /vendor/lib64/rfs/dsp, /vendor/lib/rfsa/adsp, 
+11-12 23:36:13.570 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4405: fastrpc_apps_user_init done  with default domain:3 and &fastrpc_trace:0x764ecb60f0
+11-12 23:36:13.570 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4519: multidsplib_env_init: libcdsprpc.so loaded
+11-12 23:36:13.571 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3408: close_device_node: closed dev 8 on domain 3
+11-12 23:36:13.571 26034 26034 I mtmd-inference-api: ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1
+11-12 23:36:13.571 26034 26034 I mtmd-inference-api: ggml-hex: Hexagon Arch version v75, DMA64 disabled
+11-12 23:36:13.571 26034 26034 I mtmd-inference-api: ggml-hex: device 0: HTP0 (phys=0, virt=0, domain=cdsp:3)
+11-12 23:36:13.571 26034 26034 I mtmd-inference-api: load_backend: loaded HTP backend from /data/local/tmp/mtmd-profile-test/libggml-hexagon.so
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: load_backend: loaded CPU backend from /data/local/tmp/mtmd-profile-test/libggml-cpu.so
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: llama_backend_init completed, reg count: 3
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: CPU mode: GPU offloading disabled
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api:   n_batch: 512
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api:   n_ubatch: 512
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api:   n_ctx: 4096
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api:   Flash attention type: 1
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api:   Flash attention enabled: yes
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: Model path: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/Qwen3.5-0.8B-Q4_K_M.gguf
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: MMProj path: /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/mmproj-F16.gguf
+11-12 23:36:13.574 26034 26034 I mtmd-inference-api: Device: CPU, GPU layers: 0
+11-12 23:36:13.880 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2661: remote_session_control Unsigned PD enable 1 request for domain 3
+11-12 23:36:13.881 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3408: close_device_node: closed dev 9 on domain 3
+11-12 23:36:13.881 26034 26034 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3578: Error 0xd: open_shell failed for domain 3 search paths used are /dsp/, /vendor/dsp/, /vendor/dsp/xdsp/ (errno Permission denied)
+11-12 23:36:13.919 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3662: Created user PD on domain 3, dbg_trace 0x0, enabled attr=> RPC timeout:0, Dbg Mode:N, CRC:N, Unsigned:Y, Signed:N, Adapt QOS:N, PD dump: (Config:N, Dbg:N), Perf: (Kernel:N, DSP:N), Iregion:N, QTF:N, UAF:N userPD initmem len:0x500000, Log pkt: N
+11-12 23:36:13.921 26034 26038 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/listener_android.c:116: listener thread starting
+11-12 23:36:13.921 26034 26034 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:610:Error : Unable to add watcher for folder /vendor/lib64/rfs/dsp : errno is Permission denied
+11-12 23:36:13.921 26034 26034 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:610:Error : Unable to add watcher for folder /vendor/lib/rfsa/adsp : errno is Permission denied
+11-12 23:36:13.921 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_perf.c:278: fastrpc_perf_init: enabled systrace 0x0 and RPC traces (kernel 0, dsp 0) with frequency 1000
+11-12 23:36:13.922 26034 26039 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:362: file_watcher_thread starting for domain 3
+11-12 23:36:13.922 26034 26039 W mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:382:file_watcher_thread: Couldn't find file mtmd-profile-test.farf, errno (No such file or directory) at ;/vendor/lib64/rfs/dsp;/vendor/lib/rfsa/adsp;/vendor/lib/rfsa/dsp;/vendor/dsp;
+11-12 23:36:13.923 26034 26038 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:701: open_mod_table_open_from_static: reverse module apps_std opened with handle 0x4ecb8dd8 (idx 0)
+11-12 23:36:13.923 26034 26038 D mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:380: apps_std_fopen_fd: done for ./cdsp/./libggml-htp-v75.so with fopen:10us, read:0us, rpc_alloc:0us, mmap:0us
+11-12 23:36:13.924 26034 26038 D mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:380: apps_std_fopen_fd: done for ././libggml-htp-v75.so with fopen:78us, read:365us, rpc_alloc:67us, mmap:358us
+11-12 23:36:13.924 26034 26038 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/apps_std_imp.c:1149: Successfully opened file ././libggml-htp-v75.so
+11-12 23:36:13.925 26034 26038 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:701: open_mod_table_open_from_static: reverse module apps_mem opened with handle 0x4ecb8ed8 (idx 1)
+11-12 23:36:13.928 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1684: remote_handle64_open: opened handle 0xb400007704fca090 (remote 0x1eccab0) for file:///libggml-htp-v75.so?htp_iface_skel_handle_invoke&_modver=1.0&_dom=cdsp&_session=0 on domain 3 (spawn time 41796 us, load time 6746 us), num handles 1
+11-12 23:36:13.929 26034 26040 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:97: fastrpc_latency_thread_handler started for QoS with activity window 100 ms
+11-12 23:36:13.929 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2313: remote_handle_control_domain: requested QOS 1, latency 4 for domain 3 handle 0xb400007704fca090
+11-12 23:36:13.929 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1684: remote_handle64_open: opened handle 0xb400007704fca7d0 (remote 0x1ecd120) for file:///libdspqueue_rpc_skel.so?dspqueue_rpc_skel_handle_invoke&_modver=1.0&_dom=cdsp&_session=0 on domain 3 (spawn time 0 us, load time 252 us), num handles 2
+11-12 23:36:13.929 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:104: fastrpc_notif_domain_init: FastRPC notification worker thread launched
+11-12 23:36:13.930 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2797: remote_session_control Register PD status notification request for domain 3
+11-12 23:36:13.930 26034 26041 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2020: get_remote_notif_response: received status notification 0 for domain 3, session 0
+11-12 23:36:13.931 26034 26034 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1475: Error 0x80000414: remote_handle64_invoke failed for handle 0xb400007704fca7d0, method 3 on domain 3 (sc 0x3010100) (errno Success)
+11-12 23:36:13.931 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:624: dspqueue_create: created Queue 0, 0xb4000077d3ed3d90, DSP 0x00000000 for domain 3
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: loaded meta data with 46 key-value pairs and 320 tensors from /data/local/tmp/llama.cpp/models/Qwen3.5-VL-0.8B-Unsloth/Qwen3.5-0.8B-Q4_K_M.gguf (version GGUF V3 (latest))
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   0:                       general.architecture str              = qwen35
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   1:                               general.type str              = model
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   2:                               general.name str              = Qwen3.5-0.8B
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   3:                           general.basename str              = Qwen3.5-0.8B
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   4:                       general.quantized_by str              = Unsloth
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   5:                         general.size_label str              = 0.8B
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   6:                            general.license str              = apache-2.0
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   7:                       general.license.link str              = https://huggingface.co/Qwen/Qwen3.5-0...
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   8:                           general.repo_url str              = https://huggingface.co/unsloth
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv   9:                   general.base_model.count u32              = 1
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  10:                  general.base_model.0.name str              = Qwen3.5 0.8B
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  11:          general.base_model.0.organization str              = Qwen
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  12:              general.base_model.0.repo_url str              = https://huggingface.co/Qwen/Qwen3.5-0.8B
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  13:                               general.tags arr[str,1]       = ["image-text-to-text"]
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  14:                         qwen35.block_count u32              = 24
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  15:                      qwen35.context_length u32              = 262144
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  16:                    qwen35.embedding_length u32              = 1024
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  17:                 qwen35.feed_forward_length u32              = 3584
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  18:                qwen35.attention.head_count u32              = 8
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  19:             qwen35.attention.head_count_kv u32              = 2
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  20:             qwen35.rope.dimension_sections arr[i32,4]       = [11, 11, 10, 0]
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  21:                      qwen35.rope.freq_base f32              = 10000000.000000
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  22:    qwen35.attention.layer_norm_rms_epsilon f32              = 0.000001
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  23:                qwen35.attention.key_length u32              = 256
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  24:              qwen35.attention.value_length u32              = 256
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  25:                     qwen35.ssm.conv_kernel u32              = 4
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  26:                      qwen35.ssm.state_size u32              = 128
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  27:                     qwen35.ssm.group_count u32              = 16
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  28:                  qwen35.ssm.time_step_rank u32              = 16
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  29:                      qwen35.ssm.inner_size u32              = 2048
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  30:             qwen35.full_attention_interval u32              = 4
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  31:                qwen35.rope.dimension_count u32              = 64
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  32:                       tokenizer.ggml.model str              = gpt2
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  33:                         tokenizer.ggml.pre str              = qwen35
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  34:                      tokenizer.ggml.tokens arr[str,248320]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  35:                  tokenizer.ggml.token_type arr[i32,248320]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  36:                      tokenizer.ggml.merges arr[str,247587]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  37:                tokenizer.ggml.eos_token_id u32              = 248046
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  38:            tokenizer.ggml.padding_token_id u32              = 248055
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  39:                    tokenizer.chat_template str              = {%- set image_count = namespace(value...
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  40:               general.quantization_version u32              = 2
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  41:                          general.file_type u32              = 15
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  42:                      quantize.imatrix.file str              = Qwen3.5-0.8B-GGUF/imatrix_unsloth.gguf
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  43:                   quantize.imatrix.dataset str              = unsloth_calibration_Qwen3.5-0.8B.txt
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  44:             quantize.imatrix.entries_count u32              = 186
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - kv  45:              quantize.imatrix.chunks_count u32              = 80
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - type  f32:  133 tensors
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - type q8_0:   36 tensors
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - type q4_K:   98 tensors
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - type q5_K:   36 tensors
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_model_loader: - type q6_K:   17 tensors
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: print_info: file format = GGUF V3 (latest)
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: print_info: file type   = Q4_K - Medium
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: print_info: file size   = 497.39 MiB (5.55 BPW) 
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_prepare_model_devices: using device GPUOpenCL (QUALCOMM Adreno(TM) 750) (unknown id) - 4533 MiB free
+11-12 23:36:14.232 26034 26034 I mtmd-inference-api: llama_prepare_model_devices: using device HTP0 (Hexagon) (unknown id) - 0 MiB free
+11-12 23:36:14.382 26034 26034 I mtmd-inference-api: load: 0 unused tokens
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load: printing all EOG tokens:
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load:   - 248044 ('<|endoftext|>')
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load:   - 248046 ('<|im_end|>')
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load:   - 248063 ('<|fim_pad|>')
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load:   - 248064 ('<|repo_name|>')
+11-12 23:36:14.407 26034 26034 I mtmd-inference-api: load:   - 248065 ('<|file_sep|>')
+11-12 23:36:14.408 26034 26034 I mtmd-inference-api: load: special tokens cache size = 33
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: load: token to piece cache size = 1.7581 MB
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: arch                  = qwen35
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: vocab_only            = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: no_alloc              = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_ctx_train           = 262144
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_inp            = 1024
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd                = 1024
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_out            = 1024
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_layer               = 24
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_layer_all           = 24
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_head                = 8
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_head_kv             = 2
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_rot                 = 64
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_swa                 = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: is_swa_any            = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: non_causal_type       = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_head_k         = 256
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_head_v         = 256
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_gqa                 = 4
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_k_gqa          = 512
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_embd_v_gqa          = 512
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_norm_eps            = 0.0e+00
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_norm_rms_eps        = 1.0e-06
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_clamp_kqv           = 0.0e+00
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_max_alibi_bias      = 0.0e+00
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_logit_scale         = 0.0e+00
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_attn_scale          = 0.0e+00
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: f_attn_value_scale    = 0.0000
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_ff                  = 3584
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_expert              = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_expert_used         = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_expert_groups       = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_group_used          = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: causal attn           = 1
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: pooling type          = -1
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: rope type             = 40
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: rope scaling          = linear
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: freq_base_train       = 10000000.0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: freq_scale_train      = 1
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_ctx_orig_yarn       = 262144
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: rope_yarn_log_mul     = 0.0000
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: rope_finetuned        = unknown
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: mrope sections        = [11, 11, 10, 0]
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_d_conv            = 4
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_d_inner           = 2048
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_d_state           = 128
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_dt_rank           = 16
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_n_group           = 16
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: ssm_dt_b_c_rms        = 0
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: model type            = 0.8B
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: model params          = 752.39 M
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: general.name          = Qwen3.5-0.8B
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: vocab type            = BPE
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_vocab               = 248320
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: n_merges              = 247587
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: BOS token             = 11 ','
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOS token             = 248046 '<|im_end|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOT token             = 248044 '<|endoftext|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: PAD token             = 248055 '<|vision_pad|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: LF token              = 198 'Ċ'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM PRE token         = 248060 '<|fim_prefix|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM SUF token         = 248062 '<|fim_suffix|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM MID token         = 248061 '<|fim_middle|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM PAD token         = 248063 '<|fim_pad|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM REP token         = 248064 '<|repo_name|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: FIM SEP token         = 248065 '<|file_sep|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOG token             = 248044 '<|endoftext|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOG token             = 248046 '<|im_end|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOG token             = 248063 '<|fim_pad|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOG token             = 248064 '<|repo_name|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: EOG token             = 248065 '<|file_sep|>'
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: print_info: max token length      = 256
+11-12 23:36:14.454 26034 26034 I mtmd-inference-api: load_tensors: loading model tensors, this can take a while... (load_mode = none)
+11-12 23:36:14.457 26034 26034 I mtmd-inference-api: load_tensors: offloading 0 repeating layers to GPU
+11-12 23:36:14.457 26034 26034 I mtmd-inference-api: load_tensors: offloaded 0/25 layers to GPU
+11-12 23:36:14.457 26034 26034 I mtmd-inference-api: load_tensors:   CPU_REPACK model buffer size =   495.49 MiB
+11-12 23:36:14.457 26034 26034 I mtmd-inference-api: load_tensors:    HTP0-HOST model buffer size =   200.83 MiB
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: constructing llama_context
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_seq_max             = 1
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_ctx                 = 4096
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_ctx_seq             = 4096
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_batch               = 512
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_ubatch              = 512
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: causal_attn           = 1
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: flash_attn            = enabled
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: kv_unified            = false
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: freq_base             = 10000000.0
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: freq_scale            = 1
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_rs_seq              = 0
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_outputs_max         = 512
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_outputs_max_per_seq = 1
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context: n_ctx_seq (4096) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: OpenCL device: QUALCOMM Adreno(TM) 750
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: OpenCL driver: OpenCL 3.0 QUALCOMM build: 0762.39 Compiler E031.45.02.26
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: vector subgroup broadcast support: false
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: subgroup shuffle support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: device FP16 support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: khr dot product support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: mem base addr align: 128
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: global mem size: 5557 MB
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: max mem alloc size: 1024 MB
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: device max image buffer size (pixels): 134217728
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: device max image2d size: 16384 x 16384
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: device max workgroup size: 1024
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: SVM coarse grain buffer support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: SVM fine grain buffer support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: SVM fine grain system support: false
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: SVM atomics support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: cl_qcom_subgroup_shuffle support: true
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: flattening quantized weights representation as struct of arrays (GGML_OPENCL_SOA_Q)
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: using kernels optimized for Adreno (GGML_OPENCL_USE_ADRENO_KERNELS)
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: ggml_opencl: Adreno xmem F16xF32 GEMM enabled (temporary weight prepack)
+11-12 23:36:15.300 26034 26034 I mtmd-inference-api: llama_context:        CPU  output buffer size =     0.95 MiB
+11-12 23:36:15.314 26034 26034 I mtmd-inference-api: llama_kv_cache:        CPU KV buffer size =    48.00 MiB
+11-12 23:36:15.314 26034 26034 I mtmd-inference-api: llama_kv_cache: size =   48.00 MiB (  4096 cells,   6 layers,  1/1 seqs), K (f16):   24.00 MiB, V (f16):   24.00 MiB
+11-12 23:36:15.314 26034 26034 I mtmd-inference-api: llama_kv_cache: n_rot_k = 0, n_embd_head_k_all = 256
+11-12 23:36:15.314 26034 26034 I mtmd-inference-api: llama_kv_cache: n_rot_v = 0, n_embd_head_k_all = 256
+11-12 23:36:15.319 26034 26034 I mtmd-inference-api: llama_memory_recurrent:        CPU RS buffer size =    19.27 MiB
+11-12 23:36:15.319 26034 26034 I mtmd-inference-api: llama_memory_recurrent: size =   19.27 MiB (     1 cells,  24 layers,  1 seqs  0 rs_seq), R (f32):    1.27 MiB, S (f32):   18.00 MiB, P (f32):    0.00 MiB
+11-12 23:36:15.319 26034 26034 I mtmd-inference-api: sched_reserve: reserving ...
+11-12 23:36:15.322 26034 26034 I mtmd-inference-api: resolve_fused_ops: resolving fused DeepSeek V4 HC support:
+11-12 23:36:15.323 26034 26034 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC pre enabled
+11-12 23:36:15.324 26034 26034 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC comb enabled
+11-12 23:36:15.324 26034 26034 I mtmd-inference-api: resolve_fused_ops: fused DeepSeek V4 HC post enabled
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: sched_reserve:       HTP0 compute buffer size =    32.08 MiB
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: sched_reserve:        CPU compute buffer size =   489.00 MiB
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: sched_reserve: graph (pp bs=512, tg bs=1): nodes = 1431 / 1431, splits = 230 / 232, input objects = 4 / 4, input tensors = 10 / 10
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: sched_reserve: reserve took 8.54 ms, sched copies = 1
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: Model loaded successfully
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: Initializing sampler...
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: Initializing multimodal context...
+11-12 23:36:15.328 26034 26034 I mtmd-inference-api: Vision encoder device: default, use_gpu: 0
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: model name:   Qwen3.5-0.8B
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: description:  
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: GGUF version: 3
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: alignment:    32
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: n_tensors:    154
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: n_kv:         32
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: 
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_model_loader: has vision encoder
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: clip_ctx: CLIP using CPU backend
+11-12 23:36:15.333 26034 26034 W mtmd-inference-api: load_hparams: Qwen-VL models require at minimum 1024 image tokens to function correctly on grounding tasks
+11-12 23:36:15.333 26034 26034 W mtmd-inference-api: load_hparams: if you encounter problems with accuracy, try adding --image-min-tokens 1024
+11-12 23:36:15.333 26034 26034 W mtmd-inference-api: load_hparams: more info: https://github.com/ggml-org/llama.cpp/issues/16842
+11-12 23:36:15.333 26034 26034 W mtmd-inference-api: 
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: projector:          qwen3vl_merger
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_embd:             768
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_head:             12
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_ff:               3072
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_layer:            12
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: ffn_op:             gelu
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: projection_dim:     1024
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: 
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: --- vision hparams ---
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: image_size:         768
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: patch_size:         16
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: has_llava_proj:     0
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: minicpmv_version:   0
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_merge:            2
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: n_wa_pattern: 0
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: image_min_pixels:   8192
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: image_max_pixels:   4194304
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: 
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: model size:         195.48 MiB
+11-12 23:36:15.333 26034 26034 I mtmd-inference-api: load_hparams: metadata size:      0.05 MiB
+11-12 23:36:15.518 26034 26034 I mtmd-inference-api: get_dummy_batch: warmup with image size = 1472 x 1472
+11-12 23:36:15.528 26034 26034 I mtmd-inference-api: Initializing chat templates...
+11-12 23:36:15.534 26034 26034 I mtmd-inference-api: Chat template initialized, use_jinja=1 enable_thinking=0 (template supports thinking switch: 1)
+11-12 23:36:15.558 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100068514.png (334x446, 4 channels)
+11-12 23:36:15.558 26034 26034 I mtmd-profile-test: === Processing image 1/10: VLM_CAMERA_1782100068514.png ===
+11-12 23:36:15.558 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: Formatted prompt (first run, use_jinja=1 enable_thinking=0):
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: <|im_start|>system
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: You are a AI assistant. Describe what is on a phone screen or camera view to the person looking at it. Answer in English only, in three or four detailed sentences, under 100 words. Plain speech: no lists, no markdown, no headings.<|im_end|>
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: <|im_start|>user
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: What is on this screen right now? What should the person see? Tell them what matters. Keep it casual like you are explaining it to a friend. <__media__><|im_end|>
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: <|im_start|>assistant
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: <think>
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: 
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: </think>
+11-12 23:36:15.560 26034 26034 I mtmd-inference-api: 
+11-12 23:36:16.075 26034 26034 I mtmd-inference-api: reserve_compute_meta:        CPU compute buffer size =    10.67 MiB
+11-12 23:36:16.075 26034 26034 I mtmd-inference-api: reserve_compute_meta: graph splits = 1, nodes = 388
+11-12 23:36:16.075 26034 26034 I mtmd-inference-api: warmup: flash attention is enabled
+11-12 23:36:17.040 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:17.040 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:17.743 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:17.743 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:17.840 26034 26034 I mtmd-inference-api:   Prompt tokens: 245 (image 140, text 105), positions: 119
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Prompt tokens: 245
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Completion tokens: 53
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Prefill time: 2281.00 ms
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Decode time: 2383.00 ms
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Total time: 4664.00 ms
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Prefill throughput: 107.41 t/s
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Decode throughput: 22.24 t/s
+11-12 23:36:20.224 26034 26034 I mtmd-inference-api:   Overall throughput: 22.24 t/s
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test: Thermal: image=1 samples=10 gpu_temp_max=56.8 npu_temp_max=57.2 cpu_temp_max=82.6 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=1235 policy2_mhz_avg=2374 policy5_mhz_avg=1593 policy7_mhz_avg=2372
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782100068514.png:
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test:   Prompt tokens: 245
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test:   Completion tokens: 53
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test:   Total time: 4664.00 ms
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test:   Tokens per second: 22.24
+11-12 23:36:20.249 26034 26034 I mtmd-profile-test:   Response: This is a cozy living room with a TV displaying a movie, a fireplace with a stone mantle, a cozy couch, a coffee table with a vase and mug, and a dining area in the background. It’s a relaxed evenin...
+11-12 23:36:20.255 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100091800.png (334x446, 4 channels)
+11-12 23:36:20.255 26034 26034 I mtmd-profile-test: === Processing image 2/10: VLM_CAMERA_1782100091800.png ===
+11-12 23:36:20.256 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:21.696 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:21.697 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:22.399 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:22.399 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:22.495 26034 26034 I mtmd-inference-api:   Prompt tokens: 245 (image 140, text 105), positions: 119
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Prompt tokens: 245
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Completion tokens: 43
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Prefill time: 2237.00 ms
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Decode time: 1945.00 ms
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Total time: 4182.00 ms
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Prefill throughput: 109.52 t/s
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Decode throughput: 22.11 t/s
+11-12 23:36:24.440 26034 26034 I mtmd-inference-api:   Overall throughput: 22.11 t/s
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test: Thermal: image=2 samples=9 gpu_temp_max=60.7 npu_temp_max=61.1 cpu_temp_max=90.7 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=556 policy2_mhz_avg=2380 policy5_mhz_avg=2120 policy7_mhz_avg=2380
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782100091800.png:
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test:   Prompt tokens: 245
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test:   Completion tokens: 43
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test:   Total time: 4182.00 ms
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test:   Tokens per second: 22.11
+11-12 23:36:24.457 26034 26034 I mtmd-profile-test:   Response: It's a cozy living room with a modern fireplace and coffee table. You should watch the TV, but also enjoy the warm coffee and cozy vibe around it. What matters most is staying warm and comfortable whi...
+11-12 23:36:24.463 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100189050.png (334x446, 4 channels)
+11-12 23:36:24.463 26034 26034 I mtmd-profile-test: === Processing image 3/10: VLM_CAMERA_1782100189050.png ===
+11-12 23:36:24.463 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:25.906 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:25.906 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:26.611 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:26.611 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:26.706 26034 26034 I mtmd-inference-api:   Prompt tokens: 245 (image 140, text 105), positions: 119
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Prompt tokens: 245
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Completion tokens: 51
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Prefill time: 2242.00 ms
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Decode time: 2308.00 ms
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Total time: 4550.00 ms
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Prefill throughput: 109.28 t/s
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Decode throughput: 22.10 t/s
+11-12 23:36:29.015 26034 26034 I mtmd-inference-api:   Overall throughput: 22.10 t/s
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test: Thermal: image=3 samples=10 gpu_temp_max=63.5 npu_temp_max=63.9 cpu_temp_max=94.2 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=657 policy2_mhz_avg=2380 policy5_mhz_avg=2323 policy7_mhz_avg=2380
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782100189050.png:
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test:   Prompt tokens: 245
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test:   Completion tokens: 51
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test:   Total time: 4550.00 ms
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test:   Tokens per second: 22.10
+11-12 23:36:29.041 26034 26034 I mtmd-profile-test:   Response: This is a modern kitchen and living room with white cabinets, a gray sofa, and a kitchen island with bar stools. The main thing here is the kitchen area with appliances and the living space with the s...
+11-12 23:36:29.047 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782100225319.png (334x446, 4 channels)
+11-12 23:36:29.047 26034 26034 I mtmd-profile-test: === Processing image 4/10: VLM_CAMERA_1782100225319.png ===
+11-12 23:36:29.047 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:30.520 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:30.520 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 140 new tokens
+11-12 23:36:31.227 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:31.227 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 118 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:31.324 26034 26034 I mtmd-inference-api:   Prompt tokens: 245 (image 140, text 105), positions: 119
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Prompt tokens: 245
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Completion tokens: 51
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Prefill time: 2275.00 ms
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Decode time: 2325.00 ms
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Total time: 4600.00 ms
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Prefill throughput: 107.69 t/s
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Decode throughput: 21.94 t/s
+11-12 23:36:33.649 26034 26034 I mtmd-inference-api:   Overall throughput: 21.94 t/s
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test: Thermal: image=4 samples=10 gpu_temp_max=65.8 npu_temp_max=65.8 cpu_temp_max=95.4 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=579 policy2_mhz_avg=2380 policy5_mhz_avg=2323 policy7_mhz_avg=2380
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782100225319.png:
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test:   Prompt tokens: 245
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test:   Completion tokens: 51
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test:   Total time: 4600.00 ms
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test:   Tokens per second: 21.94
+11-12 23:36:33.697 26034 26034 I mtmd-profile-test:   Response: This screen shows a coffee table with a ceramic mug in the front and some decorative items in the back. The mug looks like it has some stains on it. The items behind it look like a vase and a small wo...
+11-12 23:36:33.705 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782105927664.png (432x576, 4 channels)
+11-12 23:36:33.705 26034 26034 I mtmd-profile-test: === Processing image 5/10: VLM_CAMERA_1782105927664.png ===
+11-12 23:36:33.705 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:36.216 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:36.217 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:37.475 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:37.476 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:37.573 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Completion tokens: 52
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Prefill time: 3867.00 ms
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Decode time: 2693.00 ms
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Total time: 6560.00 ms
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Prefill throughput: 92.32 t/s
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Decode throughput: 19.31 t/s
+11-12 23:36:40.267 26034 26034 I mtmd-inference-api:   Overall throughput: 19.31 t/s
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test: Thermal: image=5 samples=13 gpu_temp_max=67.0 npu_temp_max=67.0 cpu_temp_max=95.4 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=556 policy2_mhz_avg=2208 policy5_mhz_avg=2169 policy7_mhz_avg=2208
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782105927664.png:
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test:   Completion tokens: 52
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test:   Total time: 6560.00 ms
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test:   Tokens per second: 19.31
+11-12 23:36:40.288 26034 26034 I mtmd-profile-test:   Response: This is a room with a gray cabinet and a wooden floor. There are some books and a bag on the shelf, a plush toy, and a black TV. The TV is on. You're probably looking at it because it's the main objec...
+11-12 23:36:40.299 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782106045294.png (432x576, 4 channels)
+11-12 23:36:40.299 26034 26034 I mtmd-profile-test: === Processing image 6/10: VLM_CAMERA_1782106045294.png ===
+11-12 23:36:40.300 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:43.421 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:43.422 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:45.023 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:45.023 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:45.146 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Completion tokens: 107
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Prefill time: 4845.00 ms
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Decode time: 6425.00 ms
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Total time: 11270.00 ms
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Prefill throughput: 73.68 t/s
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Decode throughput: 16.65 t/s
+11-12 23:36:51.572 26034 26034 I mtmd-inference-api:   Overall throughput: 16.65 t/s
+11-12 23:36:51.596 26034 26034 I mtmd-profile-test: Thermal: image=6 samples=23 gpu_temp_max=63.9 npu_temp_max=65.0 cpu_temp_max=82.9 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=571 policy2_mhz_avg=1660 policy5_mhz_avg=1660 policy7_mhz_avg=1683
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782106045294.png:
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test:   Completion tokens: 107
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test:   Total time: 11270.00 ms
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test:   Tokens per second: 16.65
+11-12 23:36:51.597 26034 26034 I mtmd-profile-test:   Response: This is a laptop keyboard with a thick, black, cable-like cable plugged into the side, connected to a small black box with red and blue connectors. The cable has a silver metallic tip and is wrapped i...
+11-12 23:36:51.612 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176095192.png (432x576, 4 channels)
+11-12 23:36:51.612 26034 26034 I mtmd-profile-test: === Processing image 7/10: VLM_CAMERA_1782176095192.png ===
+11-12 23:36:51.613 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:36:55.957 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:55.957 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:36:58.184 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:58.184 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:36:58.352 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Completion tokens: 58
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Prefill time: 6736.00 ms
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Decode time: 4295.00 ms
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Total time: 11031.00 ms
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Prefill throughput: 53.00 t/s
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Decode throughput: 13.50 t/s
+11-12 23:37:02.647 26034 26034 I mtmd-inference-api:   Overall throughput: 13.50 t/s
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test: Thermal: image=7 samples=22 gpu_temp_max=60.3 npu_temp_max=61.9 cpu_temp_max=72.8 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=608 policy2_mhz_avg=1209 policy5_mhz_avg=1209 policy7_mhz_avg=1279
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782176095192.png:
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test:   Completion tokens: 58
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test:   Total time: 11031.00 ms
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test:   Tokens per second: 13.50
+11-12 23:37:02.660 26034 26034 I mtmd-profile-test:   Response: This is a cozy living room with a cozy brown teddy bear, a blue sofa with a blue pillow, a white chair, and a white table. The teddy bear is the main focus. The blue pillow adds a pop of color. The wh...
+11-12 23:37:02.678 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176126527.png (432x576, 4 channels)
+11-12 23:37:02.679 26034 26034 I mtmd-profile-test: === Processing image 8/10: VLM_CAMERA_1782176126527.png ===
+11-12 23:37:02.679 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:37:07.868 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:07.869 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:10.910 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:10.910 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:11.118 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Completion tokens: 56
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Prefill time: 8435.00 ms
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Decode time: 4881.00 ms
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Total time: 13316.00 ms
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Prefill throughput: 42.32 t/s
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Decode throughput: 11.47 t/s
+11-12 23:37:15.999 26034 26034 I mtmd-inference-api:   Overall throughput: 11.47 t/s
+11-12 23:37:16.018 26034 26034 I mtmd-profile-test: Thermal: image=8 samples=27 gpu_temp_max=57.2 npu_temp_max=58.8 cpu_temp_max=66.6 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=920 policy2_mhz_avg=1011 policy5_mhz_avg=1011 policy7_mhz_avg=1068
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782176126527.png:
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test:   Completion tokens: 56
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test:   Total time: 13316.00 ms
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test:   Tokens per second: 11.47
+11-12 23:37:16.019 26034 26034 I mtmd-profile-test:   Response: The screen shows a cozy bedroom scene with a plush teddy bear and a bed, while the main view focuses on a white dining table and chairs. The person should see the teddy bear's soft fur and the cozy be...
+11-12 23:37:16.040 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176185284.png (432x576, 4 channels)
+11-12 23:37:16.041 26034 26034 I mtmd-profile-test: === Processing image 9/10: VLM_CAMERA_1782176185284.png ===
+11-12 23:37:16.041 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:37:23.369 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:23.370 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:27.056 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:27.057 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:27.305 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Completion tokens: 97
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Prefill time: 11259.00 ms
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Decode time: 9465.00 ms
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Total time: 20724.00 ms
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Prefill throughput: 31.71 t/s
+11-12 23:37:36.770 26034 26034 I mtmd-inference-api:   Decode throughput: 10.25 t/s
+11-12 23:37:36.771 26034 26034 I mtmd-inference-api:   Overall throughput: 10.25 t/s
+11-12 23:37:36.821 26034 26034 I mtmd-profile-test: Thermal: image=9 samples=42 gpu_temp_max=56.4 npu_temp_max=57.6 cpu_temp_max=66.2 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=1689 policy2_mhz_avg=913 policy5_mhz_avg=960 policy7_mhz_avg=970
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782176185284.png:
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test:   Completion tokens: 97
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test:   Total time: 20724.00 ms
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test:   Tokens per second: 10.25
+11-12 23:37:36.822 26034 26034 I mtmd-profile-test:   Response: This is a computer screen with two big monitors side by side. On the left one, you can see a lot of code in a dark window, and some messages popping up. On the right one, there’s a long list of text...
+11-12 23:37:36.843 26034 26034 I mtmd-profile-test: Loaded image: VLM_CAMERA_1782176228820.png (432x576, 4 channels)
+11-12 23:37:36.844 26034 26034 I mtmd-profile-test: === Processing image 10/10: VLM_CAMERA_1782176228820.png ===
+11-12 23:37:36.844 26034 26034 I mtmd-inference-api: === mtmd_inference_run START === images=1, prompt=140 chars, system=230 chars
+11-12 23:37:44.611 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:44.611 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 95 after 94 for sequence 0 with 252 new tokens
+11-12 23:37:48.480 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:48.480 26034 26034 W mtmd-inference-api: find_slot: non-consecutive token position 122 after 95 for sequence 0 with 10 new tokens
+11-12 23:37:48.739 26034 26034 I mtmd-inference-api:   Prompt tokens: 357 (image 252, text 105), positions: 123
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api: === mtmd_inference_run COMPLETE ===
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Prompt tokens: 357
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Completion tokens: 61
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Prefill time: 11890.00 ms
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Decode time: 5226.00 ms
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Total time: 17116.00 ms
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Prefill throughput: 30.03 t/s
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Decode throughput: 11.67 t/s
+11-12 23:37:53.965 26034 26034 I mtmd-inference-api:   Overall throughput: 11.67 t/s
+11-12 23:37:53.987 26034 26034 I mtmd-profile-test: Thermal: image=10 samples=34 gpu_temp_max=55.3 npu_temp_max=56.8 cpu_temp_max=65.4 gpu_mhz_min=231 gpu_mhz_max=231 gpu_busy_mhz_avg=0 gpu_busy_samples=0 policy0_mhz_avg=1689 policy2_mhz_avg=844 policy5_mhz_avg=960 policy7_mhz_avg=902
+11-12 23:37:53.987 26034 26034 I mtmd-profile-test: Results for VLM_CAMERA_1782176228820.png:
+11-12 23:37:53.987 26034 26034 I mtmd-profile-test:   Prompt tokens: 357
+11-12 23:37:53.987 26034 26034 I mtmd-profile-test:   Completion tokens: 61
+11-12 23:37:53.987 26034 26034 I mtmd-profile-test:   Total time: 17116.00 ms
+11-12 23:37:53.988 26034 26034 I mtmd-profile-test:   Tokens per second: 11.67
+11-12 23:37:53.988 26034 26034 I mtmd-profile-test:   Response: This is a computer setup on a desk, so what matters is the screen and the mouse. The monitor shows some text, the keyboard is active, and the mouse has a red button. The phone is not visible, so you s...
+11-12 23:37:54.253 26034 26034 I mtmd-profile-test: === mtmd-profile-test COMPLETE ===
+11-12 23:37:54.253 26034 26034 I mtmd-profile-test: Results written to: /sdcard/profile_results_cpu_qwen35_08b.csv
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4063: close_dev: unloading library libcdsprpc.so
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 0: dev -1
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 1: dev -1
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 2: dev -1
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 3: dev 9
+11-12 23:37:54.254 26034 26041 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:2020: get_remote_notif_response: received status notification 1 for domain 3, session 0
+11-12 23:37:54.254 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:122: dspsignal_domain_deinit done for domain 3
+11-12 23:37:54.254 26034 26041 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspqueue/dspqueue_cpu.c:2184: dspqueue_notif_callback for domain 3, session 0, status 1
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:296::Error: 0xd: (ds = signals->domain_signals[domain]) != NULL
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:314: Error 0xd: dspsignal_cancel_wait failed (domain 3, ID 0) errno Success
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:296::Error: 0xd: (ds = signals->domain_signals[domain]) != NULL
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:314: Error 0xd: dspsignal_cancel_wait failed (domain 3, ID 1) errno Success
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:296::Error: 0xd: (ds = signals->domain_signals[domain]) != NULL
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:314: Error 0xd: dspsignal_cancel_wait failed (domain 3, ID 2) errno Success
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:296::Error: 0xd: (ds = signals->domain_signals[domain]) != NULL
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/dspsignal.c:314: Error 0xd: dspsignal_cancel_wait failed (domain 3, ID 3) errno Success
+11-12 23:37:54.254 26034 26041 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:57:Error 0xc: notif_fastrpc_thread FastRPC notification worker thread exited for domain 3 (errno Success), notif_domain_deinit started 0
+11-12 23:37:54.255 26034 26038 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1453: Error 0x8000040d: remote_handle_invoke failed for handle 0x3, method 4 on domain 3 (sc 0x4020200) (errno Success)
+11-12 23:37:54.256 26034 26038 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1453: Error 0x8000040d: remote_handle_invoke failed for handle 0x3, method 4 on domain 3 (sc 0x4020200) (errno Success)
+11-12 23:37:54.256 26034 26038 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/listener_android.c:237:Error 0x8000040d: listener response with result 0x0 for ctx 0xe39105, handle 0x4ecb8ed8, sc 0xffffffff failed : listener thread exited (errno Success)
+11-12 23:37:54.257 26034 26038 E mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1475: Error 0x27: remote_handle64_invoke failed for handle 0xb400007704fc9fd0, method 3 on domain 3 (sc 0x3000000) (errno Success)
+11-12 23:37:54.257 26034 26038 D mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4332: exit_thread: nErr:0x27, dom:3, h:0xb400007704fc9fd0
+11-12 23:37:54.259 26034 26039 W mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:396:Warning: file_watcher_thread received exit for domain 3, file mtmd-profile-test.farf
+11-12 23:37:54.259 26034 26039 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/log_config.c:448: file_watcher_thread exiting for domain 3
+11-12 23:37:54.261 26034 26040 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:158: FastRPC latency thread for QoS exited
+11-12 23:37:54.261 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_latency.c:69: latency thread joined
+11-12 23:37:54.261 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:73: fastrpc_notif_domain_deinit: Waiting for FastRPC notification worker thread to join
+11-12 23:37:54.262 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_notif.c:81: fastrpc_notif_domain_deinit: Fastrpc notification worker thread joined
+11-12 23:37:54.262 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:792: open_mod_table_close: closed reverse module apps_mem with handle 0x4ecb8ed8
+11-12 23:37:54.262 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/mod_table.c:792: open_mod_table_close: closed reverse module apps_std with handle 0x4ecb8dd8
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3408: close_device_node: closed dev 9 on domain 3
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3237: domain_deinit: closed device 9 on domain 3 (kill time 3471 us)
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 4: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 5: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 6: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 7: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 8: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 9: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 10: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 11: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 12: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 13: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 14: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:3194: domain_deinit for domain 15: dev -1
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/rpcmem_android.c:323: rpcmem_deinit_internal done
+11-12 23:37:54.265 26034 26034 I mtmd-profile-test: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:4304: fastrpc_apps_user_deinit done

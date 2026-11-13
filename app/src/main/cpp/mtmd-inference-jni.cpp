@@ -77,8 +77,21 @@ static std::string jstring_to_string(JNIEnv* env, jstring str) {
     return result;
 }
 
+// Model output is standard UTF-8 and can hold 4-byte chars (emoji) or a char cut mid-sequence
+// while streaming. NewStringUTF needs Modified UTF-8 and aborts the app on those, so decode
+// with Java's own UTF-8 decoder instead (invalid bytes become U+FFFD, never a crash).
 static jstring string_to_jstring(JNIEnv* env, const std::string& str) {
-    return env->NewStringUTF(str.c_str());
+    jbyteArray bytes = env->NewByteArray((jsize) str.size());
+    if (!bytes) return nullptr;
+    env->SetByteArrayRegion(bytes, 0, (jsize) str.size(), reinterpret_cast<const jbyte*>(str.data()));
+    jclass string_cls = env->FindClass("java/lang/String");
+    jmethodID ctor = env->GetMethodID(string_cls, "<init>", "([BLjava/lang/String;)V");
+    jstring charset = env->NewStringUTF("UTF-8");
+    jstring result = (jstring) env->NewObject(string_cls, ctor, bytes, charset);
+    env->DeleteLocalRef(charset);
+    env->DeleteLocalRef(string_cls);
+    env->DeleteLocalRef(bytes);
+    return result;
 }
 
 // ============================================================================
@@ -258,7 +271,7 @@ static void on_token(const char* token, void* user_data) {
         }
 
         if (env) {
-            jstring token_jstr = env->NewStringUTF(token_str.c_str());
+            jstring token_jstr = string_to_jstring(env, token_str);   // a token can be half an emoji
             env->CallStaticVoidMethod(g_callback_class, g_on_token_mid, token_jstr);
             if (token_jstr) env->DeleteLocalRef(token_jstr);
         }
@@ -309,7 +322,9 @@ extern "C" {
  * @param nBatch       Batch size
  * @param nPredict     Max tokens to generate (default: 512)
  * @param verbose      Enable verbose logging (default: false)
- * @param imageMinTokens  Minimum image tokens (-1 = unlimited)
+ * @param imageMinTokens  Minimum image tokens (-1 = model default)
+ * @param imageMaxTokens  Maximum image tokens (-1 = model default)
+ * @param enableThinking  Let reasoning models think before answering (default: false)
  * @param topK         Top-k sampling (<= 0 = vocab size)
  * @param topP         Top-p sampling (1.0 = disabled)
  * @param temperature  Sampling temperature (<= 0.0 = greedy)
@@ -323,7 +338,7 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeInit(
     JNIEnv* env, jobject thiz,
     jstring modelPath, jstring mmprojPath, jstring libDir,
     jstring device, jint nGpuLayers, jint nCtx, jint nBatch, jint nPredict, jboolean verbose,
-    jint imageMinTokens, jint topK, jfloat topP, jfloat temperature, jfloat repetitionPenalty, jboolean debugLogsEnabled, jboolean infoLogsEnabled) {
+    jint imageMinTokens, jint imageMaxTokens, jboolean enableThinking, jint topK, jfloat topP, jfloat temperature, jfloat repetitionPenalty, jboolean debugLogsEnabled, jboolean infoLogsEnabled) {
 
     LOGI("=== nativeInit called ===");
 
@@ -349,6 +364,8 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeInit(
     LOGI("Predict: %d", nPredict);
     LOGI("Verbose: %s", verbose ? "true" : "false");
     LOGI("Image Min Tokens: %d", imageMinTokens);
+    LOGI("Image Max Tokens: %d", imageMaxTokens);
+    LOGI("Enable Thinking: %d", enableThinking);
     LOGI("Top K: %d", topK);
     LOGI("Top P: %.2f", topP);
     LOGI("Temperature: %.2f", temperature);
@@ -387,6 +404,9 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeInit(
 
     // Inference parameters
     params.image_min_tokens = imageMinTokens;
+    params.image_max_tokens = imageMaxTokens;
+    params.use_jinja = true;                    // needed for the thinking switch
+    params.enable_thinking = enableThinking;
     params.sampling.top_k = topK;
     params.sampling.top_p = topP;
     params.sampling.temp = temperature;
@@ -720,6 +740,23 @@ Java_com_misar_vlmanalyze_LocalInferenceService_nativeFree(
     delete ctx;
 
     LOGI("Context freed");
+}
+
+/**
+ * Ask the running inference to stop (returns "Error: Inference failed: Cancelled").
+ * Called from another thread while nativeGenerate* is blocked; no effect when idle.
+ */
+JNIEXPORT void JNICALL
+Java_com_misar_vlmanalyze_LocalInferenceService_nativeCancel(
+    JNIEnv* env, jobject thiz, jlong handle) {
+
+    if (handle == 0) return;
+
+    InferenceContext* ctx = reinterpret_cast<InferenceContext*>(handle);
+    if (ctx->ctx) {
+        LOGI("Cancel requested");
+        mtmd_inference_cancel(ctx->ctx);
+    }
 }
 
 /**

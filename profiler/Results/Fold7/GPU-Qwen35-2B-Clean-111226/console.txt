@@ -1,0 +1,112 @@
+[34m[INFO][0m Cleaning existing profile data from device...
+[32m[SUCCESS][0m Cleaned existing profile data
+[34m[INFO][0m Checking build outputs...
+[32m[SUCCESS][0m Found mtmd-profile-test executable
+[34m[INFO][0m Creating device directory /data/local/tmp/mtmd-profile-test...
+[32m[SUCCESS][0m Created directories
+[34m[INFO][0m Pushing mtmd-profile-test to device...
+[32m[SUCCESS][0m Pushed executable
+[34m[INFO][0m Pushing config file...
+[32m[SUCCESS][0m Pushed config
+[34m[INFO][0m Pushing test images...
+[32m[SUCCESS][0m Pushed 10 image(s)
+[34m[INFO][0m Pushing shared libraries...
+[34m[INFO][0m   Pushed bin/libllama.so
+[34m[INFO][0m   Pushed bin/libmtmd.so
+[34m[INFO][0m   Pushed bin/libggml.so
+[34m[INFO][0m   Pushed bin/libggml-base.so
+[34m[INFO][0m   Pushed bin/libggml-cpu.so
+[34m[INFO][0m   Pushed bin/libggml-opencl.so
+[34m[INFO][0m   Pushed bin/libggml-hexagon.so
+[34m[INFO][0m   Pushed bin/libllama-common.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v73.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v75.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v79.so
+[34m[INFO][0m   Pushed ../lib/libggml-htp-v81.so
+[34m[INFO][0m   Pushed C:\Users\misar\AppData\Local\Android\Sdk\ndk\27.3.13750724\toolchains\llvm\prebuilt\windows-x86_64\lib\clang\18\lib\linux\aarch64\libomp.so
+[32m[SUCCESS][0m Pushed libraries
+[34m[INFO][0m Clearing Old LOGCAT on device...
+[34m[INFO][0m 
+[34m[INFO][0m Running mtmd-profile-test...
+[34m[INFO][0m   HTP profiling level: 0
+[34m[INFO][0m   Config: config.json
+[34m[INFO][0m 
+[34m[INFO][0m ========================================
+[34m[INFO][0m Command: logcat -s mtmd-profile-test:V mtmd-inference-api:V *:F > /sdcard/profile_log.txt & LOGCAT_PID=$!; cd /data/local/tmp/mtmd-profile-test; ./mtmd-profile-test --config config.json --htp-profile 0; sleep 2; kill $LOGCAT_PID
+[34m[INFO][0m 
+[31;1mcmn          init: llama threadpool init, n_threads = 4[0m
+[31;1m=== Processing image 1/10: VLM_CAMERA_1782100068514.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3426 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 140[0m
+[31;1mimage decoded (batch 1/1) in 23 ms[0m
+[31;1m=== Processing image 2/10: VLM_CAMERA_1782100091800.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 1050 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 140[0m
+[31;1mimage decoded (batch 1/1) in 15 ms[0m
+[31;1m=== Processing image 3/10: VLM_CAMERA_1782100189050.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 1300 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 140[0m
+[31;1mimage decoded (batch 1/1) in 16 ms[0m
+[31;1m=== Processing image 4/10: VLM_CAMERA_1782100225319.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 1415 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 140[0m
+[31;1mimage decoded (batch 1/1) in 16 ms[0m
+[31;1m=== Processing image 5/10: VLM_CAMERA_1782105927664.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 2882 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 25 ms[0m
+[31;1m=== Processing image 6/10: VLM_CAMERA_1782106045294.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3312 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 21 ms[0m
+[31;1m=== Processing image 7/10: VLM_CAMERA_1782176095192.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3275 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 21 ms[0m
+[31;1m=== Processing image 8/10: VLM_CAMERA_1782176126527.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3222 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 22 ms[0m
+[31;1m=== Processing image 9/10: VLM_CAMERA_1782176185284.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3267 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 21 ms[0m
+[31;1m=== Processing image 10/10: VLM_CAMERA_1782176228820.png ===[0m
+[31;1mencoding image slice...[0m
+[31;1mimage slice encoded in 3235 ms[0m
+[31;1mdecoding image batch 1/1, n_tokens_batch = 252[0m
+[31;1mimage decoded (batch 1/1) in 21 ms[0m
+[34m[INFO][0m 
+[34m[INFO][0m ========================================
+[34m[INFO][0m 
+[34m[INFO][0m Pulling /sdcard/profile_results_gpu_qwen35_2b.csv from device...
+[32m[SUCCESS][0m Results pulled to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_results_gpu_qwen35_2b.csv
+[34m[INFO][0m Pulling log from device...
+[32m[SUCCESS][0m Log pulled to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_log.txt
+[34m[INFO][0m Pulling cl_profiling.csv from device...
+[33m[WARN][0m No OpenCL profiling data found (rebuild with GGML_OPENCL_PROFILING=ON to enable)
+[32m[SUCCESS][0m Profile test completed
+[34m[INFO][0m 
+[34m[INFO][0m Generating timing and thermal report (parse_profile.py)...
+Parsing profile: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\profile_log.txt
+Detected type: thermal
+Found 10 images
+Report written to: C:\Users\misar\workspaveVSCode\Coding\VLM-Analyze\llama-vlm-android\profiler\thermal_report.txt
+[34m[INFO][0m HTP profiling off, skipping HTP reports (existing reports are kept)
+[33m[WARN][0m No OpenCL profiling data found, skipping OpenCL report
+[34m[INFO][0m 
+[34m[INFO][0m To analyze profiling output manually:
+[34m[INFO][0m   HTP Official:      python ../llama.cpp/scripts/snapdragon/ggml-hexagon-profile.py <log_file>
+[34m[INFO][0m   HTP Block Report:  python parse_profile.py <log_file> [output_file]
+[34m[INFO][0m   Thermal Report:    python parse_profile.py <log_file> [output_file] --mode thermal
+[34m[INFO][0m   OpenCL Report:     python parse_profile.py <cl_profiling.csv> [output_file] --mode opencl
+[34m[INFO][0m 

@@ -110,3 +110,23 @@ llama.cpp/lib/*.a
 profiler/*.csv
 profiler/*.txt
 profiler/test_images_all
+profiler/Results/*
+# V2.1 round: keep only the 11/12 Clean run folders and the combined summaries
+!profiler/Results/Fold7/
+!profiler/Results/Flip6/
+profiler/Results/Fold7/*
+profiler/Results/Flip6/*
+!profiler/Results/Fold7/*-Clean-111226/
+!profiler/Results/Flip6/*-Clean-111226/
+!profiler/Results/Fold7/summary_111226.md
+!profiler/Results/Flip6/summary_111226.md
+profiler/__pycache__/*
+
+
+
+#LLama.cpp V1 Release
+llama.cpp-backup
+
+#Folder for On-Device Models
+Device-Models
+
