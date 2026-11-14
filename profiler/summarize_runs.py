@@ -19,8 +19,14 @@ Sources per folder:
 
 Usage:
     python summarize_runs.py <run_folder> [<run_folder> ...] [--out summary.md]
+    python summarize_runs.py <run_folder> [<run_folder> ...] --opshares [--out opshares.md]
 Example:
     python summarize_runs.py *-Clean-111226 --out summary_111226.md
+    python summarize_runs.py Results/Fold7/HTP-*-Prof-111326 --opshares --out Results/Fold7/opshares_111326.md
+
+--opshares: decode op shares for HTP profiling runs (-HtpProfile 1), one row per run folder,
+from profile_log_utf8.txt via parse_profile.decode_op_shares (FFN / output head / other matmuls /
+non-matmul, HTP ms/token at peak clock, coverage).
 """
 
 import argparse
@@ -30,7 +36,7 @@ import statistics
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from parse_profile import parse_thermal  # noqa: E402
+from parse_profile import parse_thermal, parse_htp_profile, decode_op_shares  # noqa: E402
 
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 MARKER = re.compile(r'=== Processing image (\d+)/')
@@ -187,11 +193,62 @@ COLUMNS = [
 ]
 
 
+def opshares_report(folders):
+    """Decode op-share table for HTP profiling runs, one row per folder."""
+    results = []
+    for folder in folders:
+        log = os.path.join(folder, 'profile_log_utf8.txt')
+        if not os.path.isdir(folder) or not os.path.exists(log):
+            continue
+        shares = decode_op_shares(parse_htp_profile(log))
+        if shares is None:
+            print(f"skip {folder}: no decode ops in profile_log_utf8.txt", file=sys.stderr)
+            continue
+        name, date = short_name(folder)
+        results.append((name.replace('-HTP-Prof', ''), date, shares))
+
+    dates = sorted({d for _, d, _ in results}, key=str)
+    lines = [
+        'Run dates: ' + ', '.join(date_text(d) for d in dates),
+        '',
+        'Decode only, HTP profiling runs. Shares are of the summed decode op time (Coverage = that sum / OPBATCH decode time).',
+        'Output head = result_output matmul (vocabulary projection). Non-matmul includes Flash attention, shown separately.',
+        'ms/token: HTP time per decoded token, averaged over the images run within 1% of the run\'s highest clock',
+        '(MHz and Peak images columns); throttled images are left out. Compare ms/token only at the same clock.',
+        '',
+    ]
+    header = ['Model', 'FFN', 'Output', 'Other matmul', 'Non-matmul', 'Flash attn',
+              'ms/token', 'MHz', 'Peak images', 'Decode tokens', 'Coverage']
+    rows = [header]
+    for name, date, s in results:
+        rows.append([name if len(dates) == 1 else f"{name}-{date}",
+                     f"{s['ffn']:.1f}%", f"{s['output']:.1f}%", f"{s['other_matmul']:.1f}%",
+                     f"{s['non_matmul']:.1f}%", f"{s['flash_attn']:.1f}%",
+                     f"{s['ms_per_token']:.2f}", f"{s['mhz']:.0f}", f"{s['peak_images']}/{s['images']}",
+                     str(s['tokens']), f"{s['coverage']:.1f}%"])
+    widths = [max(len(row[i]) for row in rows) for i in range(len(header))]
+    fmt_row = lambda row: '| ' + ' | '.join(cell.ljust(w) for cell, w in zip(row, widths)) + ' |'
+    lines.append(fmt_row(header))
+    lines.append('| ' + ' | '.join('-' * w for w in widths) + ' |')
+    lines.extend(fmt_row(row) for row in rows[1:])
+    return '\n'.join(lines) + '\n'
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('folders', nargs='+')
     parser.add_argument('--out')
+    parser.add_argument('--opshares', action='store_true', help='decode op-share table for HTP profiling runs')
     args = parser.parse_args()
+
+    if args.opshares:
+        report = opshares_report(args.folders)
+        print(report)
+        if args.out:
+            with open(args.out, 'w', encoding='utf-8') as f:
+                f.write(report)
+            print(f"Summary written to: {args.out}")
+        return
 
     results = []
     for folder in args.folders:

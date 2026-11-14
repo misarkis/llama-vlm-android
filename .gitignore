@@ -130,3 +130,10 @@ llama.cpp-backup
 #Folder for On-Device Models
 Device-Models
 
+# Eval: venv, server logs and raw lmms-eval results (results.json holds the HF token)
+eval/.venv/
+eval/logs/
+eval/results/*/*/*_results.json
+eval/.venv-vlmeval/
+eval/third_party/
+eval/data/

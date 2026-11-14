@@ -414,7 +414,6 @@ Values are medians over images 2–10 (warm). TTFT (time to first token) covers 
 | Granite-3.2-2B | 3645         | 13.7 s   | 84.7 s   | 271 s    | 15.1 tk/s  | 6.8 tk/s    | 4.5 tk/s   |
 
 *⚠ On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of the 9 warm images); its GPU numbers are the average of the other 6 images. It works on NPU and CPU. ❌ On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. GPU decode slows by 20–37% over a run from thermal throttling. The first image after loading a model is slower, so it is not counted.*
-*⚠ On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of the 9 warm images); its GPU numbers are the average of the other 6 images. It works on NPU and CPU. ❌ On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. GPU decode slows by 20–37% over a run from thermal throttling. The first image after loading a model is slower, so it is not counted.*
 
 **Samsung Galaxy Z Flip 6 (Qualcomm Snapdragon 8 Gen 3; Adreno 750, Hexagon v75)**, same build and settings as above, with a context size of 4096 (`n_ctx`):
 
@@ -432,6 +431,29 @@ Values are medians over images 2–10 (warm). TTFT (time to first token) covers 
 
 *❌ Qwen3.5-4B does not fit on the Flip 6 NPU. GPU: Q4_K_M models are not supported on the Adreno 750. The Flip 6 throttles more than the Fold 7, so CPU numbers vary a lot over a run.*
 
+
+### Quality Benchmarks
+
+Accuracy on public screen-understanding benchmarks, for the same Q4_K_M GGUF files with f16 mmproj,
+run on a desktop GPU through `llama-server`. Each benchmark is scored with its official code.
+Thinking off, greedy decoding, each model's default image tokens. Scores on the phone may differ
+slightly because the NPU's numerics differ; a phone check is planned.
+
+| Model          | MMBench-GUI L1 Easy | Medium | Hard  | Mean  | ScreenQA-Short EM | ScreenQA-Short F1 |
+| -------------- | ------------------- | ------ | ----- | ----- | ----------------- | ----------------- |
+| Qwen3.5-4B     | 85.97               | 85.65  | 88.01 | 86.54 | 84.94             | 88.99             |
+| Qwen3-VL-2B    | 84.19               | 83.86  | 89.35 | 85.80 | 83.01             | 87.47             |
+| Qwen3.5-2B     | 83.43               | 82.10  | 89.66 | 85.06 | 82.10             | 86.99             |
+| Qwen3.8-2B     | 72.15               | 76.05  | 85.32 | 77.84 | 79.94             | 85.06             |
+| LFM2.5-VL-1.6B | 73.48               | 74.05  | 79.27 | 75.60 | 77.80             | 82.77             |
+| Qwen3.5-0.8B   | 67.02               | 70.89  | 80.73 | 72.88 | 72.92             | 79.22             |
+| Qwen2-VL-2B    | 72.22               | 75.09  | 80.32 | 75.88 | 69.59             | 75.02             |
+| Granite-3.2-2B | 52.45               | 59.01  | 70.28 | 60.58 | 67.95             | 76.55             |
+| SmolVLM2-2.2B  | 63.19               | 61.56  | 68.53 | 64.42 | 54.89             | 62.80             |
+
+*MMBench-GUI L1: GUI content understanding, score × 100 per difficulty level; Mean is the average of
+the three levels. ScreenQA-Short: test split, 8,419 questions; EM is exact match, F1 is the main
+score. Sorted by the average of the MMBench-GUI L1 mean and ScreenQA-Short F1.*
 
 ### Factors Affecting Performance
 

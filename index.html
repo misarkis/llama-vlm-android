@@ -720,6 +720,64 @@
             </tbody>
         </table>
         <p class="section-subtitle table-note">&#10060; Qwen3.5-4B does not fit on the Flip 6 NPU. GPU: Q4_K_M models are not supported on the Adreno 750. The Flip 6 throttles more than the Fold 7, so CPU numbers vary a lot over a run.</p>
+        <p class="section-subtitle table-title">Quality on public screen-understanding benchmarks. Same Q4_K_M GGUF files with f16 mmproj, run on a desktop GPU through llama-server, scored with each benchmark's official code.</p>
+        <table class="performance-table fade-in">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>MMBench-GUI L1<br>Easy / Medium / Hard / Mean</th>
+                    <th>ScreenQA-Short<br>Exact Match / F1</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Qwen3.5-4B</td>
+                    <td>85.97 / 85.65 / 88.01 / 86.54</td>
+                    <td>84.94 / 88.99</td>
+                </tr>
+                <tr>
+                    <td>Qwen3-VL-2B</td>
+                    <td>84.19 / 83.86 / 89.35 / 85.80</td>
+                    <td>83.01 / 87.47</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-2B</td>
+                    <td>83.43 / 82.10 / 89.66 / 85.06</td>
+                    <td>82.10 / 86.99</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.8-2B</td>
+                    <td>72.15 / 76.05 / 85.32 / 77.84</td>
+                    <td>79.94 / 85.06</td>
+                </tr>
+                <tr>
+                    <td>LFM2.5-VL-1.6B</td>
+                    <td>73.48 / 74.05 / 79.27 / 75.60</td>
+                    <td>77.80 / 82.77</td>
+                </tr>
+                <tr>
+                    <td>Qwen3.5-0.8B</td>
+                    <td>67.02 / 70.89 / 80.73 / 72.88</td>
+                    <td>72.92 / 79.22</td>
+                </tr>
+                <tr>
+                    <td>Qwen2-VL-2B</td>
+                    <td>72.22 / 75.09 / 80.32 / 75.88</td>
+                    <td>69.59 / 75.02</td>
+                </tr>
+                <tr>
+                    <td>Granite-Vision-3.2-2B</td>
+                    <td>52.45 / 59.01 / 70.28 / 60.58</td>
+                    <td>67.95 / 76.55</td>
+                </tr>
+                <tr>
+                    <td>SmolVLM2-2.2B</td>
+                    <td>63.19 / 61.56 / 68.53 / 64.42</td>
+                    <td>54.89 / 62.80</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="section-subtitle table-note">Thinking off, greedy decoding, image tokens at model defaults. MMBench-GUI L1 is GUI content understanding, score &times; 100 per difficulty level; Mean is the average of the three levels. ScreenQA-Short uses the test split (8,419 questions); F1 is the main score. Sorted by the average of the MMBench-GUI L1 mean and ScreenQA-Short F1. Scores on the phone may differ slightly because the NPU's numerics differ; a phone check is planned.</p>
     </section>
 
     <!-- Architecture Section -->

@@ -42,7 +42,8 @@ LLM_WEIGHT = re.compile(r'(?<![\w.])blk\.(\d+)\.(\w+)')
 ENCODER_TENSOR = re.compile(r'(?:^|\s)(?:v|mm)\.')
 BLOCK_NODE = re.compile(r'\b[A-Za-z_]+-(\d+)\b')
 NODE_SUFFIX = re.compile(r'(-\d+|_l\d+)$')
-ATTN_NORM_OUTPUT = re.compile(r'-> attn_norm-\d+')
+# First-layer norm output; LFM2/LFM2.5 name it model.layers.{}.operator_norm instead of attn_norm
+ATTN_NORM_OUTPUT = re.compile(r'-> (?:attn_norm|model\.layers\.\{\}\.operator_norm)-\d+')
 FIRST_DIMS_ROWS = re.compile(r'^\d+:(\d+)')
 
 PHASES = ('decode', 'prefill', 'encoder', 'warmup')
@@ -216,6 +217,50 @@ def op_totals(ops):
     return totals
 
 
+def decode_op_shares(data):
+    """Decode time split into FFN / output head / other matmuls / non-matmul, plus speed at peak clock.
+
+    Output head: matmuls named result_output. Some models (Granite) scale the logits, so the name
+    lands on the SCALE op and the matmul is unnamed; then the unnamed MUL_MAT that runs as many
+    times as the named result_output op is the output head.
+    Speed: HTP ms/token averaged (token-weighted) over the images whose clock is within 1% of the
+    run's highest image clock, so throttled images do not mix in.
+    Returns None when the run has no decode ops.
+    """
+    totals = op_totals(data['ops']['decode'])
+    total = sum(entry[0] for entry in totals.values())
+    if not total:
+        return None
+    matmuls = {k: v for k, v in totals.items() if k.startswith('MUL_MAT')}
+    output_keys = {k for k in matmuls if 'result_output' in k}
+    if not output_keys:
+        head_counts = {v[3] for k, v in totals.items() if 'result_output' in k}
+        output_keys = {k for k, v in matmuls.items() if ':' not in k and v[3] in head_counts}
+    ffn = sum(v[0] for k, v in matmuls.items() if 'ffn_' in k and k not in output_keys)
+    output = sum(matmuls[k][0] for k in output_keys)
+    matmul = sum(v[0] for v in matmuls.values())
+    attn = sum(v[0] for k, v in totals.items() if k.startswith('FLASH_ATTN'))
+
+    rows = [r for r in (image_row(image) for image in data['images']) if r and r['tokens'] > 0]
+    peak = max((r['mhz'] for r in rows), default=0.0)
+    top = [r for r in rows if r['mhz'] >= 0.99 * peak]
+    top_tokens = sum(r['tokens'] for r in top)
+    batch = data['batch_usec']['decode']
+    return {
+        'ffn': ffn / total * 100,
+        'output': output / total * 100,
+        'other_matmul': (matmul - ffn - output) / total * 100,
+        'non_matmul': (total - matmul) / total * 100,
+        'flash_attn': attn / total * 100,
+        'ms_per_token': sum(r['htp_ms'] * r['tokens'] for r in top) / top_tokens if top_tokens else 0.0,
+        'mhz': sum(r['mhz'] for r in top) / len(top) if top else 0.0,
+        'peak_images': len(top),
+        'images': len(rows),
+        'tokens': sum(r['tokens'] for r in rows),
+        'coverage': total / batch * 100 if batch else 0.0,
+    }
+
+
 def op_table(lines, totals, limit=20):
     grand_total = sum(entry[0] for entry in totals.values())
     lines.append(f"{'Operation':<44} {'Total (ms)':>12} {'Avg (ms)':>10} {'Max (ms)':>10} {'Count':>8} {'%':>7}")
@@ -277,6 +322,16 @@ def generate_htp_report(data, output_file=None):
         coverage = op_ms / batch_ms * 100 if batch_ms else 0
         lines.append(f"{phase:<10} {op_ms:>14.1f} {batch_ms:>19.1f} {coverage:>8.1f}% {no_block_ms:>14.1f}")
     lines.append("")
+
+    shares = decode_op_shares(data)
+    if shares:
+        lines.append("Decode Op Shares (share of decode op time; Flash attention is part of Non-matmul):")
+        lines.append(f"  FFN matmuls {shares['ffn']:.1f}%, Output head {shares['output']:.1f}%, "
+                     f"Other matmuls {shares['other_matmul']:.1f}%, Non-matmul {shares['non_matmul']:.1f}% "
+                     f"(Flash attention {shares['flash_attn']:.1f}%)")
+        lines.append(f"  HTP ms/token at peak clock: {shares['ms_per_token']:.2f} at {shares['mhz']:.0f} MHz "
+                     f"({shares['peak_images']} of {shares['images']} images), {shares['tokens']} decode tokens")
+        lines.append("")
 
     # Operation rankings
     for phase in PHASES[:3]:

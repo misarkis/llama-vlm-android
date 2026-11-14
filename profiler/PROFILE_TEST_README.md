@@ -223,6 +223,20 @@ One row per run folder, following the speed protocol (plan.md 0.5; MLPerf Client
 
 Older runs without image markers get encode and image-token columns only when each image is a single slice.
 
+### Decode Op Shares for a Round
+
+For HTP profiling runs (`-HtpProfile 1`), one row per run folder from `profile_log_utf8.txt`:
+
+```bash
+python summarize_runs.py Results/Fold7/HTP-*-Prof-111326 --opshares --out Results/Fold7/opshares_111326.md
+```
+
+- **Shares** split the summed decode op time into FFN matmuls, output head (`result_output`, the vocabulary projection), other matmuls and non-matmul ops; flash attention is shown on its own and is part of non-matmul.
+- **ms/token** is HTP time per decoded token over the images run within 1% of the run's highest clock. Compare it only at the same clock.
+- **Coverage** is the op total over the OPBATCH decode total; a low value means ops are missing.
+
+Each run's `htp_block_profile_report.txt` has the same figures in its "Decode Op Shares" section (`parse_profile.decode_op_shares`).
+
 ### Official HTP Report
 
 ```bash
@@ -339,8 +353,8 @@ The Flip 6 NPU needs a context size of 4096 (16384 gave IOVA mapping failures); 
 The `run-profile-test.ps1` script automatically loads environment variables from `.env` in the parent directory:
 
 ```
-ANDROID_SDK_ROOT=/c/Users/misar/AppData/Local/Android/Sdk
-ANDROID_NDK_HOME=/c/Users/misar/AppData/Local/Android/Sdk/ndk/27.3.13750724
+ANDROID_SDK_ROOT=/c/Users/<user>/AppData/Local/Android/Sdk
+ANDROID_NDK_HOME=/c/Users/<user>/AppData/Local/Android/Sdk/ndk/27.3.13750724
 MSYS2_PATH=/c/msys64
 ```
 
