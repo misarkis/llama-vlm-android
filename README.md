@@ -392,7 +392,7 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 - Build: llama.cpp b12181, Hexagon SDK 6.7.0.1
 - Models: the 9 [tested models](#supported-models), Q4_K_M with f16 mmproj
 - Context size 16384 (`n_ctx`)
-- 10 test images, image tokens at each model's default
+- 10 app camera captures: 4 at 334 × 446 and 6 at 432 × 576 pixels (portrait), image tokens at each model's default. The medians fall on the 432 × 576 images, so image tokens and times are for that size
 - Thinking off, Jinja template on, short-answer prompt
 - Sampling: temperature 0.6, top_k 20, top_p 0.95, min_p 0.05
 - NPU uses 1 HTP session with the vision encoder on HTP
@@ -401,33 +401,33 @@ adb shell "ls -lh /data/local/tmp/llama.cpp/models/Qwen2-VL-2B/"
 
 Values are medians over images 2–10 (warm). TTFT (time to first token) covers image encode and prefill.
 
-| Model          | Image Tokens | TTFT NPU | TTFT GPU | TTFT CPU | Decode NPU | Decode GPU  | Decode CPU |
-| -------------- | ------------ | -------- | -------- | -------- | ---------- | ----------- | ---------- |
-| Qwen3.5-0.8B   | 252          | 0.30 s   | 1.3 s    | 7.0 s    | 54.0 tk/s  | 41.0 tk/s   | 15.9 tk/s  |
-| Qwen3.8-2B     | 252          | 0.53 s   | 4.7 s    | 21.1 s   | 31.0 tk/s  | 17.4 tk/s   | 9.0 tk/s   |
-| Qwen3.5-2B     | 252          | 0.53 s   | 5.0 s    | 21.1 s   | 31.3 tk/s  | 17.4 tk/s   | 9.1 tk/s   |
-| Qwen3-VL-2B    | 252          | 0.57 s   | 4.1 s ⚠  | 20.9 s   | 33.2 tk/s  | 16.2 tk/s ⚠ | 10.8 tk/s  |
-| Qwen2-VL-2B    | 315          | 0.78 s   | 8.4 s    | 42.5 s   | 41.3 tk/s  | 16.7 tk/s   | 11.1 tk/s  |
-| Qwen3.5-4B     | 252          | 1.0 s    | 9.3 s    | 33.2 s   | 14.9 tk/s  | 7.7 tk/s    | 4.7 tk/s   |
-| LFM2.5-VL-1.6B | 252          | 1.5 s    | 12.7 s   | 22.2 s   | 59.2 tk/s  | 29.5 tk/s   | 19.1 tk/s  |
-| SmolVLM2-2.2B  | 243          | 4.2 s    | ❌       | 47.0 s   | 33.8 tk/s  | ❌          | 13.0 tk/s  |
-| Granite-3.2-2B | 3645         | 13.7 s   | 84.7 s   | 271 s    | 15.1 tk/s  | 6.8 tk/s    | 4.5 tk/s   |
+| Model          | Image Tokens (432 × 576) | TTFT NPU | TTFT GPU | TTFT CPU | Decode NPU | Decode GPU  | Decode CPU |
+| -------------- | ------------------------ | -------- | -------- | -------- | ---------- | ----------- | ---------- |
+| Qwen3.5-0.8B   | 252                      | 0.30 s   | 1.3 s    | 7.0 s    | 54.0 tk/s  | 41.0 tk/s   | 15.9 tk/s  |
+| Qwen3.8-2B     | 252                      | 0.53 s   | 4.7 s    | 21.1 s   | 31.0 tk/s  | 17.4 tk/s   | 9.0 tk/s   |
+| Qwen3.5-2B     | 252                      | 0.53 s   | 5.0 s    | 21.1 s   | 31.3 tk/s  | 17.4 tk/s   | 9.1 tk/s   |
+| Qwen3-VL-2B    | 252                      | 0.57 s   | 4.1 s ⚠  | 20.9 s   | 33.2 tk/s  | 16.2 tk/s ⚠ | 10.8 tk/s  |
+| Qwen2-VL-2B    | 315                      | 0.78 s   | 8.4 s    | 42.5 s   | 41.3 tk/s  | 16.7 tk/s   | 11.1 tk/s  |
+| Qwen3.5-4B     | 252                      | 1.0 s    | 9.3 s    | 33.2 s   | 14.9 tk/s  | 7.7 tk/s    | 4.7 tk/s   |
+| LFM2.5-VL-1.6B | 252                      | 1.5 s    | 12.7 s   | 22.2 s   | 59.2 tk/s  | 29.5 tk/s   | 19.1 tk/s  |
+| SmolVLM2-2.2B  | 243                      | 4.2 s    | ❌       | 47.0 s   | 33.8 tk/s  | ❌          | 13.0 tk/s  |
+| Granite-3.2-2B | 3645                     | 13.7 s   | 84.7 s   | 271 s    | 15.1 tk/s  | 6.8 tk/s    | 4.5 tk/s   |
 
 *⚠ On GPU, Qwen3-VL sometimes does not stop and gives very long answers (3 of the 9 warm images); its GPU numbers are the average of the other 6 images. It works on NPU and CPU. ❌ On GPU, SmolVLM2 gives garbage output, so its GPU measurement is dropped; it works on NPU and CPU. GPU decode slows by 20–37% over a run from thermal throttling. The first image after loading a model is slower, so it is not counted.*
 
 **Samsung Galaxy Z Flip 6 (Qualcomm Snapdragon 8 Gen 3; Adreno 750, Hexagon v75)**, same build and settings as above, with a context size of 4096 (`n_ctx`):
 
-| Model          | Image Tokens | TTFT NPU | TTFT CPU | Decode NPU | Decode CPU |
-| -------------- | ------------ | -------- | -------- | ---------- | ---------- |
-| Qwen3.5-0.8B   | 252          | 0.48 s   | 4.8 s    | 35.5 tk/s  | 16.7 tk/s  |
-| Qwen3.8-2B     | 252          | 0.92 s   | 30.8 s   | 19.3 tk/s  | 6.0 tk/s   |
-| Qwen3.5-2B     | 252          | 0.91 s   | 19.5 s   | 19.9 tk/s  | 9.9 tk/s   |
-| Qwen3-VL-2B    | 252          | 0.91 s   | 31.3 s   | 20.3 tk/s  | 6.8 tk/s   |
-| Qwen2-VL-2B    | 315          | 1.2 s    | 61.0 s   | 26.5 tk/s  | 7.6 tk/s   |
-| Qwen3.5-4B     | 252          | ❌       | 31.7 s   | ❌         | 4.6 tk/s   |
-| LFM2.5-VL-1.6B | 252          | 3.5 s    | 32.6 s   | 34.6 tk/s  | 12.3 tk/s  |
-| SmolVLM2-2.2B  | 243          | 7.9 s    | 40.6 s   | 19.2 tk/s  | 13.1 tk/s  |
-| Granite-3.2-2B | 3645         | 26.0 s   | 245 s    | 8.9 tk/s   | 6.0 tk/s   |
+| Model          | Image Tokens (432 × 576) | TTFT NPU | TTFT CPU | Decode NPU | Decode CPU |
+| -------------- | ------------------------ | -------- | -------- | ---------- | ---------- |
+| Qwen3.5-0.8B   | 252                      | 0.48 s   | 4.8 s    | 35.5 tk/s  | 16.7 tk/s  |
+| Qwen3.8-2B     | 252                      | 0.92 s   | 30.8 s   | 19.3 tk/s  | 6.0 tk/s   |
+| Qwen3.5-2B     | 252                      | 0.91 s   | 19.5 s   | 19.9 tk/s  | 9.9 tk/s   |
+| Qwen3-VL-2B    | 252                      | 0.91 s   | 31.3 s   | 20.3 tk/s  | 6.8 tk/s   |
+| Qwen2-VL-2B    | 315                      | 1.2 s    | 61.0 s   | 26.5 tk/s  | 7.6 tk/s   |
+| Qwen3.5-4B     | 252                      | ❌       | 31.7 s   | ❌         | 4.6 tk/s   |
+| LFM2.5-VL-1.6B | 252                      | 3.5 s    | 32.6 s   | 34.6 tk/s  | 12.3 tk/s  |
+| SmolVLM2-2.2B  | 243                      | 7.9 s    | 40.6 s   | 19.2 tk/s  | 13.1 tk/s  |
+| Granite-3.2-2B | 3645                     | 26.0 s   | 245 s    | 8.9 tk/s   | 6.0 tk/s   |
 
 *❌ Qwen3.5-4B does not fit on the Flip 6 NPU. GPU: Q4_K_M models are not supported on the Adreno 750. The Flip 6 throttles more than the Fold 7, so CPU numbers vary a lot over a run.*
 

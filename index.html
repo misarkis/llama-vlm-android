@@ -584,12 +584,12 @@
     <!-- Performance Section -->
     <section id="performance">
         <h2 class="section-title">Performance Benchmarks</h2>
-        <p class="section-subtitle table-title">9 tested models measured on Samsung Galaxy Z Fold 7 Ultra (Qualcomm Snapdragon 8 Elite). Q4_K_M, f16 mmproj, context size 16384, 10 test images. Median over images 2-10.</p>
+        <p class="section-subtitle table-title">9 tested models measured on Samsung Galaxy Z Fold 7 Ultra (Qualcomm Snapdragon 8 Elite). Q4_K_M, f16 mmproj, context size 16384, 10 app camera captures (4 at 334 &times; 446, 6 at 432 &times; 576 pixels, portrait). Median over images 2-10, which falls on the 432 &times; 576 images; image tokens and times are for that size.</p>
         <table class="performance-table fade-in">
             <thead>
                 <tr>
                     <th>Model</th>
-                    <th>Image Tokens</th>
+                    <th>Image Tokens<br>(432 &times; 576)</th>
                     <th>Time to First Token, sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-gpu">GPU</span> / <span class="badge badge-cpu">CPU</span></th>
                     <th>Decode, tokens/sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-gpu">GPU</span> / <span class="badge badge-cpu">CPU</span></th>
                 </tr>
@@ -657,7 +657,7 @@
             <thead>
                 <tr>
                     <th>Model</th>
-                    <th>Image Tokens</th>
+                    <th>Image Tokens<br>(432 &times; 576)</th>
                     <th>Time to First Token, sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-cpu">CPU</span></th>
                     <th>Decode, tokens/sec<br><span class="badge badge-npu">NPU</span> / <span class="badge badge-cpu">CPU</span></th>
                 </tr>
