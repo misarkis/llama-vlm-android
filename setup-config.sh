@@ -1,3 +1,8 @@
+# Copyright (c) 2026 Michel Sarkis (https://github.com/misarkis)
+#
+# This software is released under the MIT License.
+# https://opensource.org
+
 # =============================================================================
 # VLM-Analyze Android - Setup Configuration (MSYS2 UCRT64)
 # =============================================================================
@@ -122,6 +127,27 @@ fi
 echo ""
 
 # -----------------------------------------------------------------------------
+# ACCURACY BENCHMARKS - OPTIONAL (only for the bench/ scripts, not the app build)
+# -----------------------------------------------------------------------------
+echo "6. Accuracy benchmarks (OPTIONAL - bench/run_*.sh, bench/setup_eval.sh):"
+ask() {  # ask VAR "label" default: keep an existing value, else prompt (Enter = default)
+    if [ -n "${!1}" ]; then echo "   $2: using existing ${!1}"; return; fi
+    read -p "   $2 [${3:-none}]: " val
+    printf -v "$1" '%s' "${val:-$3}"
+}
+ask LLAMA_SERVER "PC llama-server executable (default: the one on PATH)" "$(command -v llama-server 2>/dev/null)"
+ask MODEL_DIR    "GGUF models folder (relative to the repo or absolute)" "Device-Models/models"
+ask EVAL_DIR     "Benchmark workspace created by bench/setup_eval.sh" "public_eval"
+ask PYTHON       "Python 3.11 for the benchmark venvs" "python"
+warn=()
+[ -n "$LLAMA_SERVER" ] && [ -f "$LLAMA_SERVER" ] || warn+=("LLAMA_SERVER not found: ${LLAMA_SERVER:-not set}")
+[ -d "$MODEL_DIR" ] || [ -d "$(dirname "$0")/$MODEL_DIR" ] || warn+=("MODEL_DIR not found: $MODEL_DIR")
+command -v "$PYTHON" >/dev/null 2>&1 || [ -f "$PYTHON" ] || warn+=("PYTHON not found: $PYTHON")
+for w in "${warn[@]}"; do echo "   [!] $w (the bench/ scripts need it)"; done
+[ ${#warn[@]} -eq 0 ] && echo "   [OK] Set"
+echo ""
+
+# -----------------------------------------------------------------------------
 # Validation
 # -----------------------------------------------------------------------------
 echo "=== Validation ==="
@@ -149,6 +175,10 @@ echo "Android SDK:  $ANDROID_SDK_ROOT"
 echo "Android NDK:  $ANDROID_NDK_HOME"
 echo "Java JDK:     $JAVA_HOME"
 echo "Hexagon SDK:  $HEXAGON_SDK_ROOT"
+echo "llama-server: ${LLAMA_SERVER:-not set}"
+echo "Models:       $MODEL_DIR"
+echo "Eval dir:     $EVAL_DIR"
+echo "Python:       $PYTHON"
 echo "OpenCL:       [AUTO] Downloaded during build"
 echo ""
 
@@ -160,6 +190,10 @@ ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT
 ANDROID_NDK_HOME=$ANDROID_NDK_HOME
 JAVA_HOME=$JAVA_HOME
 HEXAGON_SDK_ROOT=$HEXAGON_SDK_ROOT
+LLAMA_SERVER=$LLAMA_SERVER
+MODEL_DIR=$MODEL_DIR
+EVAL_DIR=$EVAL_DIR
+PYTHON=$PYTHON
 EOF
 
 echo "Configuration saved to: $CONFIG_PATH"

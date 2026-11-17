@@ -1,0 +1,123 @@
+{
+    "easy": {
+        "os_ios": {
+            "score": 0.7579653437674676,
+            "score_weighted": 0.5895652173913042,
+            "score_base": 0.7778260869565218,
+            "sample_num": 115
+        },
+        "os_linux": {
+            "score": 0.6904684626203612,
+            "score_weighted": 0.5482817869415807,
+            "score_base": 0.7940721649484537,
+            "sample_num": 194
+        },
+        "os_windows": {
+            "score": 0.7595942120163572,
+            "score_weighted": 0.5962345679012344,
+            "score_base": 0.7849382716049382,
+            "sample_num": 270
+        },
+        "os_mac": {
+            "score": 0.7381974248927038,
+            "score_weighted": 0.58015873015873,
+            "score_base": 0.7859126984126983,
+            "sample_num": 84
+        },
+        "os_web": {
+            "score": 0.6861985472154962,
+            "score_weighted": 0.539193302891933,
+            "score_base": 0.7857686453576865,
+            "sample_num": 219
+        },
+        "os_android": {
+            "score": 0.7144431434671811,
+            "score_weighted": 0.5668306010928962,
+            "score_base": 0.7933879781420764,
+            "sample_num": 305
+        },
+        "level_sample_num": 1187,
+        "level_score": 0.7214815145869387
+    },
+    "medium": {
+        "os_ios": {
+            "score": 0.7288570904421205,
+            "score_weighted": 0.5757971014492752,
+            "score_base": 0.7899999999999999,
+            "sample_num": 115
+        },
+        "os_linux": {
+            "score": 0.7608269858541892,
+            "score_weighted": 0.6006872852233677,
+            "score_base": 0.7895189003436427,
+            "sample_num": 194
+        },
+        "os_windows": {
+            "score": 0.8626028059990323,
+            "score_weighted": 0.6603703703703703,
+            "score_base": 0.7655555555555555,
+            "sample_num": 270
+        },
+        "os_mac": {
+            "score": 0.6292500000000001,
+            "score_weighted": 0.49940476190476185,
+            "score_base": 0.7936507936507935,
+            "sample_num": 84
+        },
+        "os_web": {
+            "score": 0.6948957031625492,
+            "score_weighted": 0.550152207001522,
+            "score_base": 0.7917047184170471,
+            "sample_num": 219
+        },
+        "os_android": {
+            "score": 0.765143612212254,
+            "score_weighted": 0.6012021857923497,
+            "score_base": 0.7857377049180327,
+            "sample_num": 305
+        },
+        "level_sample_num": 1187,
+        "level_score": 0.760513663853101
+    },
+    "hard": {
+        "os_ios": {
+            "score": 0.7925501432664758,
+            "score_weighted": 0.601304347826087,
+            "score_base": 0.758695652173913,
+            "sample_num": 115
+        },
+        "os_linux": {
+            "score": 0.8770741618692856,
+            "score_weighted": 0.6675257731958762,
+            "score_base": 0.761082474226804,
+            "sample_num": 194
+        },
+        "os_windows": {
+            "score": 0.8658943024916681,
+            "score_weighted": 0.6735802469135803,
+            "score_base": 0.7779012345679012,
+            "sample_num": 270
+        },
+        "os_mac": {
+            "score": 0.7875420005169294,
+            "score_weighted": 0.604563492063492,
+            "score_base": 0.7676587301587302,
+            "sample_num": 84
+        },
+        "os_web": {
+            "score": 0.8338830584707645,
+            "score_weighted": 0.634931506849315,
+            "score_base": 0.7614155251141552,
+            "sample_num": 219
+        },
+        "os_android": {
+            "score": 0.8814178302900106,
+            "score_weighted": 0.672622950819672,
+            "score_base": 0.7631147540983606,
+            "sample_num": 305
+        },
+        "level_sample_num": 1187,
+        "level_score": 0.8531537250530827
+    },
+    "total_sample_num": 3561
+}

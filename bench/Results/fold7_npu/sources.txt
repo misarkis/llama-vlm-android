@@ -1,0 +1,9 @@
+Galaxy Z Fold 7, NPU (1 HTP session), settings in fold7_npu.conf.
+
+qwen3vl_2b, qwen35_0.8b, qwen35_2b, qwen2vl_2b, qwen38_2b, lfm25_1.6b:
+  run of Nov 16, 2026 (fold7_npu.conf).
+
+qwen35_4b:
+  rerun of Nov 16, 2026 after a reboot and a 30-minute rest, because the phone
+  overheated (thermal status 4) during the first run. Same settings as
+  fold7_npu.conf, only MODELS="qwen35_4b".

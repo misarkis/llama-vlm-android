@@ -1,0 +1,8 @@
+{
+  "model": "qwen35_4b",
+  "n": 100,
+  "exact_match": 87.0,
+  "f1": 92.3,
+  "prompt": "Answer the question using the screenshot. Reply with a short answer only (a word, a number or a short phrase copied from the screen). If the answer is not on the screen, reply <no answer>.\nQuestion: {question}",
+  "max_tokens": 64
+}

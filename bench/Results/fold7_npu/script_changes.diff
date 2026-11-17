@@ -1,0 +1,56 @@
+13c13
+< ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+---
+> ROOT="$PWD"
+90c90
+<   log="eval/logs/server_${name}.log"
+---
+>   log="bench/Results/fold7_npu/logs/server_${name}.log"
+114c114
+<     --model_args "model_version=$name,base_url=http://127.0.0.1:$PORT/v1,api_key=EMPTY" \
+---
+>     --model_args "model_version=$name,base_url=http://127.0.0.1:$PORT/v1,api_key=EMPTY,num_concurrent=1,timeout=600" \
+116c116
+<     --output_path "$OUT" "${limit_arg[@]}" 2>&1 | tee "eval/logs/lmms_${name}.log" | grep -E "^\||Final Score|ERROR|Traceback"
+---
+>     --output_path "$OUT" "${limit_arg[@]}" 2>&1 | tee "bench/Results/fold7_npu/logs/lmms_${name}.log" | grep -E "^\||Final Score|ERROR|Traceback"
+16c16
+< ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+---
+> ROOT="$PWD"
+84c84
+<   log="eval/logs/server_sqa_${name}.log"
+---
+>   log="bench/Results/fold7_npu/logs/server_sqa_${name}.log"
+103c103
+<     --workers "$SLOTS" --limit "$LIMIT" --out "$OUT" 2>&1 | tee "eval/logs/sqa_${name}.log"
+---
+>     --workers "$SLOTS" --limit "$LIMIT" --out "$OUT" 2>&1 | tee "bench/Results/fold7_npu/logs/sqa_${name}.log"
+13c13
+< ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+---
+> ROOT="$PWD"
+90c90
+<   log="eval/logs/server_${name}.log"
+---
+>   log="bench/Results/fold7_npu/logs/server512_${name}.log"
+114,116c114,116
+<     --model_args "model_version=$name,base_url=http://127.0.0.1:$PORT/v1,api_key=EMPTY" \
+<     --tasks "$TASKS" --batch_size 1 --log_samples \
+<     --output_path "$OUT" "${limit_arg[@]}" 2>&1 | tee "eval/logs/lmms_${name}.log" | grep -E "^\||Final Score|ERROR|Traceback"
+---
+>     --model_args "model_version=$name,base_url=http://127.0.0.1:$PORT/v1,api_key=EMPTY,num_concurrent=1,timeout=600" \
+>     --tasks "$TASKS" --batch_size 1 --gen_kwargs max_new_tokens=512 --log_samples \
+>     --output_path "$OUT" "${limit_arg[@]}" 2>&1 | tee "bench/Results/fold7_npu/logs/lmms512_${name}.log" | grep -E "^\||Final Score|ERROR|Traceback"
+23c23
+< ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+---
+> ROOT="$PWD"
+95c95
+<   log="eval/logs/server_gui_${name}.log"
+---
+>   log="bench/Results/fold7_npu/logs/server_gui_${name}.log"
+125c125
+<     | tee "eval/logs/gui_${name}.log" | grep -E "Evaluation Results|overall|Overall|ERROR|Traceback"
+---
+>     | tee "bench/Results/fold7_npu/logs/gui_${name}.log" | grep -E "Evaluation Results|overall|Overall|ERROR|Traceback"

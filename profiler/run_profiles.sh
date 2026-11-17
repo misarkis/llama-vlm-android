@@ -1,4 +1,9 @@
 #!/bin/bash
+# Copyright (c) 2026 Michel Sarkis (https://github.com/misarkis)
+#
+# This software is released under the MIT License.
+# https://opensource.org
+
 # Usage: [HTP_PROFILE=0|1|2] ./run_profiles.sh <folder>=<config> ...
 # Runs each profile in turn with a cooldown before it, and saves each run to its own result folder
 # under profiler/Results/ (override with RESULTS_DIR=<dir>).
@@ -7,7 +12,17 @@
 #          HTP_PROFILE=1 ./run_profiles.sh HTP-1Core-ViT-Qwen2VL-Prof=config_htp_1core_vit_qwen2vl.json
 cd "$(dirname "$0")" || exit 1
 export MSYS_NO_PATHCONV=1
-ADB=$(command -v adb || echo "${LOCALAPPDATA:-$HOME/AppData/Local}/Android/Sdk/platform-tools/adb.exe")
+# Settings from .env (written by setup-config.sh / setup-config.ps1); a value the caller already set wins
+ENV_FILE="$(cd .. && pwd)/.env"
+if [ -f "$ENV_FILE" ]; then
+  while IFS='=' read -r k v || [ -n "$k" ]; do
+    v="${v%$'\r'}"
+    [[ $k =~ ^[A-Z_][A-Z0-9_]*$ ]] && [ -z "${!k:-}" ] && export "$k=$v"
+  done < "$ENV_FILE"
+fi
+need() { for k; do [ -n "${!k:-}" ] || { echo "$k is not set: run setup-config.sh (it writes .env)"; exit 1; }; done; }
+need ANDROID_SDK_ROOT
+ADB="$ANDROID_SDK_ROOT/platform-tools/adb"
 HTP=${HTP_PROFILE:-0}
 RESULTS=${RESULTS_DIR:-Results}  # result folders go here, relative to profiler/
 mkdir -p "$RESULTS"
@@ -45,7 +60,7 @@ for pair in "$@"; do
     timeout 3600 pwsh -NoProfile -File run-profile-test.ps1 -Config "configs/$config" -HtpProfile "$HTP" > "$name/console.txt" 2>&1
     code=$?
     mv -f $OUTPUTS "$name/" 2>/dev/null
-    log=$(python -c "import json,sys;print(json.load(open(sys.argv[1]))['output_log'])" "$name/$config")
+    log=$(python -c "import json,sys;print(json.load(sys.stdin)['output_log'])" < "$name/$config")
     "$ADB" pull "$log" "$name/" >/dev/null 2>&1
     rows=$(cat "$name"/profile_results*.csv 2>/dev/null | wc -l)
     echo "=== $(date +%T) END $name exit=$code csv_lines=$rows files: $(ls "$name" | tr '\n' ' ')"

@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
     private var isServiceRunning = false
     private var isOverlayEnabled = false
     private var broadcastReceiver: android.content.BroadcastReceiver? = null
-    private var localBackend: com.misar.vlmanalyze.LocalBackend? = null
+    // llama-server path (LocalBackend) is unused; kept commented out for later use
+    // private var localBackend: com.misar.vlmanalyze.LocalBackend? = null
     private var currentMode: BackendMode = BackendMode.REMOTE
 
     // Capture source selection (Screen vs Camera)
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
         ttsHelper.initialize(this)
 
         // Initialize LocalBackend (for HTTP server approach)
-        localBackend = LocalBackend(this)
+        // localBackend = LocalBackend(this)
 
         // LocalInferenceBackend is initialized lazily on first use
 
@@ -1482,7 +1483,7 @@ class MainActivity : AppCompatActivity(), TtsHelper.Listener {
             isOverlayEnabled = false
         }
         // Stop local inference backends
-        localBackend?.destroy()
+        // localBackend?.destroy()
         // Don't destroy VlmApplication.localInferenceBackend here - it's managed by "Stop Local" button
         unregisterBroadcastReceiver()
         ttsHelper.shutdown()

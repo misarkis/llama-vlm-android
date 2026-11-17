@@ -4,7 +4,7 @@
   "backend": "NPU-1Core",
   "vit_device": "HTP0",
   "htp_sessions": 1,
-  "n_ctx": 4096,
+  "n_ctx": 8192,
   "n_batch": 512,
   "n_predict": 512,
   "image_min_tokens": -1,

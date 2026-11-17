@@ -1,0 +1,15 @@
+Galaxy Z Flip6 (SM-F741U), NPU, final results. Merged from four runs with the same
+build, model files, prompts and token limits (STEPS="public sqa gui", see flip6_npu.conf).
+
+public/        qwen3vl_2b, qwen35_0.8b, qwen35_2b  first run    (Nov 15)
+               qwen2vl_2b, qwen38_2b, lfm25_1.6b   second run   (Nov 15-16)
+               The first run's qwen2vl_2b public step was aborted and is not used.
+screenqa_short qwen3vl_2b, qwen35_0.8b, qwen35_2b  first run
+               qwen2vl_2b, qwen38_2b               second run
+               lfm25_1.6b                          third run    (Nov 16)
+mmbench_gui/   all six models                      fourth run   (Nov 15-16)
+
+Scores: public/<model>/*_results.json (lmms-eval), screenqa_short/<model>_scores.json,
+mmbench_gui/<model>/T*/<model>_GUIContentUnderstanding_scores.json
+(L1 mean = average of the easy/medium/hard level_score x 100).
+results.json also holds MMMU val and AI2D scores, which are not reported.

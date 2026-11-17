@@ -198,6 +198,12 @@ Java_com_misar_vlmanalyze_LlamaServerService_nativeStartServer(
     g_server_args.push_back("-ngl");
     g_server_args.push_back(std::to_string(nGpuLayers));
 
+    // Same as the bench runs: no RAM prompt cache (default up to 8192 MiB, it grew until a phone
+    // rebooted), and no host buffer (large images failed on the Hexagon NPU with "out of IOVA space")
+    g_server_args.push_back("--cache-ram");
+    g_server_args.push_back("0");
+    g_server_args.push_back("--no-host");
+
     // Disable -v flag for now - it may cause issues
     // if (verbose) {
     //     g_server_args.push_back("-v");

@@ -1,3 +1,8 @@
+# Copyright (c) 2026 Michel Sarkis (https://github.com/misarkis)
+#
+# This software is released under the MIT License.
+# https://opensource.org
+
 # run-profile-test.ps1
 # Deploys and runs mtmd-profile-test on Android device with HTP profiling enabled
 #
@@ -7,7 +12,7 @@
 # GGML_HEXAGON_PROFILE before the Hexagon backend loads. 0 is the clean timing mode: per-op,
 # debug and verbose logging all stay off, and the HTP reports are skipped.
 #
-# Environment variables from .env (auto-loaded):
+# Settings from .env (written by setup-config.ps1; the script stops if one is missing):
 #   ANDROID_SDK_ROOT    - Path to Android SDK (for ADB)
 #   ANDROID_NDK_HOME    - Path to Android NDK (for libomp.so)
 param(
@@ -42,20 +47,27 @@ $ProfilerDir = $ScriptDir
 $LlamaCppDir = Join-Path $ScriptDir "..\llama.cpp"
 $BuildDirPath = Join-Path $LlamaCppDir "build-android"
 
-# Load environment configuration from .env
+# Settings from .env (written by setup-config.ps1 / setup-config.sh); a value the caller already set wins
 $EnvFile = Join-Path $ScriptDir "..\.env"
 if (Test-Path $EnvFile) {
     Get-Content $EnvFile | ForEach-Object {
-        if ($_ -match '^([^#][^=]+)=(.*)$') {
-            Set-Item -Force -Path "ENV:\$($matches[1])" -Value $matches[2]
+        $line = $_.TrimEnd("`r")
+        if ($line -match '^([A-Z_][A-Z0-9_]*)=(.*)$' -and -not [Environment]::GetEnvironmentVariable($matches[1])) {
+            Set-Item -Path "Env:\$($matches[1])" -Value $matches[2]
         }
+    }
+}
+foreach ($k in @("ANDROID_SDK_ROOT", "ANDROID_NDK_HOME")) {
+    if (-not [Environment]::GetEnvironmentVariable($k)) {
+        Write-Host "$k is not set: run setup-config.ps1 (it writes .env)" -ForegroundColor Red
+        exit 1
     }
 }
 
 # Helper function to convert Unix path to Windows path
 function ConvertTo-WindowsPath {
     param([string]$Path)
-    if ($Path -match '^/([a-z])/') {
+    if ($Path -match '^/([a-zA-Z])/') {
         $drive = $matches[1].ToUpper()
         $rest = $Path.Substring(3) -replace '/', '\'
         return "${drive}:\" + $rest
@@ -64,18 +76,10 @@ function ConvertTo-WindowsPath {
 }
 
 # ADB path from ANDROID_SDK_ROOT
-$AdbPath = if ($env:ANDROID_SDK_ROOT) {
-    ConvertTo-WindowsPath -Path "$env:ANDROID_SDK_ROOT\platform-tools\adb.exe"
-} else {
-    "C:\Users\misar\AppData\Local\Android\Sdk\platform-tools\adb.exe"
-}
+$AdbPath = ConvertTo-WindowsPath -Path "$env:ANDROID_SDK_ROOT\platform-tools\adb.exe"
 
 # OMP LIB path from ANDROID_NDK_HOME (lib dir and clang version differ between NDKs)
-$NdkRoot = if ($env:ANDROID_NDK_HOME) {
-    ConvertTo-WindowsPath -Path "$env:ANDROID_NDK_HOME"
-} else {
-    "c:\Users\misar\AppData\Local\Android\Sdk\ndk\27.3.13750724"
-}
+$NdkRoot = ConvertTo-WindowsPath -Path "$env:ANDROID_NDK_HOME"
 $OMP_LIB = Get-ChildItem -Path "$NdkRoot\toolchains\llvm\prebuilt\windows-x86_64\lib*\clang\*\lib\linux\aarch64\libomp.so" -ErrorAction SilentlyContinue |
     Select-Object -First 1 -ExpandProperty FullName
 

@@ -1,0 +1,29 @@
+PC reference runs (llama-server on PC), full sets, 9 models.
+
+Settings: llama-server -c 32768 with 4 parallel slots, so 8,192 tokens per request
+(the scripts' defaults, CTX=32768 SLOTS=4). Greedy decoding.
+
+mmbench_gui/      MMBench-GUI L1 (GUI Content Understanding), full set, 3,561 questions,
+                  bench/run_mmbench_gui.sh, official exact-match scoring (VLMEvalKit at the authors' pin).
+                  Per-model scores.json and the run config.
+screenqa_short/   ScreenQA-Short test split, 8,419 questions, bench/run_screenqa_short.sh,
+                  Google's official metric (exact match and F1).
+public/           lmms-eval results.json for DocVQA val, ChartQA, OCRBench, TextVQA val, MMStar, POPE,
+                  bench/run_public.sh. Seven of the files also hold AI2D and MMMU val, which are not
+                  reported (the answer parser could not read these models' answers).
+
+Requests longer than 8,192 tokens failed and scored 0:
+  granite32_2b    MMBench-GUI 398 of 3,561 (11.2%); MMStar 1. With 16,384 per request its
+                  MMBench-GUI mean would be 67.95 instead of 60.58.
+  qwen35_4b       MMBench-GUI 3 of 3,561.
+  smolvlm2_2.2b   DocVQA 47, OCRBench 14, TextVQA 1. 8,192 is this model's trained context,
+                  so a larger setting would not change it.
+
+smolvlm2_2.2b POPE is 0.00: the official scorer only accepts an exact "yes"/"no" and the model
+always answers with a period ("Yes."); without the period it would score 85.54.
+
+Phone comparison subset (PC row of the phones-vs-PC table, same 8,192 setting):
+mmbench_gui198/   MMBench-GUI L1, 198 questions (every 18th screenshot), a separate PC run
+                  with LMU_DIR pointing at the subset; same files as mmbench_gui/.
+lmms-eval x50 and ScreenQA-Short x100: the first 50 (100) answers of the full PC runs above,
+                  the same questions the phones ran with --limit 50 (-l 100).

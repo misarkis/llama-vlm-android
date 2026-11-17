@@ -640,6 +640,9 @@ mtmd_api_status mtmd_inference_init(
     cparams.use_mlock = params.use_mlock;
 #endif
     cparams.no_kv_offload = params.no_kv_offload;
+    // Always on (same as llama-server --no-host): without the host buffer, large images no longer
+    // fail on the Hexagon NPU with "out of IOVA space" (Flip6: 47 of 70 requests); speed unchanged
+    cparams.no_host = true;
     cparams.swa_full = params.swa_full;
     cparams.kv_unified = params.kv_unified;
 

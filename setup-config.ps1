@@ -1,3 +1,8 @@
+# Copyright (c) 2026 Michel Sarkis (https://github.com/misarkis)
+#
+# This software is released under the MIT License.
+# https://opensource.org
+
 # =============================================================================
 # VLM-Analyze Android - Setup Configuration (PowerShell)
 # =============================================================================
@@ -19,6 +24,10 @@ Remove-Item Env:\ANDROID_SDK_ROOT -ErrorAction SilentlyContinue
 Remove-Item Env:\ANDROID_NDK_HOME -ErrorAction SilentlyContinue
 Remove-Item Env:\JAVA_HOME -ErrorAction SilentlyContinue
 Remove-Item Env:\HEXAGON_SDK_ROOT -ErrorAction SilentlyContinue
+Remove-Item Env:\LLAMA_SERVER -ErrorAction SilentlyContinue
+Remove-Item Env:\MODEL_DIR -ErrorAction SilentlyContinue
+Remove-Item Env:\EVAL_DIR -ErrorAction SilentlyContinue
+Remove-Item Env:\PYTHON -ErrorAction SilentlyContinue
 
 $missing = @()
 
@@ -171,6 +180,28 @@ if ([string]::IsNullOrWhiteSpace($env:HEXAGON_SDK_ROOT)) {
 Write-Host ""
 
 # -----------------------------------------------------------------------------
+# ACCURACY BENCHMARKS - OPTIONAL (only for the bench/ scripts, not the app build)
+# -----------------------------------------------------------------------------
+Write-Host "6. Accuracy benchmarks (OPTIONAL - bench\run_*.ps1/.sh, bench\setup_eval):" -ForegroundColor Yellow
+function Ask-Setting {
+    param([string]$Name, [string]$Label, [string]$Default)
+    $value = Read-Host "   $Label [$(if ($Default) { $Default } else { 'none' })]"
+    if ([string]::IsNullOrWhiteSpace($value)) { $value = $Default }
+    Set-Item -Path "Env:\$Name" -Value $value
+}
+Ask-Setting LLAMA_SERVER "PC llama-server executable (default: the one on PATH)" "$((Get-Command llama-server -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source)"
+Ask-Setting MODEL_DIR    "GGUF models folder (relative to the repo or absolute)" "Device-Models/models"
+Ask-Setting EVAL_DIR     "Benchmark workspace created by bench/setup_eval" "public_eval"
+Ask-Setting PYTHON       "Python 3.11 for the benchmark venvs" "python"
+$warn = @()
+if (-not $env:LLAMA_SERVER -or -not (Test-Path $env:LLAMA_SERVER)) { $warn += "LLAMA_SERVER not found: $(if ($env:LLAMA_SERVER) { $env:LLAMA_SERVER } else { 'not set' })" }
+if (-not (Test-Path $env:MODEL_DIR) -and -not (Test-Path (Join-Path $PSScriptRoot $env:MODEL_DIR))) { $warn += "MODEL_DIR not found: $($env:MODEL_DIR)" }
+if (-not (Get-Command $env:PYTHON -ErrorAction SilentlyContinue)) { $warn += "PYTHON not found: $($env:PYTHON)" }
+foreach ($w in $warn) { Write-Host "   [!] $w (the bench/ scripts need it)" -ForegroundColor Yellow }
+if ($warn.Count -eq 0) { Write-Host "   [OK] Set" -ForegroundColor Green }
+Write-Host ""
+
+# -----------------------------------------------------------------------------
 # Validation
 # -----------------------------------------------------------------------------
 Write-Host "=== Validation ===" -ForegroundColor Cyan
@@ -198,6 +229,10 @@ Write-Host "Android SDK:  $($env:ANDROID_SDK_ROOT)"
 Write-Host "Android NDK:  $($env:ANDROID_NDK_HOME)"
 Write-Host "Java JDK:     $($env:JAVA_HOME)"
 Write-Host "Hexagon SDK:  $($env:HEXAGON_SDK_ROOT)"
+Write-Host "llama-server: $(if ($env:LLAMA_SERVER) { $env:LLAMA_SERVER } else { 'not set' })"
+Write-Host "Models:       $($env:MODEL_DIR)"
+Write-Host "Eval dir:     $($env:EVAL_DIR)"
+Write-Host "Python:       $($env:PYTHON)"
 Write-Host "OpenCL:       [AUTO] Downloaded during build"
 Write-Host ""
 
@@ -209,6 +244,10 @@ ANDROID_SDK_ROOT=$(ConvertTo-UnixPath -Path $env:ANDROID_SDK_ROOT)
 ANDROID_NDK_HOME=$(ConvertTo-UnixPath -Path $env:ANDROID_NDK_HOME)
 JAVA_HOME=$(ConvertTo-UnixPath -Path $env:JAVA_HOME)
 HEXAGON_SDK_ROOT=$(ConvertTo-UnixPath -Path $env:HEXAGON_SDK_ROOT)
+LLAMA_SERVER=$(ConvertTo-UnixPath -Path $env:LLAMA_SERVER)
+MODEL_DIR=$(ConvertTo-UnixPath -Path $env:MODEL_DIR)
+EVAL_DIR=$(ConvertTo-UnixPath -Path $env:EVAL_DIR)
+PYTHON=$(ConvertTo-UnixPath -Path $env:PYTHON)
 "@
 
 $configPath = Join-Path $PSScriptRoot ".env"

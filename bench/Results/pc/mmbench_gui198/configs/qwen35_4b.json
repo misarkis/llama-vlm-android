@@ -1,0 +1,23 @@
+{
+    "model": {
+        "qwen35_4b": {
+            "model_path": "http://127.0.0.1:8081/v1?api_key=EMPTY&model=qwen35_4b",
+            "generate_cfg": {
+                "max_tokens": 2048,
+                "temperature": 0
+            },
+            "imp_type": "openai",
+            "kwargs": {
+                "system_prompt": "benchmark_default",
+                "img_size": -1
+            }
+        }
+    },
+    "data": {
+        "GUIContentUnderstanding": {
+            "mode": "all",
+            "parse_function": "models.api_gpt.parse_gui_qa_api",
+            "match_mode": "exact_matching"
+        }
+    }
+}

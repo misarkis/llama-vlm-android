@@ -434,26 +434,70 @@ Values are medians over images 2–10 (warm). TTFT (time to first token) covers 
 
 ### Quality Benchmarks
 
-Accuracy on public screen-understanding benchmarks, for the same Q4_K_M GGUF files with f16 mmproj,
-run on a desktop GPU through `llama-server`. Each benchmark is scored with its official code.
-Thinking off, greedy decoding, each model's default image tokens. Scores on the phone may differ
-slightly because the NPU's numerics differ; a phone check is planned.
+Accuracy on public benchmarks for the same Q4_K_M GGUF files with f16 mmproj, run on a desktop GPU (NVIDIA RTX PRO 6000, CUDA 13.2)
+through `llama-server`. Each benchmark is scored with its official code: the authors' code for
+MMBench-GUI and ScreenQA-Short, lmms-eval for the others. Full sets, thinking off, greedy decoding,
+each model's default image tokens, 8,192 tokens per request. See [BENCH_README.md](bench/BENCH_README.md) to run them.
 
-| Model          | MMBench-GUI L1 Easy | Medium | Hard  | Mean  | ScreenQA-Short EM | ScreenQA-Short F1 |
-| -------------- | ------------------- | ------ | ----- | ----- | ----------------- | ----------------- |
-| Qwen3.5-4B     | 85.97               | 85.65  | 88.01 | 86.54 | 84.94             | 88.99             |
-| Qwen3-VL-2B    | 84.19               | 83.86  | 89.35 | 85.80 | 83.01             | 87.47             |
-| Qwen3.5-2B     | 83.43               | 82.10  | 89.66 | 85.06 | 82.10             | 86.99             |
-| Qwen3.8-2B     | 72.15               | 76.05  | 85.32 | 77.84 | 79.94             | 85.06             |
-| LFM2.5-VL-1.6B | 73.48               | 74.05  | 79.27 | 75.60 | 77.80             | 82.77             |
-| Qwen3.5-0.8B   | 67.02               | 70.89  | 80.73 | 72.88 | 72.92             | 79.22             |
-| Qwen2-VL-2B    | 72.22               | 75.09  | 80.32 | 75.88 | 69.59             | 75.02             |
-| Granite-3.2-2B | 52.45               | 59.01  | 70.28 | 60.58 | 67.95             | 76.55             |
-| SmolVLM2-2.2B  | 63.19               | 61.56  | 68.53 | 64.42 | 54.89             | 62.80             |
+| Model          | MMBench-GUI L1 Easy | Medium | Hard  | Mean  | ScreenQA-Short EM | ScreenQA-Short F1 | DocVQA | ChartQA | OCRBench | TextVQA | MMStar | POPE  |
+| -------------- | ------------------- | ------ | ----- | ----- | ----------------- | ----------------- | ------ | ------- | -------- | ------- | ------ | ----- |
+| Qwen3.5-4B     | 85.97               | 85.65  | 88.01 | 86.54 | 84.94             | 88.99             | 95.24  | 84.60   | 85.70    | 81.81   | 65.67  | 89.92 |
+| Qwen3-VL-2B    | 84.19               | 83.86  | 89.35 | 85.80 | 83.01             | 87.47             | 92.49  | 78.80   | 81.10    | 78.81   | 52.53  | 89.37 |
+| Qwen3.5-2B     | 83.43               | 82.10  | 89.66 | 85.06 | 82.10             | 86.99             | 92.92  | 79.24   | 83.10    | 78.07   | 59.33  | 90.12 |
+| Qwen3.8-2B     | 72.15               | 76.05  | 85.32 | 77.84 | 79.94             | 85.06             | 92.31  | 71.16   | 82.60    | 76.24   | 58.27  | 89.37 |
+| LFM2.5-VL-1.6B | 73.48               | 74.05  | 79.27 | 75.60 | 77.80             | 82.77             | 87.06  | 39.72   | 80.10    | 80.37   | 48.80  | 89.31 |
+| Qwen3.5-0.8B   | 67.02               | 70.89  | 80.73 | 72.88 | 72.92             | 79.22             | 87.88  | 69.08   | 74.90    | 68.56   | 46.87  | 87.90 |
+| Qwen2-VL-2B    | 72.22               | 75.09  | 80.32 | 75.88 | 69.59             | 75.02             | 89.08  | 74.20   | 77.00    | 78.82   | 42.73  | 88.00 |
+| Granite-3.2-2B | 52.45               | 59.01  | 70.28 | 60.58 | 67.95             | 76.55             | 58.39  | 27.00   | 59.60    | 67.80   | 49.07  | 86.96 |
+| SmolVLM2-2.2B  | 63.19               | 61.56  | 68.53 | 64.42 | 54.89             | 62.80             | 68.83  | 34.96   | 69.50    | 70.15   | 41.27  | 0.00  |
 
 *MMBench-GUI L1: GUI content understanding, score × 100 per difficulty level; Mean is the average of
 the three levels. ScreenQA-Short: test split, 8,419 questions; EM is exact match, F1 is the main
-score. Sorted by the average of the MMBench-GUI L1 mean and ScreenQA-Short F1.*
+score. DocVQA val (ANLS), ChartQA (relaxed accuracy), OCRBench (accuracy), TextVQA val (exact match),
+MMStar (average) and POPE (accuracy): full sets, score × 100. Sorted by the average of the
+MMBench-GUI L1 mean and ScreenQA-Short F1.*
+
+- Granite-3.2-2B: 398 of its 3,561 MMBench-GUI requests (11.2%) are longer than 8,192 tokens and score 0; with 16,384 tokens per request its mean would be 67.95.
+- SmolVLM2-2.2B: POPE scores 0.00 because the official scorer only accepts an exact "yes"/"no" and SmolVLM2 always adds a period ("Yes."); without the period it would score 85.54. 62 requests are longer than its 8,192-token trained context and score 0.
+- **Granite-3.2-2B and SmolVLM2-2.2B are dropped from the on-device check and later work:** they have the lowest MMBench-GUI and ScreenQA-Short scores and the slowest time to first token on the phone (13.7 s and 4.2 s on the Fold 7 NPU), most of it in the vision encoder (Granite sends 3,645 image tokens per image).
+
+### On-Device Verification
+
+The same benchmarks on the phones' NPU, on a subset: the first 50 questions of each lmms-eval
+benchmark, the first 100 of ScreenQA-Short and 198 MMBench-GUI L1 questions (every 18th screenshot).
+The RTX PRO 6000 row uses the same questions.
+
+| Model          | Device       | MMBench-GUI L1 Mean | ScreenQA-Short EM | ScreenQA-Short F1 | DocVQA | ChartQA | OCRBench | TextVQA | MMStar | POPE  |
+| -------------- | ------------ | ------------------- | ----------------- | ----------------- | ------ | ------- | -------- | ------- | ------ | ----- |
+| Qwen3.5-4B     | RTX PRO 6000 | 83.80               | 87.00             | 92.30             | 96.85  | 76.00   | 100.00   | 85.40   | 32.00  | 90.00 |
+|                | Fold 7 NPU   | 86.28               | 87.00             | 92.30             | 95.42  | 72.00   | 100.00   | 85.60   | 36.00  | 84.00 |
+|                | Flip 6 NPU   | ❌                  | ❌                | ❌                | ❌     | ❌      | ❌       | ❌      | ❌     | ❌    |
+| Qwen3-VL-2B    | RTX PRO 6000 | 86.83               | 87.00             | 88.86             | 93.42  | 74.00   | 100.00   | 82.80   | 44.00  | 80.00 |
+|                | Fold 7 NPU   | 85.85               | 89.00             | 90.56             | 91.17  | 62.00   | 100.00   | 84.80   | 46.00  | 78.00 |
+|                | Flip 6 NPU   | 85.85               | 89.00             | 90.56             | 91.17  | 62.00   | 100.00   | 84.80   | 46.00  | 78.00 |
+| Qwen3.5-2B     | RTX PRO 6000 | 81.22               | 85.00             | 87.68             | 94.76  | 64.00   | 100.00   | 82.20   | 36.00  | 82.00 |
+|                | Fold 7 NPU   | 80.75               | 87.00             | 89.61             | 94.72  | 62.00   | 100.00   | 80.20   | 38.00  | 84.00 |
+|                | Flip 6 NPU   | 80.24               | 87.00             | 89.11             | 94.72  | 62.00   | 100.00   | 82.20   | 38.00  | 84.00 |
+| Qwen3.8-2B     | RTX PRO 6000 | 72.61               | 81.00             | 86.55             | 94.73  | 60.00   | 96.00    | 82.60   | 26.00  | 82.00 |
+|                | Fold 7 NPU   | 74.11               | 83.00             | 86.80             | 94.98  | 56.00   | 96.00    | 82.60   | 26.00  | 84.00 |
+|                | Flip 6 NPU   | 73.61               | 84.00             | 87.80             | 94.98  | 58.00   | 96.00    | 82.60   | 28.00  | 80.00 |
+| LFM2.5-VL-1.6B | RTX PRO 6000 | 72.17               | 80.00             | 83.62             | 81.52  | 54.00   | 96.00    | 82.20   | 34.00  | 78.00 |
+|                | Fold 7 NPU   | 72.70               | 79.00             | 82.83             | 85.92  | 48.00   | 96.00    | 82.40   | 32.00  | 78.00 |
+|                | Flip 6 NPU   | 73.71               | 80.00             | 83.62             | 85.92  | 54.00   | 96.00    | 84.20   | 34.00  | 78.00 |
+| Qwen3.5-0.8B   | RTX PRO 6000 | 74.16               | 78.00             | 82.46             | 86.38  | 52.00   | 98.00    | 73.40   | 28.00  | 84.00 |
+|                | Fold 7 NPU   | 70.64               | 76.00             | 80.46             | 86.38  | 58.00   | 98.00    | 73.80   | 36.00  | 82.00 |
+|                | Flip 6 NPU   | 70.10               | 76.00             | 80.46             | 86.72  | 56.00   | 98.00    | 71.80   | 32.00  | 82.00 |
+| Qwen2-VL-2B    | RTX PRO 6000 | 75.78               | 75.00             | 81.93             | 89.59  | 60.00   | 98.00    | 82.80   | 18.00  | 84.00 |
+|                | Fold 7 NPU   | 75.73               | 80.00             | 84.77             | 89.59  | 58.00   | 98.00    | 78.20   | 16.00  | 80.00 |
+|                | Flip 6 NPU   | 75.74               | 79.00             | 84.57             | 89.59  | 56.00   | 98.00    | 80.00   | 16.00  | 80.00 |
+
+*Phones: `llama-server` on the NPU (1 HTP session), Q4_K_M, `--cache-ram 0 --no-host`, context size
+16384 (Fold 7) and 8192 (Flip 6); same prompts and token limits as the PC. OCRBench is correct
+answers out of 50, × 100. With 50 questions one question is 2 points, so differences under about
+6–8 points are noise. Most phone scores are within that range of the PC; the largest gap is
+Qwen3-VL-2B ChartQA, 12 points lower on both phones.
+❌ Qwen3.5-4B does not fit in the Flip 6's memory (about 6 GB needed, 4.9 GB free),
+so it has no Flip 6 row.*
 
 ### Factors Affecting Performance
 
@@ -529,6 +573,7 @@ For detailed build instructions:
 - **[SETUP.md](SETUP.md)** - Complete setup and build guide
 - **[BUILD_LLAMACPP_ANDROID_README.md](BUILD_LLAMACPP_ANDROID_README.md)** - llama.cpp build details (in case needed)
 - **[PROFILE_TEST_README.md](profiler/PROFILE_TEST_README.md)** - On-device profiling and timing runs
+- **[BENCH_README.md](bench/BENCH_README.md)** - Quality benchmarks on desktop and on the phone
 
 ---
 

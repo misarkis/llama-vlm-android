@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Michel Sarkis (https://github.com/misarkis)
+#
+# This software is released under the MIT License.
+# https://opensource.org
+
 """
 summarize_runs.py
 
